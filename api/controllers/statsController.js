@@ -141,15 +141,15 @@ function getAllMinerStats(){
 
 function restartInterval(){
   clearInterval(interval);
-  interval=setInterval(getAllMinerStats,configModule.config.interval);
+  interval=setInterval(getAllMinerStats,configModule.config.interval*1000);
 }
 
 function init() {
   getAllMinerStats();
-  interval=setInterval(getAllMinerStats,configModule.config.interval);
+  interval=setInterval(getAllMinerStats,configModule.config.interval*1000);
 }
 
-setTimeout(init, 5000);
+setTimeout(init, 1000);
 
 exports.getStats = getStats;
 exports.restartInterval = restartInterval;
