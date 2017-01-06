@@ -57,7 +57,7 @@
 
           <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'">{{d.hashrate |hashrate}}</td>
           <td ng-if="d.type==='claymore-cryptonight'">{{d.hashrate/1000 |hashrate}}</td>
-          <td ng-if="d.type==='claymore-eth'">dagger: {{d['eth-hashrate'] | hashrate}}<span ng-if="d['alt-hashrate']!==0"><br />alt: {{d['alt-hashrate'] | hashrate}}</span></td>
+          <td ng-if="d.type==='claymore-eth'">dagger: {{d['eth-hashrate'] | hashrate}}<span ng-if="d['alt-hashrate']!=='0'"><br />alt: {{d['alt-hashrate'] | hashrate}}</span></td>
           <td ng-if="d.type==='claymore-zec'">{{d['zec-hashrate'] | solutionrate}}</td>
           <td ng-if="d.type==='nheqminer'">{{d.solutionRate | solutionrate}}</td>
           <td ng-if="d.type==='other'">-</td>
@@ -77,12 +77,12 @@
           <td ng-if="d.type==='other'||d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='nheqminer'">-</td>
 
           <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-cryptonight'">{{d.accepted}}</td>
-          <td ng-if="d.type==='claymore-eth'">dagger: {{d['eth-accepted']}}<span ng-if="d['alt-hashrate']!==0"><br />alt: {{d['alt-accepted']}}</span></td>
+          <td ng-if="d.type==='claymore-eth'">dagger: {{d['eth-accepted']}}<span ng-if="d['alt-hashrate']!=='0'"><br />alt: {{d['alt-accepted']}}</span></td>
           <td ng-if="d.type==='claymore-zec'">{{d['zec-accepted']}}</td>
           <td ng-if="d.type==='other'||d.type==='nheqminer'">-</td>
 
           <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-cryptonight'">{{d.rejected}}</td>
-          <td ng-if="d.type==='claymore-eth'">dagger: {{d['eth-rejected']}}<span ng-if="d['alt-hashrate']!==0"><br />alt: {{d['alt-rejected']}}</span></td>
+          <td ng-if="d.type==='claymore-eth'">dagger: {{d['eth-rejected']}}<span ng-if="d['alt-hashrate']!=='0'"><br />alt: {{d['alt-rejected']}}</span></td>
           <td ng-if="d.type==='claymore-zec'">{{d['zec-rejected']}}</td>
           <td ng-if="d.type==='other'||d.type==='nheqminer'">-</td>
 
