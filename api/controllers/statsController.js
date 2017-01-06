@@ -149,7 +149,7 @@ function init() {
   interval=setInterval(getAllMinerStats,configModule.config.interval);
 }
 
-setTimeout(init, 1000);
+setTimeout(init, 5000);
 
 exports.getStats = getStats;
 exports.restartInterval = restartInterval;
