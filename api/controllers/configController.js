@@ -17,9 +17,9 @@ function getConfig(req, res, next) {
   res.send(JSON.stringify(configModule.getConfig()));
 }
 function setConfig(req, res, next) {
-  var prev=JSON.parse(JSON.stringify(configModule.config.statsEnabled));
+  var prev=JSON.parse(JSON.stringify(configModule.config.interval));
   configModule.setConfig(req.body);
-  if (prev!==req.body.statsEnabled)
+  if (prev!==req.body.interval)
     statsController.restartInterval();
   configModule.saveConfig();
   res.setHeader('Content-Type', 'application/json');
