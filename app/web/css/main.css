@@ -1,0 +1,79 @@
+html {
+    text-align: center;
+    position: relative;
+    min-height: 100%;
+    font-size:x-small;
+}
+
+body {
+    /* Margin bottom by footer height */
+    margin-bottom: 2em;
+}
+
+/* Index / Shorten wide values in tables and show them on hover */
+.ellipsis{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 80px;
+}
+.ellipsis:hover{
+    overflow: visible;
+    max-width:none;
+    width:auto;
+    background-color: #fff!important;
+}
+
+.container {
+    text-align: center;
+    word-wrap: break-word;
+    position: relative;
+}
+
+.mycontainer {
+    width: 96%;
+    margin: 0 auto;
+}
+
+
+th {
+    text-align: center;
+}
+
+ul {
+    display: inline-block;
+    text-align: left;
+}
+
+ul.centered {
+    text-align: center;
+}
+
+ul.dotted {
+    padding-left: 8px;
+    display:list-item;
+}
+ul.dotted li {
+    list-style-type: circle;
+}
+
+.childLeft {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 8px;
+    margin-left: 8px;
+}
+
+.footer {
+    bottom: 0;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    height: 2em;
+}
+
+.highlight {
+    background-color: lightgreen;
+    transition: background 500ms;
+}

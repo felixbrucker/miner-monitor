@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/html" ng-app="app">
+<head lang="en">
+  <meta charset="utf-8">
+  <title update-title></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="stylesheet" href="web/css/font-awesome.min.css">
+  <link rel="stylesheet" href="web/css/bootstrap.min.css">
+  <link rel='stylesheet' href='web/css/loading-bar.min.css' type='text/css' media='all'/>
+  <link rel="stylesheet" href="web/css/main.css">
+  <base href="/">
+</head>
+<body>
+  <header>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand">Miner-Monitor</a>
+        </div>
+        <div class="collapse navbar-collapse" id="navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li ui-sref-active="active"><a ui-sref="stats">Stats</a></li>
+            <li ui-sref-active="active"><a ui-sref="generalConfig">General Config</a></li>
+            <li ui-sref-active="active"><a ui-sref="deviceConfig">Device Config</a></li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div>
+    </nav>
+  </header>
+  <main>
+    <div class="mycontainer">
+      <div ui-view></div>
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="container">
+      <span class="copyright">created by Felix Brucker</span>
+    </div>
+  </footer>
+  <script src="web/js/jquery.min.js"></script>
+  <script src="web/js/bootstrap.min.js"></script>
+  <script src="web/js/angular.min.js"></script>
+  <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>-->
+  <script src="web/js/angular-ui-router.min.js"></script>
+  <script src='web/js/loading-bar.min.js'></script>
+  <script src="web/js/app/app.js"></script>
+  <script src="web/js/app/controllers/statsCtrl.js"></script>
+  <script src="web/js/app/controllers/configCtrl.js"></script>
+</body>
+</html>
