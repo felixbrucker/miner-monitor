@@ -24,7 +24,7 @@
           <td colspan="100%"></td>
         </tr>
         <tr ng-if="(entry.type==='miner-agent') && (entry.entries | isEmpty)">
-          <td class="table-danger">{{entry.name}}</td>
+          <td class="danger">{{entry.name}}</td>
           <td>-</td>
           <td>-</td>
           <td>-</td>
@@ -40,7 +40,7 @@
           <td>-</td>
         </tr>
         <tr ng-if="(entry.type==='baikal-miner') && (entry.devs | isEmpty)">
-          <td class="table-danger">{{entry.name}}</td>
+          <td class="danger">{{entry.name}}</td>
           <td>-</td>
           <td>-</td>
           <td>-</td>
@@ -57,7 +57,7 @@
         </tr>
         <tr ng-if="entry.type==='miner-agent'" ng-repeat="d in entry.entries track by $index">
 
-          <td class="table-success">{{entry.name}}</td>
+          <td class="success">{{entry.name}}</td>
 
           <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'">{{d.miner}}</td>
           <td ng-if="d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-cryptonight'">{{d.type}} {{d.version}}</td>
@@ -117,7 +117,7 @@
         
         <tr ng-if="entry.type==='baikal-miner'" ng-repeat="d in entry.devs track by $index">
 
-          <td class="table-success">{{entry.name}}</td>
+          <td class="success">{{entry.name}}</td>
 
           <td>baikal-miner</td>
 
