@@ -73,9 +73,26 @@ function getMinerStats(device) {
                 stats.entries[device.id]=parsed;
                 break;
             }
+          }else{
+            switch(device.type){
+              case "baikal-miner":
+                stats.entries[device.id]={type:device.type,name:device.name,devs:{}};
+                break;
+              case "miner-agent":
+                stats.entries[device.id]={type:device.type,name:device.name,entries:{}};
+                break;
+            }
           }
         });
       }).on("error", function(error) {
+        switch(device.type){
+          case "baikal-miner":
+            stats.entries[device.id]={type:device.type,name:device.name,devs:{}};
+            break;
+          case "miner-agent":
+            stats.entries[device.id]={type:device.type,name:device.name,entries:{}};
+            break;
+        }
         console.log(colors.red("["+device.name+"] Error: Unable to get stats data"));
         console.log(error);
       });
@@ -120,9 +137,26 @@ function getMinerStats(device) {
                 stats.entries[device.id]=parsed;
                 break;
             }
+          }else{
+            switch(device.type){
+              case "baikal-miner":
+                stats.entries[device.id]={type:device.type,name:device.name,devs:{}};
+                break;
+              case "miner-agent":
+                stats.entries[device.id]={type:device.type,name:device.name,entries:{}};
+                break;
+            }
           }
         });
       }).on("error", function(error) {
+        switch(device.type){
+          case "baikal-miner":
+            stats.entries[device.id]={type:device.type,name:device.name,devs:{}};
+            break;
+          case "miner-agent":
+            stats.entries[device.id]={type:device.type,name:device.name,entries:{}};
+            break;
+        }
         console.log(colors.red("["+device.name+"] Error: Unable to get stats data"));
         console.log(error);
       });
