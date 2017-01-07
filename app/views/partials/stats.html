@@ -39,6 +39,22 @@
           <td>-</td>
           <td>-</td>
         </tr>
+        <tr ng-if="(entry.type==='baikal-miner') && (entry.devs | isEmpty)">
+          <td>{{entry.name}}</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+          <td>-</td>
+        </tr>
         <tr ng-if="entry.type==='miner-agent'" ng-repeat="d in entry.entries track by $index">
 
           <td>{{entry.name}}</td>
@@ -98,6 +114,7 @@
           <td ng-if="d.type==='other'||d.type==='nheqminer'">-</td>
 
         </tr>
+        
         <tr ng-if="entry.type==='baikal-miner'" ng-repeat="d in entry.devs track by $index">
 
           <td>{{entry.name}}</td>
