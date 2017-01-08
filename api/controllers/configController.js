@@ -17,6 +17,7 @@ function getConfig(req, res, next) {
   res.send(JSON.stringify(configModule.getConfig()));
 }
 function setConfig(req, res, next) {
+  statsController.cleanup();
   var prev=JSON.parse(JSON.stringify(configModule.config.interval));
   configModule.setConfig(req.body);
   if (prev!==req.body.interval)

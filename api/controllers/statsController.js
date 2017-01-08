@@ -236,7 +236,12 @@ function getAllMinerStats(){
       }
     }
   }
+}
 
+function cleanup(){
+  Object.keys(stats.entries).forEach(function(key) {
+    stats.entries[key]=null;
+  });
 }
 
 function restartInterval(){
@@ -253,3 +258,4 @@ setTimeout(init, 2000);
 
 exports.getStats = getStats;
 exports.restartInterval = restartInterval;
+exports.cleanup = cleanup;
