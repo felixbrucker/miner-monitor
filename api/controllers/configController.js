@@ -46,4 +46,3 @@ init();
 exports.getConfig = getConfig;
 exports.setConfig = setConfig;
 exports.update = update;
-

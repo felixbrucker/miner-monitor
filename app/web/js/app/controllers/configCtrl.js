@@ -15,12 +15,13 @@
     .module('app')
     .controller('configCtrl', configController);
 
-  function configController($scope, $interval, $http) {
+  function configController($scope, $interval, $http, $filter) {
 
     var vm = this;
     vm.config = {
       types: [],
       devices: [],
+      groups:[],
       interval: null
     };
     vm.waiting = null;
@@ -31,7 +32,14 @@
       enabled: true,
       name: "",
       type: "",
-      hostname: ""
+      hostname: "",
+      group:""
+    };
+
+    vm.newGroup = {
+      id: null,
+      enabled: true,
+      name: ""
     };
 
 
@@ -43,6 +51,8 @@
     vm.update = update;
     vm.addDevice = addDevice;
     vm.delDevice = delDevice;
+    vm.addGroup=addGroup;
+    vm.delGroup=delGroup;
 
 
     /**
@@ -76,7 +86,8 @@
           enabled: true,
           name: "",
           type: "",
-          hostname: ""
+          hostname: "",
+          group:""
         };
         vm.setConfig();
       } else {
@@ -98,7 +109,41 @@
       vm.setConfig();
     }
 
+    /**
+     * @name addGroup
+     * @desc add new group to array
+     * @memberOf configCtrl
+     */
+    function addGroup() {
+      if (vm.newGroup.name!==""&&vm.newGroup.name!==null){
+        //gen unique id
+        vm.newGroup.id=Date.now();
+        //add to array
+        vm.config.groups.push(JSON.parse(JSON.stringify(vm.newGroup)));
+        //clear variables
+        vm.newGroup={
+          id:null,
+          enabled:true,
+          name:""
+        };
+        vm.setConfig();
+      }
+    }
 
+
+    /**
+     * @name delGroup
+     * @desc delete group from array
+     * @memberOf configCtrl
+     */
+    function delGroup(id) {
+      vm.config.groups.forEach(function (entry,index,array) {
+        if (entry.id===id){
+          vm.config.groups.splice(index,1);
+        }
+      });
+      vm.setConfig();
+    }
 
 
     /**
@@ -113,7 +158,10 @@
       }).then(function successCallback(response) {
         vm.config.types = response.data.types;
         vm.config.devices = response.data.devices;
+        vm.config.groups = response.data.groups;
         vm.config.interval = response.data.interval;
+        vm.config.devices = $filter('orderBy')(vm.config.devices, 'name');
+        vm.config.groups = $filter('orderBy')(vm.config.groups, 'name');
       }, function errorCallback(response) {
         console.log(response);
       });

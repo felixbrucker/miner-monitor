@@ -64,22 +64,42 @@ function getMinerStats(device) {
                 if (parsed.status!==false){
                   parsed.status.type=device.type;
                   parsed.status.name=device.name;
-                  stats.entries[device.id]=parsed.status;
+                  if(stats.entries[device.group]!==undefined&&stats.entries[device.group]!==null)
+                    stats.entries[device.group][device.id]=parsed.status;
+                  else{
+                    stats.entries[device.group]={};
+                    stats.entries[device.group][device.id]=parsed.status;
+                  }
                 }
                 break;
               case "miner-agent":
                 parsed.type=device.type;
                 parsed.name=device.name;
-                stats.entries[device.id]=parsed;
+                if(stats.entries[device.group]!==undefined&&stats.entries[device.group]!==null)
+                  stats.entries[device.group][device.id]=parsed;
+                else{
+                  stats.entries[device.group]={};
+                  stats.entries[device.group][device.id]=parsed;
+                }
                 break;
             }
           }else{
             switch(device.type){
               case "baikal-miner":
-                stats.entries[device.id]={type:device.type,name:device.name,devs:{}};
+                if(stats.entries[device.group]!==undefined&&stats.entries[device.group]!==null)
+                  stats.entries[device.group][device.id]={type:device.type,name:device.name,devs:{}};
+                else{
+                  stats.entries[device.group]={};
+                  stats.entries[device.group][device.id]={type:device.type,name:device.name,devs:{}};
+                }
                 break;
               case "miner-agent":
-                stats.entries[device.id]={type:device.type,name:device.name,entries:{}};
+                if(stats.entries[device.group]!==undefined&&stats.entries[device.group]!==null)
+                  stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:{}};
+                else{
+                  stats.entries[device.group]={};
+                  stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:{}};
+                }
                 break;
             }
           }
@@ -87,10 +107,20 @@ function getMinerStats(device) {
       }).on("error", function(error) {
         switch(device.type){
           case "baikal-miner":
-            stats.entries[device.id]={type:device.type,name:device.name,devs:{}};
+            if(stats.entries[device.group]!==undefined&&stats.entries[device.group]!==null)
+              stats.entries[device.group][device.id]={type:device.type,name:device.name,devs:{}};
+            else{
+              stats.entries[device.group]={};
+              stats.entries[device.group][device.id]={type:device.type,name:device.name,devs:{}};
+            }
             break;
           case "miner-agent":
-            stats.entries[device.id]={type:device.type,name:device.name,entries:{}};
+            if(stats.entries[device.group]!==undefined&&stats.entries[device.group]!==null)
+              stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:{}};
+            else{
+              stats.entries[device.group]={};
+              stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:{}};
+            }
             break;
         }
         console.log(colors.red("["+device.name+"] Error: Unable to get stats data"));
@@ -128,22 +158,42 @@ function getMinerStats(device) {
                 if (parsed.status!==false){
                   parsed.status.type=device.type;
                   parsed.status.name=device.name;
-                  stats.entries[device.id]=parsed.status;
+                  if(stats.entries[device.group]!==undefined&&stats.entries[device.group]!==null)
+                    stats.entries[device.group][device.id]=parsed.status;
+                  else{
+                    stats.entries[device.group]={};
+                    stats.entries[device.group][device.id]=parsed.status;
+                  }
                 }
                 break;
               case "miner-agent":
                 parsed.type=device.type;
                 parsed.name=device.name;
-                stats.entries[device.id]=parsed;
+                if(stats.entries[device.group]!==undefined&&stats.entries[device.group]!==null)
+                  stats.entries[device.group][device.id]=parsed;
+                else{
+                  stats.entries[device.group]={};
+                  stats.entries[device.group][device.id]=parsed;
+                }
                 break;
             }
           }else{
             switch(device.type){
               case "baikal-miner":
-                stats.entries[device.id]={type:device.type,name:device.name,devs:{}};
+                if(stats.entries[device.group]!==undefined&&stats.entries[device.group]!==null)
+                  stats.entries[device.group][device.id]={type:device.type,name:device.name,devs:{}};
+                else{
+                  stats.entries[device.group]={};
+                  stats.entries[device.group][device.id]={type:device.type,name:device.name,devs:{}};
+                }
                 break;
               case "miner-agent":
-                stats.entries[device.id]={type:device.type,name:device.name,entries:{}};
+                if(stats.entries[device.group]!==undefined&&stats.entries[device.group]!==null)
+                  stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:{}};
+                else{
+                  stats.entries[device.group]={};
+                  stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:{}};
+                }
                 break;
             }
           }
@@ -151,10 +201,20 @@ function getMinerStats(device) {
       }).on("error", function(error) {
         switch(device.type){
           case "baikal-miner":
-            stats.entries[device.id]={type:device.type,name:device.name,devs:{}};
+            if(stats.entries[device.group]!==undefined&&stats.entries[device.group]!==null)
+              stats.entries[device.group][device.id]={type:device.type,name:device.name,devs:{}};
+            else{
+              stats.entries[device.group]={};
+              stats.entries[device.group][device.id]={type:device.type,name:device.name,devs:{}};
+            }
             break;
           case "miner-agent":
-            stats.entries[device.id]={type:device.type,name:device.name,entries:{}};
+            if(stats.entries[device.group]!==undefined&&stats.entries[device.group]!==null)
+              stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:{}};
+            else{
+              stats.entries[device.group]={};
+              stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:{}};
+            }
             break;
         }
         console.log(colors.red("["+device.name+"] Error: Unable to get stats data"));
@@ -166,11 +226,17 @@ function getMinerStats(device) {
 }
 
 function getAllMinerStats(){
-  for(var i=0;i<configModule.config.devices.length;i++){
-    var device=configModule.config.devices[i];
-    if(device.enabled)
-      getMinerStats(JSON.parse(JSON.stringify(device)));
+  for(var i=0;i<configModule.config.groups.length;i++){
+    var group=configModule.config.groups[i];
+    if(group.enabled){
+      for(var j=0;j<configModule.config.devices.length;j++){
+        var device=configModule.config.devices[j];
+        if(device.enabled&&device.group===group.name)
+          getMinerStats(JSON.parse(JSON.stringify(device)));
+      }
+    }
   }
+
 }
 
 function restartInterval(){
@@ -183,7 +249,7 @@ function init() {
   interval=setInterval(getAllMinerStats,configModule.config.interval*1000);
 }
 
-setTimeout(init, 1000);
+setTimeout(init, 2000);
 
 exports.getStats = getStats;
 exports.restartInterval = restartInterval;

@@ -11,7 +11,8 @@ if (!fs.existsSync("data")){
 var config = module.exports = {
   config: {
     interval:null,
-    devices:[]
+    devices:[],
+    groups:[]
   },
   configNonPersistent:{
     types:[
@@ -42,6 +43,8 @@ var config = module.exports = {
         fs.readFile(configPath, 'utf8', function (err, data) {
           if (err) throw err;
           config.config = JSON.parse(data);
+          if(config.config.groups===undefined)
+            config.config.groups=[];
         });
       } else if (err.code == 'ENOENT') {
         //default conf

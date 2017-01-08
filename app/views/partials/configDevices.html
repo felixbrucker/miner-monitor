@@ -1,5 +1,10 @@
 <form name="config">
   <div class="row" style="margin-bottom: 10px;">
+    <div class="col-md-12" style="margin-bottom: 10px;">
+      <span style="font-size:120%;">Devices:</span>
+    </div>
+  </div>
+  <div class="row" style="margin-bottom: 10px;">
     <div class="col-md-12">
       <table class='table table-borderless table-condensed'>
         <tr>
@@ -7,13 +12,15 @@
           <th>name</th>
           <th>type</th>
           <th>hostname</th>
+          <th>group</th>
           <th>action</th>
         </tr>
-        <tr ng-repeat="entry in configVm.config.devices | orderBy:'name' track by $index">
+        <tr ng-repeat="entry in configVm.config.devices track by $index">
           <td><input type="checkbox" ng-model="entry.enabled" ng-click="configVm.setConfig()"></td>
           <td><input type="text" name="{{entry.name}}" ng-model="entry.name" placeholder="name" size="26" required></td>
           <td><select name="typeSelect-{{entry.name}}" ng-options="type for type in configVm.config.types" ng-model="entry.type" required></select></td>
           <td><input type="text" name="{{entry.hostname}}" ng-model="entry.hostname" placeholder="http://192.168.0.101:80" size="26" required></td>
+          <td><select name="groupSelect-{{entry.id}}" ng-options="group.name as group.name for group in configVm.config.groups" ng-model="entry.group" required></select></td>
           <td><button type="button" class="btn btn-warning" ng-click="configVm.delDevice(entry.id)">remove Device</button></td>
         </tr>
         <tr style="border-top: 1px solid lightgrey;">
@@ -21,7 +28,34 @@
           <td><input type="text" name="newDeviceName" ng-model="configVm.newDevice.name" placeholder="name" size="26"></td>
           <td><select name="typeSelect-newDevice" ng-options="type for type in configVm.config.types" ng-model="configVm.newDevice.type"></select></td>
           <td><input type="text" name="{{configVm.newDevice.hostname}}" ng-model="configVm.newDevice.hostname" placeholder="http://192.168.0.101:80" size="26"></td>
+          <td><select name="groupSelect-newDevice" ng-options="group.name as group.name for group in configVm.config.groups" ng-model="configVm.newDevice.group"></select></td>
           <td><button type="button" class="btn btn-success" ng-click="configVm.addDevice()">add Device</button></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="row" style="margin-bottom: 10px;">
+    <div class="col-md-12" style="margin-bottom: 10px;">
+      <span style="font-size:120%;">Groups:</span>
+    </div>
+  </div>
+  <div class="row" style="margin-bottom: 10px;">
+    <div class="col-md-12">
+      <table class='table table-borderless table-condensed'>
+        <tr>
+          <th>enabled</th>
+          <th>name</th>
+          <th>action</th>
+        </tr>
+        <tr ng-repeat="entry in configVm.config.groups track by $index">
+          <td><input type="checkbox" ng-model="entry.enabled" ng-click="configVm.setConfig()"></td>
+          <td><input type="text" name="{{entry.name}}" ng-model="entry.name" placeholder="name" size="26" required></td>
+          <td><button type="button" class="btn btn-warning" ng-click="configVm.delGroup(entry.id)">remove Group</button></td>
+        </tr>
+        <tr style="border-top: 1px solid lightgrey;">
+          <td><input type="checkbox" ng-model="configVm.newGroup.enabled"></td>
+          <td><input type="text" name="newGroupName" ng-model="configVm.newGroup.name" placeholder="name" size="26"></td>
+          <td><button type="button" class="btn btn-success" ng-click="configVm.addGroup()">add Group</button></td>
         </tr>
       </table>
     </div>
