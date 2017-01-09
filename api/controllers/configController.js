@@ -12,6 +12,11 @@ Array.prototype.contains = function (element) {
   return this.indexOf(element) > -1;
 };
 
+function getLayout(req, res, next){
+  res.setHeader('Content-Type', 'application/json');
+  res.send(JSON.stringify(configModule.getConfig().layout));
+}
+
 function getConfig(req, res, next) {
   res.setHeader('Content-Type', 'application/json');
   res.send(JSON.stringify(configModule.getConfig()));
@@ -47,3 +52,4 @@ init();
 exports.getConfig = getConfig;
 exports.setConfig = setConfig;
 exports.update = update;
+exports.getLayout = getLayout;

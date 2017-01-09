@@ -22,11 +22,13 @@
     vm.current = {
       entries:null
     };
+    vm.layout="";
 
 
     // controller API
     vm.init = init;
     vm.getStats = getStats;
+    vm.getLayout = getLayout;
 
 
     /**
@@ -36,6 +38,7 @@
      */
     function init() {
       angular.element(document).ready(function () {
+        vm.getLayout();
         vm.getStats();
         vm.statsInterval = $interval(vm.getStats, 2000);
       });
@@ -52,6 +55,22 @@
         url: 'api/mining/stats'
       }).then(function successCallback(response) {
         vm.current.entries = response.data.entries;
+      }, function errorCallback(response) {
+        console.log(response);
+      });
+    }
+
+    /**
+     * @name getStats
+     * @desc get the stats
+     * @memberOf statsCtrl
+     */
+    function getLayout() {
+      $http({
+        method: 'GET',
+        url: 'api/config/layout'
+      }).then(function successCallback(response) {
+        vm.layout = response.data;
       }, function errorCallback(response) {
         console.log(response);
       });

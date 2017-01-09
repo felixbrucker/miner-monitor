@@ -12,21 +12,25 @@ var config = module.exports = {
   config: {
     interval:null,
     devices:[],
-    groups:[]
+    groups:[],
+    layout:null
   },
   configNonPersistent:{
     types:[
       "baikal-miner",
       "miner-agent"
-    ]
+    ],
+    layouts:["small","large"]
   },
   getConfig: function () {
     var obj=config.config;
     obj.types=config.configNonPersistent.types;
+    obj.layouts=config.configNonPersistent.layouts;
     return obj;
   },
   setConfig: function (newConfig) {
     delete newConfig.types;
+    delete newConfig.layouts;
     config.config = newConfig;
   },
   saveConfig: function () {
@@ -45,6 +49,8 @@ var config = module.exports = {
           config.config = JSON.parse(data);
           if(config.config.groups===undefined)
             config.config.groups=[];
+          if(config.config.layout===undefined)
+            config.config.layout="small";
         });
       } else if (err.code == 'ENOENT') {
         //default conf

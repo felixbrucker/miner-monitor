@@ -10,6 +10,7 @@ module.exports = function(app) {
 
   router.get('/config', configController.getConfig);
   router.post('/config', configController.setConfig);
+  router.get('/config/layout', configController.getLayout);
   router.post('/config/update', configController.update);
 
   router.get('/mining/stats', statsController.getStats);

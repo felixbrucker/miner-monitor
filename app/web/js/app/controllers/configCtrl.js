@@ -22,7 +22,9 @@
       types: [],
       devices: [],
       groups:[],
-      interval: null
+      interval: null,
+      layout:null,
+      layouts:null
     };
     vm.waiting = null;
     vm.updating = null;
@@ -33,7 +35,8 @@
       name: "",
       type: "",
       hostname: "",
-      group:""
+      group:"",
+      ohm:""
     };
 
     vm.newGroup = {
@@ -87,7 +90,8 @@
           name: "",
           type: "",
           hostname: "",
-          group:""
+          group:"",
+          ohm:""
         };
         vm.setConfig();
       } else {
@@ -160,6 +164,8 @@
         vm.config.devices = response.data.devices;
         vm.config.groups = response.data.groups;
         vm.config.interval = response.data.interval;
+        vm.config.layout = response.data.layout;
+        vm.config.layouts = response.data.layouts;
         vm.config.devices = $filter('orderBy')(vm.config.devices, 'name');
         vm.config.groups = $filter('orderBy')(vm.config.groups, 'name');
       }, function errorCallback(response) {
