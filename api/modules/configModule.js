@@ -13,7 +13,8 @@ var config = module.exports = {
     interval:null,
     devices:[],
     groups:[],
-    layout:null
+    layout:null,
+    nicehashAddr:""
   },
   configNonPersistent:{
     types:[
@@ -50,11 +51,15 @@ var config = module.exports = {
           if(config.config.groups===undefined)
             config.config.groups=[];
           if(config.config.layout===undefined)
-            config.config.layout="small";
+            config.config.layout="large";
+          if(config.config.nicehashAddr===undefined)
+            config.config.nicehashAddr="12gotm1HbU1zv9FMnuNfPakpn7rsRjB1no";
         });
       } else if (err.code == 'ENOENT') {
         //default conf
         config.config.interval=10;
+        config.config.layout="large";
+        config.config.nicehashAddr="12gotm1HbU1zv9FMnuNfPakpn7rsRjB1no";
         config.saveConfig();
         setTimeout(function(){
           config.loadConfig();

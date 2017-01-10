@@ -24,7 +24,8 @@
       groups:[],
       interval: null,
       layout:null,
-      layouts:null
+      layouts:null,
+      nicehashAddr:null
     };
     vm.waiting = null;
     vm.updating = null;
@@ -166,6 +167,7 @@
         vm.config.interval = response.data.interval;
         vm.config.layout = response.data.layout;
         vm.config.layouts = response.data.layouts;
+        vm.config.nicehashAddr = response.data.nicehashAddr;
         vm.config.devices = $filter('orderBy')(vm.config.devices, 'name');
         vm.config.groups = $filter('orderBy')(vm.config.groups, 'name');
       }, function errorCallback(response) {

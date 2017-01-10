@@ -20,7 +20,8 @@
     var vm = this;
     vm.statsInterval = null;
     vm.current = {
-      entries:null
+      entries:null,
+      nicehash:null
     };
     vm.layout="";
 
@@ -40,7 +41,7 @@
       angular.element(document).ready(function () {
         vm.getLayout();
         vm.getStats();
-        vm.statsInterval = $interval(vm.getStats, 2000);
+        vm.statsInterval = $interval(vm.getStats, 5000);
       });
     }
 
@@ -55,6 +56,7 @@
         url: 'api/mining/stats'
       }).then(function successCallback(response) {
         vm.current.entries = response.data.entries;
+        vm.current.nicehash = response.data.nicehash;
       }, function errorCallback(response) {
         console.log(response);
       });

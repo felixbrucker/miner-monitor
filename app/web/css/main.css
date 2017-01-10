@@ -36,6 +36,9 @@ body {
     margin: 0 auto;
 }
 
+.leftAlign {
+    text-align:left;
+}
 
 th {
     text-align: center;
@@ -76,4 +79,10 @@ ul.dotted li {
 .highlight {
     background-color: lightgreen;
     transition: background 500ms;
+}
+
+@media screen and (max-width: 760px) {
+    .nomobile {
+        display:none;
+    }
 }

@@ -10,14 +10,21 @@ var colors = require('colors/safe');
 var configModule = require(__basedir + 'api/modules/configModule');
 
 var stats = {
-  entries:{}
+  entries:{},
+  nicehash:{}
 };
 
 var interval=null;
+var nhinterval=null;
 
 function getStats(req, res, next) {
+  var entries=[];
+  Object.keys(stats.entries).forEach(function(key,index) {
+    var arr=Object.keys(stats.entries[key]).map(function (key2) { return stats.entries[key][key2]; });
+    entries.push({name:key,devices:arr});
+  });
   res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify(stats));
+  res.send(JSON.stringify({entries:entries,nicehash:stats.nicehash}));
 }
 
 
@@ -430,6 +437,99 @@ function getOhmStats(device){
   }
 }
 
+function getNicehashStats(addr){
+  var req= https.request({
+    host: 'www.nicehash.com',
+    path: '/api?method=stats.provider.ex&addr='+addr,
+    method: 'GET',
+    port: 443,
+    rejectUnauthorized: false,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8'
+    }
+  }, function (response) {
+    response.setEncoding('utf8');
+    var body = '';
+    response.on('data', function (d) {
+      body += d;
+    });
+    response.on('end', function () {
+      var parsed = null;
+      try{
+        parsed=JSON.parse(body);
+      }catch(error){
+        console.log(colors.red("Error: Unable to get nicehash stats data"));
+      }
+      if (parsed != null){
+        if(parsed.result.error)
+          console.log(colors.red("Error: "+parsed.result.error));
+        var unpaidBalance=0;
+        var profitability=0;
+        var current=parsed.result.current;
+        var payments=parsed.result.payments;
+        for(var i=0;i<current.length;i++){
+          var algo=current[i];
+          if (algo.data['1'] !== '0') {
+            unpaidBalance += parseFloat(algo.data['1']);
+            if (algo.data['0'].a !== undefined) {
+              profitability += parseFloat(algo.data['0'].a) * parseFloat(algo.profitability);
+              getNicehashWorkerStats(addr,algo);
+            }
+          }
+        }
+        // ugly
+        setTimeout(function(){
+          stats.nicehash.sum={profitability:profitability,unpaidBalance:unpaidBalance};
+          stats.nicehash.data={current:current,payments:payments};
+        },5000);
+      }
+    });
+  }).on("error", function(error) {
+    console.log(colors.red("Error: Unable to get nicehash stats data"));
+    console.log(error);
+  });
+  req.end();
+}
+
+function getNicehashWorkerStats(addr,algo){
+  var req= https.request({
+    host: 'www.nicehash.com',
+    path: '/api?method=stats.provider.workers&addr='+addr+'&algo='+algo.algo,
+    method: 'GET',
+    port: 443,
+    rejectUnauthorized: false,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8'
+    }
+  }, function (response) {
+    response.setEncoding('utf8');
+    var body = '';
+    response.on('data', function (d) {
+      body += d;
+    });
+    response.on('end', function () {
+      var parsed = null;
+      try{
+        parsed=JSON.parse(body);
+      }catch(error){
+        console.log(colors.red("Error: Unable to get nicehash worker data"));
+      }
+      if (parsed != null){
+        parsed.result.workers.sort(function(a,b){
+          if(a[0]<b[0]) return -1;
+          if(a[0]>b[0]) return 1;
+          return 0;
+        });
+        algo.worker = parsed.result.workers;
+      }
+    });
+  }).on("error", function(error) {
+    console.log(colors.red("Error: Unable to get nicehash worker data"));
+    console.log(error);
+  });
+  req.end();
+}
+
 function getAllMinerStats(){
   for(var i=0;i<configModule.config.groups.length;i++){
     var group=configModule.config.groups[i];
@@ -447,9 +547,7 @@ function getAllMinerStats(){
 }
 
 function cleanup(){
-  Object.keys(stats.entries).forEach(function(key) {
-    stats.entries[key]=null;
-  });
+  stats.entries={};
 }
 
 function restartInterval(){
@@ -459,7 +557,9 @@ function restartInterval(){
 
 function init() {
   getAllMinerStats();
+  getNicehashStats(configModule.config.nicehashAddr);
   interval=setInterval(getAllMinerStats,configModule.config.interval*1000);
+  nhinterval=setInterval(getNicehashStats,20000,configModule.config.nicehashAddr);
 }
 
 setTimeout(init, 2000);
