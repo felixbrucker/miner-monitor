@@ -29,6 +29,10 @@ body {
     margin: 0 auto;
 }
 
+.centerAlign {
+    text-align:center;
+}
+
 .leftAlign {
     text-align:left;
 }
