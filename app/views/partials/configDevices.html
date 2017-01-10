@@ -32,7 +32,7 @@
           <td><select name="typeSelect-newDevice" ng-options="type for type in configVm.config.types" ng-model="configVm.newDevice.type"></select></td>
           <td><input type="text" name="hostname-newDevice" ng-model="configVm.newDevice.hostname" placeholder="http://192.168.0.101:80" size="26"></td>
           <td ng-if="configVm.newDevice.type==='miner-agent'"><input type="text" name="ohm-NewDevice" ng-model="configVm.newDevice.ohm" placeholder="http://192.168.0.101:8085" size="26"></td>
-          <td ng-if="configVm.newDevic.type==='baikal-miner'"><input type="text" name="ohm-NewDevice" ng-model="configVm.newDevice.ohm" placeholder="http://192.168.0.101:8085" size="26" disabled></td>
+          <td ng-if="configVm.newDevice.type==='baikal-miner'"><input type="text" name="ohm-NewDevice" ng-model="configVm.newDevice.ohm" placeholder="http://192.168.0.101:8085" size="26" disabled></td>
           <td><select name="groupSelect-newDevice" ng-options="group.name as group.name for group in configVm.config.groups" ng-model="configVm.newDevice.group"></select></td>
           <td><button type="button" class="btn btn-success" ng-click="configVm.addDevice()">add Device</button></td>
         </tr>
