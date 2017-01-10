@@ -26,7 +26,7 @@ function getStats(req, res, next) {
     entries.push({name:key,devices:arr});
   });
   res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify({entries:entries,nicehash:stats.nicehash,bitcoinBalances:stats.bitcoinBalances}));
+  res.send(JSON.stringify({entries:entries,nicehash:{addr:configModule.config.nicehashAddr,stats:stats.nicehash},bitcoinBalances:stats.bitcoinBalances}));
 }
 
 

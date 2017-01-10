@@ -483,7 +483,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="(id, data) in statsVm.current.nicehash.data.current track by $index">
+            <tr ng-repeat="(id, data) in statsVm.current.nicehash.stats.data.current track by $index">
               <td ng-if="data.data['1']!=='0'">{{data.name}}</td>
               <td ng-if="data.data['1']!=='0' && data.data['0'].a!==undefined"><span data-highlighter="data.data['0'].a">{{data.data['0'].a}}</span> {{data.suffix}}/s
           <span ng-if="data.worker!==undefined" style="font-size:small;">
@@ -499,10 +499,10 @@
               <td ng-if="data.data['1']!=='0'"><span data-highlighter="data.data['1']">{{data.data['1']|number:8}}</span> BTC</td>
             </tr>
             </tbody>
-            <tr ng-if="statsVm.current.nicehash.sum!==undefined && statsVm.current.nicehash.sum!==null">
+            <tr ng-if="statsVm.current.nicehash.stats.sum!==undefined && statsVm.current.nicehash.stats.sum!==null">
               <td colspan="2" style="font-weight: bold;">Total</td>
-              <td style="font-weight: bold;">{{statsVm.current.nicehash.sum.profitability | number:4}} BTC/Day</td>
-              <td style="font-weight: bold;">{{statsVm.current.nicehash.sum.unpaidBalance | number:8}} BTC</td>
+              <td style="font-weight: bold;">{{statsVm.current.nicehash.stats.sum.profitability | number:4}} BTC/Day</td>
+              <td style="font-weight: bold;">{{statsVm.current.nicehash.stats.sum.unpaidBalance | number:8}} BTC</td>
             </tr>
           </table>
         </div>
@@ -518,7 +518,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="(id, data) in statsVm.current.nicehash.data.payments track by $index">
+            <tr ng-repeat="(id, data) in statsVm.current.nicehash.stats.data.payments track by $index">
               <td>{{data.time * 1000 | date: "yyyy-MM-dd HH:mm"}}</td>
               <td>{{data.amount}} BTC</td>
             </tr>
@@ -543,6 +543,15 @@
           </table>
         </div>
       </div>
-
+      <div class="row">
+        <div class="col-md-12 centerAlign">
+          <a href="https://www.nicehash.com/?p=miners&addr={{statsVm.current.nicehash.addr}}" target="_blank">Nicehash Main</a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 centerAlign">
+          <a href="https://www.nicehash.com/" target="_blank">Nicehash Homepage</a>
+        </div>
+      </div>
     </div>
 </div>
