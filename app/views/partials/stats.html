@@ -1,5 +1,4 @@
-<div class="col-md-12" ng-if="statsVm.layout==='small'">
-  <div style="margin-bottom: 70px;">
+<div class="col-md-12" ng-if="statsVm.layout==='small'" style="margin-bottom: 70px;">
     <div style="margin-bottom: 10px;" ng-repeat="(id,group) in statsVm.current.entries|orderBy:'name'">
       <div class="col-md-12" style="margin-bottom: 10px;">
         <span style="font-size:120%;">{{group.name}}:</span>
@@ -184,11 +183,9 @@
         </tbody>
       </table>
     </div>
-  </div>
 </div>
 
-<div class="col-md-12" ng-if="statsVm.layout==='large'">
-  <div style="margin-bottom: 70px;">
+<div class="col-md-12" ng-if="statsVm.layout==='large'" style="margin-bottom: 70px;">
     <div class="col-md-7">
       <div class="row" ng-repeat="(id,group) in statsVm.current.entries | orderBy:'name'">
         <div class="col-md-12">
@@ -202,24 +199,21 @@
                   <div style="float: left;font-size:120%;">{{entry.name}}</div>
                 </div>
                 <div class="row" ng-if="entry.type==='miner-agent'&&entry.devices">
-                  <div class="col-md-8">
+                  <div class="col-md-7">
                     <table class="table table-bordered table-condensed">
                       <thead>
                       <tr>
-                        <th>type</th>
-                        <th>algo</th>
-                        <th>hr</th>
-                        <th>acc</th>
-                        <th>rej</th>
-                        <th>uptime</th>
+                        <th><span data-toggle="tooltip" title="Miner Type">Type</span></th>
+                        <th><span data-toggle="tooltip" title="Algorithm">Algo</span></th>
+                        <th><span data-toggle="tooltip" title="Hashrate">Hr</span></th>
+                        <th><span data-toggle="tooltip" title="Accepted Shares">Acc</span></th>
+                        <th><span data-toggle="tooltip" title="Rejected Shares">Rej</span></th>
+                        <th><span data-toggle="tooltip" title="Miner Uptime">Uptime</span></th>
                       </tr>
                       </thead>
                       <tbody>
-                      <tr style="border-bottom:1px solid black">
-                        <td colspan="100%"></td>
-                      </tr>
                       <tr ng-if="(entry.type==='miner-agent') && (entry.entries | isEmpty)">
-                        <td>-</td>
+                        <td class="danger">OFFLINE</td>
                         <td>-</td>
                         <td>-</td>
                         <td>-</td>
@@ -227,7 +221,7 @@
                         <td>-</td>
                       </tr>
                       <tr ng-if="(entry.type==='baikal-miner') && (entry.devs | isEmpty)">
-                        <td>-</td>
+                        <td class="danger">OFFLINE</td>
                         <td>-</td>
                         <td>-</td>
                         <td>-</td>
@@ -325,23 +319,20 @@
                     </table>
                   </div>
 
-                  <div class="col-md-4">
+                  <div class="col-md-5">
                     <table class="table table-bordered table-condensed leftAlign">
                       <thead>
                       <tr >
-                        <th class="leftAlign">Dev</th>
-                        <th class="leftAlign">Temp</th>
-                        <th class="leftAlign">Fan</th>
+                        <th>Device</th>
+                        <th><span data-toggle="tooltip" title="Temperature">Temp</span></th>
+                        <th><span data-toggle="tooltip" title="Fanspeed">Fan</span></th>
                       </tr>
                       </thead>
                       <tbody>
-                      <tr style="border-bottom:1px solid black">
-                        <td colspan="100%"></td>
-                      </tr>
                       <tr ng-repeat="(id, data) in entry.devices track by $index">
                         <td>{{data.dev}}</td>
-                        <td>{{data.temp}}</td>
-                        <td>{{data.fan}}</td>
+                        <td ng-class="{danger:data.temp>'80'}">{{data.temp}}</td>
+                        <td ng-class="{danger:data.fan>'80'}">{{data.fan}}</td>
                       </tr>
                       </tbody>
                     </table>
@@ -353,20 +344,17 @@
                     <table class="table table-bordered table-condensed">
                       <thead>
                       <tr>
-                        <th>type</th>
-                        <th>algo</th>
-                        <th>hr</th>
-                        <th>acc</th>
-                        <th>rej</th>
-                        <th>uptime</th>
+                        <th><span data-toggle="tooltip" title="Miner Type">Type</span></th>
+                        <th><span data-toggle="tooltip" title="Algorithm">Algo</span></th>
+                        <th><span data-toggle="tooltip" title="Hashrate">Hr</span></th>
+                        <th><span data-toggle="tooltip" title="Accepted Shares">Acc</span></th>
+                        <th><span data-toggle="tooltip" title="Rejected Shares">Rej</span></th>
+                        <th><span data-toggle="tooltip" title="Miner Uptime">Uptime</span></th>
                       </tr>
                       </thead>
                       <tbody>
-                      <tr style="border-bottom:1px solid black">
-                        <td colspan="100%"></td>
-                      </tr>
                       <tr ng-if="(entry.type==='miner-agent') && (entry.entries | isEmpty)">
-                        <td>-</td>
+                        <td class="danger">OFFLINE</td>
                         <td>-</td>
                         <td>-</td>
                         <td>-</td>
@@ -374,7 +362,7 @@
                         <td>-</td>
                       </tr>
                       <tr ng-if="(entry.type==='baikal-miner') && (entry.devs | isEmpty)">
-                        <td>-</td>
+                        <td class="danger">OFFLINE</td>
                         <td>-</td>
                         <td>-</td>
                         <td>-</td>
@@ -482,42 +470,79 @@
     </div>
 
     <div class="col-md-5">
-      Workers (nicehash:main):<br />
-      <table class="table table-bordered table-condensed leftAlign">
-        <thead>
-        <tr>
-          <th class="leftAlign">Algorithm</th>
-          <th class="leftAlign">Hashrate</th>
-          <th class="leftAlign">Profitability</th>
-          <th class="leftAlign">Unpaid balance</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr style="border-bottom:1px solid black">
-          <td colspan="100%"></td>
-        </tr>
-        <tr ng-repeat="(id, data) in statsVm.current.nicehash.data.current track by $index">
-          <td ng-if="data.data['1']!=='0'">{{data.name}}</td>
-          <td ng-if="data.data['1']!=='0' && data.data['0'].a!==undefined"><span data-highlighter="data.data['0'].a">{{data.data['0'].a}}</span> {{data.suffix}}/s
+      <div class="row">
+        <div class="col-md-12">
+          Workers (nicehash:main):<br />
+          <table class="table table-bordered table-condensed leftAlign">
+            <thead>
+            <tr>
+              <th class="leftAlign">Algorithm</th>
+              <th class="leftAlign">Hashrate</th>
+              <th class="leftAlign">Profitability</th>
+              <th class="leftAlign">Unpaid balance</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="(id, data) in statsVm.current.nicehash.data.current track by $index">
+              <td ng-if="data.data['1']!=='0'">{{data.name}}</td>
+              <td ng-if="data.data['1']!=='0' && data.data['0'].a!==undefined"><span data-highlighter="data.data['0'].a">{{data.data['0'].a}}</span> {{data.suffix}}/s
           <span ng-if="data.worker!==undefined" style="font-size:small;">
               <span ng-repeat="(key, value) in data.worker track by $index">
                   <br/>
                   {{value['0']}}: {{value['1'].a}}<span class="nomobile"> {{data.suffix}}/s (diff: {{value['4']}}, connected: {{value['2']}} min)</span>
               </span>
           </span>
-          </td>
-          <td ng-if="data.data['1']!=='0' && data.data['0'].a==undefined">0.00 {{data.suffix}}/s</td>
-          <td ng-if="data.data['1']!=='0' && data.data['0'].a!==undefined"><span data-highlighter="data.profitability">{{data.profitability * data.data['0'].a | number:4}}</span> BTC/Day</td>
-          <td ng-if="data.data['1']!=='0' && data.data['0'].a==undefined">0.0000 BTC/Day</td>
-          <td ng-if="data.data['1']!=='0'"><span data-highlighter="data.data['1']">{{data.data['1']|number:8}}</span> BTC</td>
-        </tr>
-        </tbody>
-        <tr ng-if="statsVm.current.nicehash.sum!==undefined && statsVm.current.nicehash.sum!==null">
-          <td colspan="2">Total</td>
-          <td>{{statsVm.current.nicehash.sum.profitability | number:4}} BTC/Day</td>
-          <td>{{statsVm.current.nicehash.sum.unpaidBalance | number:8}} BTC</td>
-        </tr>
-      </table>
+              </td>
+              <td ng-if="data.data['1']!=='0' && data.data['0'].a==undefined">0.00 {{data.suffix}}/s</td>
+              <td ng-if="data.data['1']!=='0' && data.data['0'].a!==undefined"><span data-highlighter="data.profitability">{{data.profitability * data.data['0'].a | number:4}}</span> BTC/Day</td>
+              <td ng-if="data.data['1']!=='0' && data.data['0'].a==undefined">0.0000 BTC/Day</td>
+              <td ng-if="data.data['1']!=='0'"><span data-highlighter="data.data['1']">{{data.data['1']|number:8}}</span> BTC</td>
+            </tr>
+            </tbody>
+            <tr ng-if="statsVm.current.nicehash.sum!==undefined && statsVm.current.nicehash.sum!==null">
+              <td colspan="2" style="font-weight: bold;">Total</td>
+              <td style="font-weight: bold;">{{statsVm.current.nicehash.sum.profitability | number:4}} BTC/Day</td>
+              <td style="font-weight: bold;">{{statsVm.current.nicehash.sum.unpaidBalance | number:8}} BTC</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          Payments (nicehash:main):<br />
+          <table class="table table-bordered table-condensed leftAlign">
+            <thead>
+            <tr>
+              <th>Date</th>
+              <th>Amount</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="(id, data) in statsVm.current.nicehash.data.payments track by $index">
+              <td>{{data.time * 1000 | date: "yyyy-MM-dd HH:mm"}}</td>
+              <td>{{data.amount}} BTC</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-md-6">
+          Wallet balance:<br />
+          <table class="table table-bordered table-condensed leftAlign">
+            <thead>
+            <tr>
+              <th>Wallet</th>
+              <th>Amount</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="(id, data) in statsVm.current.bitcoinBalances track by $index">
+              <td>{{id}}</td>
+              <td><span data-highlighter="data">{{(data / 100000000) | number:8}}</span> BTC</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
-  </div>
 </div>

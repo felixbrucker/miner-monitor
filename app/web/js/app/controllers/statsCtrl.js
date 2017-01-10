@@ -21,7 +21,8 @@
     vm.statsInterval = null;
     vm.current = {
       entries:null,
-      nicehash:null
+      nicehash:null,
+      bitcoinBalances:null
     };
     vm.layout="";
 
@@ -39,6 +40,7 @@
      */
     function init() {
       angular.element(document).ready(function () {
+        $("body").tooltip({ selector: '[data-toggle=tooltip]' });
         vm.getLayout();
         vm.getStats();
         vm.statsInterval = $interval(vm.getStats, 5000);
@@ -57,6 +59,7 @@
       }).then(function successCallback(response) {
         vm.current.entries = response.data.entries;
         vm.current.nicehash = response.data.nicehash;
+        vm.current.bitcoinBalances=response.data.bitcoinBalances;
       }, function errorCallback(response) {
         console.log(response);
       });

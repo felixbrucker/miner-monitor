@@ -1,8 +1,6 @@
 html {
-    text-align: center;
     position: relative;
     min-height: 100%;
-    font-size:x-small;
 }
 
 body {
@@ -25,11 +23,6 @@ body {
     background-color: #fff!important;
 }
 
-.container {
-    text-align: center;
-    word-wrap: break-word;
-    position: relative;
-}
 
 .mycontainer {
     width: 96%;
@@ -40,33 +33,6 @@ body {
     text-align:left;
 }
 
-th {
-    text-align: center;
-}
-
-ul {
-    display: inline-block;
-    text-align: left;
-}
-
-ul.centered {
-    text-align: center;
-}
-
-ul.dotted {
-    padding-left: 8px;
-    display:list-item;
-}
-ul.dotted li {
-    list-style-type: circle;
-}
-
-.childLeft {
-    display: inline-block;
-    vertical-align: top;
-    margin-right: 8px;
-    margin-left: 8px;
-}
 
 .footer {
     bottom: 0;

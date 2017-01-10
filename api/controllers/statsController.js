@@ -11,11 +11,13 @@ var configModule = require(__basedir + 'api/modules/configModule');
 
 var stats = {
   entries:{},
-  nicehash:{}
+  nicehash:{},
+  bitcoinBalances:{}
 };
 
 var interval=null;
 var nhinterval=null;
+var btcBalanceInterval=null;
 
 function getStats(req, res, next) {
   var entries=[];
@@ -24,7 +26,7 @@ function getStats(req, res, next) {
     entries.push({name:key,devices:arr});
   });
   res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify({entries:entries,nicehash:stats.nicehash}));
+  res.send(JSON.stringify({entries:entries,nicehash:stats.nicehash,bitcoinBalances:stats.bitcoinBalances}));
 }
 
 
@@ -530,6 +532,48 @@ function getNicehashWorkerStats(addr,algo){
   req.end();
 }
 
+function getAllBitcoinbalances(){
+  if(configModule.config.nicehashAddr!==undefined&&configModule.config.nicehashAddr!==null&&configModule.config.nicehashAddr!=="")
+    getBitcoinBalance("Mining",configModule.config.nicehashAddr);
+}
+
+function getBitcoinBalance(name,addr){
+  var req= https.request({
+    host: 'blockchain.info',
+    path: '/address/'+addr+'?format=json&limit=0',
+    method: 'GET',
+    port: 443,
+    rejectUnauthorized: false,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8'
+    }
+  }, function (response) {
+    response.setEncoding('utf8');
+    var body = '';
+    response.on('data', function (d) {
+      body += d;
+    });
+    response.on('end', function () {
+      var parsed = null;
+      try{
+        parsed=JSON.parse(body);
+      }catch(error){
+        console.log(colors.red("Error: Unable to get bitcoin balance data"));
+      }
+      if (parsed != null){
+        if(!parsed['final_balance'])
+          console.log(colors.red("Error: "+parsed));
+        else
+          stats.bitcoinBalances[name]=parsed['final_balance'];
+      }
+    });
+  }).on("error", function(error) {
+    console.log(colors.red("Error: Unable to get bitcoin balance data"));
+    console.log(error);
+  });
+  req.end();
+}
+
 function getAllMinerStats(){
   for(var i=0;i<configModule.config.groups.length;i++){
     var group=configModule.config.groups[i];
@@ -558,8 +602,10 @@ function restartInterval(){
 function init() {
   getAllMinerStats();
   getNicehashStats(configModule.config.nicehashAddr);
+  getAllBitcoinbalances();
   interval=setInterval(getAllMinerStats,configModule.config.interval*1000);
   nhinterval=setInterval(getNicehashStats,20000,configModule.config.nicehashAddr);
+  btcBalanceInterval=setInterval(getAllBitcoinbalances,20000);
 }
 
 setTimeout(init, 2000);
