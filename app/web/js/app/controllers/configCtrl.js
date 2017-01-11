@@ -27,6 +27,12 @@
       layouts:null,
       nicehashAddr:null
     };
+
+    vm.localStorage={
+      layout:null,
+      refreshInterval:null
+    };
+
     vm.waiting = null;
     vm.updating = null;
 
@@ -57,7 +63,34 @@
     vm.delDevice = delDevice;
     vm.addGroup=addGroup;
     vm.delGroup=delGroup;
+    vm.getLocalStorage=getLocalStorage;
+    vm.setLocalStorage=setLocalStorage;
 
+    /**
+     * @name getLocalStorage
+     * @desc get localstorage data
+     * @memberOf configCtrl
+     */
+    function getLocalStorage(){
+      vm.localStorage.layout=localStorage.getItem('layout');
+      vm.localStorage.refreshInterval=parseInt(localStorage.getItem('refreshInterval'));
+    }
+
+    /**
+     * @name setLocalStorage
+     * @desc set localstorage data
+     * @memberOf configCtrl
+     */
+    function setLocalStorage(){
+      if(vm.localStorage.layout!==null)
+        localStorage.setItem('layout', vm.localStorage.layout);
+      else
+        localStorage.removeItem('layout');
+      if(vm.localStorage.refreshInterval!==null)
+        localStorage.setItem('refreshInterval', vm.localStorage.refreshInterval.toString());
+      else
+        localStorage.removeItem('refreshInterval');
+    }
 
     /**
      * @name init
@@ -67,6 +100,7 @@
     function init() {
       angular.element(document).ready(function () {
         vm.getConfig();
+        vm.getLocalStorage();
       });
     }
 

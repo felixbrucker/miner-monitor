@@ -5,16 +5,16 @@
     </div>
   </div>
   <div class="row" style="margin-bottom: 10px;">
-    <div class="col-md-12">
+    <div class="col-md-12 centerAlign">
       <table class='table table-borderless table-condensed'>
         <tr>
-          <th>enabled</th>
-          <th>name</th>
-          <th>type</th>
-          <th>hostname</th>
-          <th><a href="http://openhardwaremonitor.org/" target="_blank">ohm</a> address</th>
-          <th>group</th>
-          <th>action</th>
+          <th class="centerAlign">enabled</th>
+          <th class="centerAlign">name</th>
+          <th class="centerAlign">type</th>
+          <th class="centerAlign">hostname</th>
+          <th class="centerAlign"><a href="http://openhardwaremonitor.org/" target="_blank">ohm</a> address</th>
+          <th class="centerAlign">group</th>
+          <th class="centerAlign">action</th>
         </tr>
         <tr ng-repeat="entry in configVm.config.devices track by $index">
           <td><input type="checkbox" ng-model="entry.enabled" ng-click="configVm.setConfig()"></td>
@@ -45,12 +45,12 @@
     </div>
   </div>
   <div class="row" style="margin-bottom: 10px;">
-    <div class="col-md-12">
+    <div class="col-md-4 col-md-offset-4 centerAlign">
       <table class='table table-borderless table-condensed'>
         <tr>
-          <th>enabled</th>
-          <th>name</th>
-          <th>action</th>
+          <th class="centerAlign">enabled</th>
+          <th class="centerAlign">name</th>
+          <th class="centerAlign">action</th>
         </tr>
         <tr ng-repeat="entry in configVm.config.groups track by $index">
           <td><input type="checkbox" ng-model="entry.enabled" ng-click="configVm.setConfig()"></td>
@@ -69,7 +69,7 @@
 
 
 <div class="row" style="margin-bottom: 10px;">
-  <div class="col-md-12">
+  <div class="col-md-12 centerAlign">
     <button type="button" class="btn btn-success" ng-click="configVm.setConfig()" ng-disabled="config.$invalid">Save
     </button>
     <i ng-show="configVm.waiting" class="fa fa-cog fa-spin fa-lg fa-fw"></i>

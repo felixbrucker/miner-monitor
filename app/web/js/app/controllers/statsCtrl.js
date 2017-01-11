@@ -41,9 +41,20 @@
     function init() {
       angular.element(document).ready(function () {
         $("body").tooltip({ selector: '[data-toggle=tooltip]' });
-        vm.getLayout();
+
+        var layout=localStorage.getItem('layout');
+        if (layout!==null&&layout!==""&&layout!=="NaN")
+          vm.layout = layout;
+        else
+          vm.getLayout();
+
+        var interval=localStorage.getItem('refreshInterval');
+        if (interval!==null&&interval!==""&&interval!=="NaN")
+          vm.statsInterval = $interval(vm.getStats, parseInt(interval)*1000);
+        else
+          vm.statsInterval = $interval(vm.getStats, 5000);
+
         vm.getStats();
-        vm.statsInterval = $interval(vm.getStats, 5000);
       });
     }
 
@@ -75,7 +86,7 @@
         method: 'GET',
         url: 'api/config/layout'
       }).then(function successCallback(response) {
-        vm.layout = response.data;
+          vm.layout = response.data;
       }, function errorCallback(response) {
         console.log(response);
       });
