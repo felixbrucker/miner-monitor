@@ -349,6 +349,7 @@
                         <th><span data-toggle="tooltip" title="Hashrate">Hr</span></th>
                         <th><span data-toggle="tooltip" title="Accepted Shares">Acc</span></th>
                         <th><span data-toggle="tooltip" title="Rejected Shares">Rej</span></th>
+                        <th><span data-toggle="tooltip" title="Temperature">Temp</span></th>
                         <th><span data-toggle="tooltip" title="Miner Uptime">Uptime</span></th>
                       </tr>
                       </thead>
@@ -360,9 +361,11 @@
                         <td>-</td>
                         <td>-</td>
                         <td>-</td>
+                        <td>-</td>
                       </tr>
                       <tr ng-if="(entry.type==='baikal-miner') && (entry.devs | isEmpty)">
                         <td class="danger">OFFLINE</td>
+                        <td>-</td>
                         <td>-</td>
                         <td>-</td>
                         <td>-</td>
@@ -431,6 +434,11 @@
                         </td>
                         <td ng-if="d.type==='other'||d.type==='nheqminer'">-</td>
 
+                        <td ng-if="d.type==='cpuminer-opt'&&d.temperature" ng-class="{danger:d.temperature>70}">{{d.temperature}} °C
+                        </td>
+                        <td ng-if="d.type==='cpuminer-opt'&&!d.temperature">-</td>
+                        <td ng-if="d.type==='other'||d.type==='ccminer'||d.type==='nheqminer'||d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-cryptonight'">-</td>
+
                         <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-cryptonight'">
                           {{d.uptime | secondsToTimeString}}
                         </td>
@@ -451,6 +459,8 @@
                         <td ng-class="{danger:d.Rejected/d.TotalShares>.1}">{{d.Rejected}} [{{d.Rejected/d.TotalShares
                           |number:2}}%]
                         </td>
+
+                        <td ng-class="{danger:d.Temperature>45}">{{d.Temperature}} °C</td>
 
                         <td>{{entry.uptime | secondsToTimeString}}</td>
 
