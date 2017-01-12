@@ -14,7 +14,7 @@ body {
     text-overflow: ellipsis;
     -o-text-overflow: ellipsis;
     white-space: nowrap;
-    max-width: 80px;
+    max-width: 160px;
 }
 .ellipsis:hover{
     overflow: visible;
