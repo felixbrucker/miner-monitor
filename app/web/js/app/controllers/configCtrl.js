@@ -202,7 +202,7 @@
         vm.config.layout = response.data.layout;
         vm.config.layouts = response.data.layouts;
         vm.config.nicehashAddr = response.data.nicehashAddr;
-        vm.config.devices = $filter('orderBy')(vm.config.devices, 'name');
+        vm.config.devices = $filter('orderBy')(vm.config.devices, ['group','name']);
         vm.config.groups = $filter('orderBy')(vm.config.groups, 'name');
       }, function errorCallback(response) {
         console.log(response);
