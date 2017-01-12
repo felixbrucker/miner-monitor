@@ -186,382 +186,375 @@
 </div>
 
 <div class="col-md-12" ng-if="statsVm.layout==='large'" style="margin-bottom: 70px;">
-    <div class="col-md-7">
-      <div class="row" ng-repeat="(id,group) in statsVm.current.entries | orderBy:'name'">
-        <div class="col-md-12">
-          <div class="row">
-            <div style="float: left;font-size:120%;">{{group.name}}</div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <div class="row" ng-repeat="entry in group.devices | toArray | orderBy:'name'">
-                <div class="col-md-12">
-                  <div style="float: left;font-size:120%;"><a href="{{entry.hostname}}" target="_blank">{{entry.name}}</a></div>
-                </div>
-                <div class="row" ng-if="entry.type==='miner-agent'&&entry.devices">
-                  <div class="col-md-7">
-                    <table class="table table-bordered table-condensed">
-                      <thead>
-                      <tr>
-                        <th><span data-toggle="tooltip" title="Miner Type">Type</span></th>
-                        <th><span data-toggle="tooltip" title="Algorithm">Algo</span></th>
-                        <th><span data-toggle="tooltip" title="Hashrate">Hr</span></th>
-                        <th><span data-toggle="tooltip" title="Accepted Shares">Acc</span></th>
-                        <th><span data-toggle="tooltip" title="Rejected Shares">Rej</span></th>
-                        <th><span data-toggle="tooltip" title="Miner Uptime">Uptime</span></th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      <tr ng-if="(entry.type==='miner-agent') && (entry.entries | isEmpty)">
-                        <td class="danger">OFFLINE</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
-                      </tr>
-                      <tr ng-if="(entry.type==='baikal-miner') && (entry.devs | isEmpty)">
-                        <td class="danger">OFFLINE</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
-                      </tr>
-                      <tr ng-if="entry.type==='miner-agent'" ng-repeat="d in entry.entries track by $index">
-
-                        <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'">{{d.miner}}</td>
-                        <td ng-if="d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-cryptonight'">
-                          {{d.type}}
-                          {{d.version}}
-                        </td>
-                        <td ng-if="d.type==='nheqminer'">nheqminer</td>
-                        <td ng-if="d.type==='other'">other</td>
-
-                        <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'">{{d.algorithm}}</td>
-                        <td ng-if="d.type==='claymore-eth'">daggerhashimoto</td>
-                        <td ng-if="d.type==='claymore-zec'">equihash</td>
-                        <td ng-if="d.type==='claymore-cryptonight'">cryptonight</td>
-                        <td ng-if="d.type==='nheqminer'">equihash</td>
-                        <td ng-if="d.type==='other'">other</td>
-
-                        <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'" ng-class="{danger:d.hashrate==0}">
-                          {{d.hashrate
-                          |hashrate}}
-                        </td>
-                        <td ng-if="d.type==='claymore-cryptonight'" ng-class="{danger:d.hashrate/1000==0}">
-                          {{d.hashrate/1000
-                          |hashrate}}
-                        </td>
-                        <td ng-if="d.type==='claymore-eth'" ng-class="{danger:d['eth-hashrate']==0}">{{d['eth-hashrate'] |
-                          hashrate}}<span
-                                  ng-if="d['alt-hashrate']!=='0'"><br/>alt: {{d['alt-hashrate'] | hashrate}}</span></td>
-                        <td ng-if="d.type==='claymore-zec'" ng-class="{danger:d['zec-hashrate']==0}">{{d['zec-hashrate'] |
-                          solutionrate}}
-                        </td>
-                        <td ng-if="d.type==='nheqminer'" ng-class="{danger:d.solutionRate==0}">{{d.solutionRate |
-                          solutionrate}}
-                        </td>
-                        <td ng-if="d.type==='other'">-</td>
-
-                        <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-cryptonight'">
-                          {{d.accepted}}
-                        </td>
-                        <td ng-if="d.type==='claymore-eth'">{{d['eth-accepted']}}<span
-                                ng-if="d['alt-hashrate']!=='0'"><br/>alt: {{d['alt-accepted']}}</span>
-                        </td>
-                        <td ng-if="d.type==='claymore-zec'">{{d['zec-accepted']}}</td>
-                        <td ng-if="d.type==='other'||d.type==='nheqminer'">-</td>
-
-                        <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-cryptonight'"
-                            ng-class="{danger:d.rejected/(d.accepted+d.rejected)>.1}">{{d.rejected}}
-                          [{{d.rejected/(d.accepted+d.rejected)*100|number:2}}%]
-                        </td>
-                        <td ng-if="d.type==='claymore-eth'"
-                            ng-class="{danger:d['eth-rejected']/(d['eth-accepted']+d['eth-rejected'])>.1}">
-                          {{d['eth-rejected']}}
-                          [{{d['eth-rejected']/(d['eth-accepted']+d['eth-rejected'])*100|number:2}}%]<span
-                                ng-if="d['alt-hashrate']!=='0'"><br/>alt: {{d['alt-rejected']}} [{{d['alt-rejected']/(d['alt-accepted']+d['alt-rejected'])*100|number:2}}%]</span>
-                        </td>
-                        <td ng-if="d.type==='claymore-zec'"
-                            ng-class="{danger:d['zec-rejected']/(d['zec-accepted']+d['zec-rejected'])>.1}">
-                          {{d['zec-rejected']}}
-                          [{{d['zec-rejected']/(d['zec-accepted']+d['zec-rejected'])*100|number:2}}%]
-                        </td>
-                        <td ng-if="d.type==='other'||d.type==='nheqminer'">-</td>
-
-                        <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-cryptonight'">
-                          {{d.uptime | secondsToTimeString}}
-                        </td>
-                        <td ng-if="d.type==='other'||d.type==='nheqminer'">-</td>
-
-                      </tr>
-
-                      <tr ng-if="entry.type==='baikal-miner'" ng-repeat="d in entry.devs track by $index">
-
-                        <td>baikal-miner</td>
-
-                        <td>{{d.Algo}}</td>
-
-                        <td ng-class="{danger:d.MHS5s<140}">{{d.MHS5s*1000 |hashrate}}</td>
-
-                        <td>{{d.Accepted}}</td>
-
-                        <td ng-class="{danger:d.Rejected/d.TotalShares>.1}">{{d.Rejected}} [{{d.Rejected/d.TotalShares*100
-                          |number:2}}%]
-                        </td>
-
-                        <td>{{entry.uptime | secondsToTimeString}}</td>
-
-                      </tr>
-
-                      </tbody>
-                    </table>
-                  </div>
-
-                  <div class="col-md-5">
-                    <table class="table table-bordered table-condensed leftAlign">
-                      <thead>
-                      <tr >
-                        <th>Device</th>
-                        <th><span data-toggle="tooltip" title="Temperature">Temp</span></th>
-                        <th><span data-toggle="tooltip" title="Fanspeed">Fan</span></th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      <tr ng-repeat="(id, data) in entry.devices track by $index">
-                        <td>{{data.dev}}</td>
-                        <td ng-class="{danger:data.temp>'80'}">{{data.temp}}</td>
-                        <td ng-class="{danger:data.fan>'80'}">{{data.fan}}</td>
-                      </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-
-                <div class="row" ng-if="entry.type!=='miner-agent'||entry.devices===undefined">
-                  <div class="col-md-12">
-                    <table class="table table-bordered table-condensed">
-                      <thead>
-                      <tr>
-                        <th><span data-toggle="tooltip" title="Miner Type">Type</span></th>
-                        <th><span data-toggle="tooltip" title="Algorithm">Algo</span></th>
-                        <th><span data-toggle="tooltip" title="Hashrate">Hr</span></th>
-                        <th><span data-toggle="tooltip" title="Accepted Shares">Acc</span></th>
-                        <th><span data-toggle="tooltip" title="Rejected Shares">Rej</span></th>
-                        <th><span data-toggle="tooltip" title="Temperature">Temp</span></th>
-                        <th><span data-toggle="tooltip" title="Miner Uptime">Uptime</span></th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      <tr ng-if="(entry.type==='miner-agent') && (entry.entries | isEmpty)">
-                        <td class="danger">OFFLINE</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
-                      </tr>
-                      <tr ng-if="(entry.type==='baikal-miner') && (entry.devs | isEmpty)">
-                        <td class="danger">OFFLINE</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
-                      </tr>
-                      <tr ng-if="entry.type==='miner-agent'" ng-repeat="d in entry.entries track by $index">
-
-                        <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'">{{d.miner}}</td>
-                        <td ng-if="d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-cryptonight'">
-                          {{d.type}}
-                          {{d.version}}
-                        </td>
-                        <td ng-if="d.type==='nheqminer'">nheqminer</td>
-                        <td ng-if="d.type==='other'">other</td>
-
-                        <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'">{{d.algorithm}}</td>
-                        <td ng-if="d.type==='claymore-eth'">daggerhashimoto</td>
-                        <td ng-if="d.type==='claymore-zec'">equihash</td>
-                        <td ng-if="d.type==='claymore-cryptonight'">cryptonight</td>
-                        <td ng-if="d.type==='nheqminer'">equihash</td>
-                        <td ng-if="d.type==='other'">other</td>
-
-                        <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'" ng-class="{danger:d.hashrate==0}">
-                          {{d.hashrate
-                          |hashrate}}
-                        </td>
-                        <td ng-if="d.type==='claymore-cryptonight'" ng-class="{danger:d.hashrate/1000==0}">
-                          {{d.hashrate/1000
-                          |hashrate}}
-                        </td>
-                        <td ng-if="d.type==='claymore-eth'" ng-class="{danger:d['eth-hashrate']==0}">{{d['eth-hashrate'] |
-                          hashrate}}<span
-                                  ng-if="d['alt-hashrate']!=='0'"><br/>alt: {{d['alt-hashrate'] | hashrate}}</span></td>
-                        <td ng-if="d.type==='claymore-zec'" ng-class="{danger:d['zec-hashrate']==0}">{{d['zec-hashrate'] |
-                          solutionrate}}
-                        </td>
-                        <td ng-if="d.type==='nheqminer'" ng-class="{danger:d.solutionRate==0}">{{d.solutionRate |
-                          solutionrate}}
-                        </td>
-                        <td ng-if="d.type==='other'">-</td>
-
-                        <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-cryptonight'">
-                          {{d.accepted}}
-                        </td>
-                        <td ng-if="d.type==='claymore-eth'">{{d['eth-accepted']}}<span
-                                ng-if="d['alt-hashrate']!=='0'"><br/>alt: {{d['alt-accepted']}}</span>
-                        </td>
-                        <td ng-if="d.type==='claymore-zec'">{{d['zec-accepted']}}</td>
-                        <td ng-if="d.type==='other'||d.type==='nheqminer'">-</td>
-
-                        <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-cryptonight'"
-                            ng-class="{danger:d.rejected/(d.accepted+d.rejected)>.1}">{{d.rejected}}
-                          [{{d.rejected/(d.accepted+d.rejected)*100|number:2}}%]
-                        </td>
-                        <td ng-if="d.type==='claymore-eth'"
-                            ng-class="{danger:d['eth-rejected']/(d['eth-accepted']+d['eth-rejected'])>.1}">
-                          {{d['eth-rejected']}}
-                          [{{d['eth-rejected']/(d['eth-accepted']+d['eth-rejected'])*100|number:2}}%]<span
-                                ng-if="d['alt-hashrate']!=='0'"><br/>alt: {{d['alt-rejected']}} [{{d['alt-rejected']/(d['alt-accepted']+d['alt-rejected'])*100|number:2}}%]</span>
-                        </td>
-                        <td ng-if="d.type==='claymore-zec'"
-                            ng-class="{danger:d['zec-rejected']/(d['zec-accepted']+d['zec-rejected'])>.1}">
-                          {{d['zec-rejected']}}
-                          [{{d['zec-rejected']/(d['zec-accepted']+d['zec-rejected'])*100|number:2}}%]
-                        </td>
-                        <td ng-if="d.type==='other'||d.type==='nheqminer'">-</td>
-
-                        <td ng-if="d.type==='cpuminer-opt'&&d.temperature" ng-class="{danger:d.temperature>70}">{{d.temperature}} °C
-                        </td>
-                        <td ng-if="d.type==='cpuminer-opt'&&!d.temperature">-</td>
-                        <td ng-if="d.type==='other'||d.type==='ccminer'||d.type==='nheqminer'||d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-cryptonight'">-</td>
-
-                        <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-cryptonight'">
-                          {{d.uptime | secondsToTimeString}}
-                        </td>
-                        <td ng-if="d.type==='other'||d.type==='nheqminer'">-</td>
-
-                      </tr>
-
-                      <tr ng-if="entry.type==='baikal-miner'" ng-repeat="d in entry.devs track by $index">
-
-                        <td>baikal-miner</td>
-
-                        <td>{{d.Algo}}</td>
-
-                        <td ng-class="{danger:d.MHS5s<140}">{{d.MHS5s*1000 |hashrate}}</td>
-
-                        <td>{{d.Accepted}}</td>
-
-                        <td ng-class="{danger:d.Rejected/d.TotalShares>.1}">{{d.Rejected}} [{{(d.Rejected/d.TotalShares)*100
-                          |number:2}}%]
-                        </td>
-
-                        <td ng-class="{danger:d.Temperature>45}">{{d.Temperature}} °C</td>
-
-                        <td>{{entry.uptime | secondsToTimeString}}</td>
-
-                      </tr>
-
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-
-      </div>
-    </div>
-
-    <div class="col-md-5">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="centerAlign">Workers (nicehash:main):</div>
-          <table class="table table-bordered table-condensed leftAlign">
-            <thead>
-            <tr>
-              <th class="leftAlign">Algorithm</th>
-              <th class="leftAlign">Hashrate</th>
-              <th class="leftAlign">Profitability</th>
-              <th class="leftAlign">Unpaid balance</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="(id, data) in statsVm.current.nicehash.stats.data.current track by $index">
-              <td ng-if="data.data['1']!=='0'">{{data.name}}</td>
-              <td ng-if="data.data['1']!=='0' && data.data['0'].a!==undefined"><span data-highlighter="data.data['0'].a">{{data.data['0'].a}}</span> {{data.suffix}}/s
+  <div style="float:right;" class="col-md-5">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="centerAlign">Workers (nicehash:main):</div>
+        <table class="table table-bordered table-condensed leftAlign">
+          <thead>
+          <tr>
+            <th class="leftAlign">Algorithm</th>
+            <th class="leftAlign">Hashrate</th>
+            <th class="leftAlign">Profitability</th>
+            <th class="leftAlign">Unpaid balance</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="(id, data) in statsVm.current.nicehash.stats.data.current track by $index">
+            <td ng-if="data.data['1']!=='0'">{{data.name}}</td>
+            <td ng-if="data.data['1']!=='0' && data.data['0'].a!==undefined"><span data-highlighter="data.data['0'].a">{{data.data['0'].a}}</span> {{data.suffix}}/s
           <span ng-if="data.worker!==undefined" style="font-size:small;">
               <span ng-repeat="(key, value) in data.worker track by $index">
                   <br/>
                   {{value['0']}}: {{value['1'].a}}<span class="nomobile"> {{data.suffix}}/s (diff: {{value['4'].split('.')[0]}}, connected: {{value['2']}} min)</span>
               </span>
           </span>
+            </td>
+            <td ng-if="data.data['1']!=='0' && data.data['0'].a==undefined">0.00 {{data.suffix}}/s</td>
+            <td ng-if="data.data['1']!=='0' && data.data['0'].a!==undefined"><span data-highlighter="data.profitability">{{data.profitability * data.data['0'].a | number:4}}</span> BTC/Day</td>
+            <td ng-if="data.data['1']!=='0' && data.data['0'].a==undefined">0.0000 BTC/Day</td>
+            <td ng-if="data.data['1']!=='0'"><span data-highlighter="data.data['1']">{{data.data['1']|number:8}}</span> BTC</td>
+          </tr>
+          </tbody>
+          <tr ng-if="statsVm.current.nicehash.stats.sum!==undefined && statsVm.current.nicehash.stats.sum!==null">
+            <td colspan="2" style="font-weight: bold;">Total</td>
+            <td style="font-weight: bold;">{{statsVm.current.nicehash.stats.sum.profitability | number:4}} BTC/Day</td>
+            <td style="font-weight: bold;">{{statsVm.current.nicehash.stats.sum.unpaidBalance | number:8}} BTC</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="centerAlign">Payments (nicehash:main):</div>
+        <table class="table table-bordered table-condensed leftAlign">
+          <thead>
+          <tr>
+            <th>Date</th>
+            <th>Amount</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="(id, data) in statsVm.current.nicehash.stats.data.payments track by $index">
+            <td>{{data.time * 1000 | date: "yyyy-MM-dd HH:mm"}}</td>
+            <td>{{data.amount}} BTC</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-6">
+        <div class="centerAlign">Wallet balance:</div>
+        <table class="table table-bordered table-condensed leftAlign">
+          <thead>
+          <tr>
+            <th>Wallet</th>
+            <th>Amount</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="(id, data) in statsVm.current.bitcoinBalances track by $index">
+            <td>{{id}}</td>
+            <td><span data-highlighter="data">{{(data / 100000000) | number:8}}</span> BTC</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 centerAlign">
+        <a href="https://www.nicehash.com/?p=miners&addr={{statsVm.current.nicehash.addr}}" target="_blank">Nicehash Main</a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 centerAlign">
+        <a href="https://www.nicehash.com/" target="_blank">Nicehash Homepage</a>
+      </div>
+    </div>
+  </div>
+  <div ng-repeat="(id,group) in statsVm.current.entries | orderBy:'name'">
+    <div ng-repeat="entry in group.devices | toArray | orderBy:'name'">
+      <div style="float: left;" class="col-md-7" ng-if="entry.type==='miner-agent'&&entry.devices">
+        <div class="col-md-12">
+          <div style="float: left;font-size:120%;"><a href="{{entry.hostname}}" target="_blank">{{entry.name}}</a></div>
+        </div>
+        <div class="col-md-7">
+          <table class="table table-bordered table-condensed">
+            <thead>
+            <tr>
+              <th><span data-toggle="tooltip" title="Miner Type">Type</span></th>
+              <th><span data-toggle="tooltip" title="Algorithm">Algo</span></th>
+              <th><span data-toggle="tooltip" title="Hashrate">Hr</span></th>
+              <th><span data-toggle="tooltip" title="Accepted Shares">Acc</span></th>
+              <th><span data-toggle="tooltip" title="Rejected Shares">Rej</span></th>
+              <th><span data-toggle="tooltip" title="Miner Uptime">Uptime</span></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-if="(entry.type==='miner-agent') && (entry.entries | isEmpty)">
+              <td class="danger">OFFLINE</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+            </tr>
+            <tr ng-if="(entry.type==='baikal-miner') && (entry.devs | isEmpty)">
+              <td class="danger">OFFLINE</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+            </tr>
+            <tr ng-if="entry.type==='miner-agent'" ng-repeat="d in entry.entries track by $index">
+
+              <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'">{{d.miner}}</td>
+              <td ng-if="d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-cryptonight'">
+                {{d.type}}
+                {{d.version}}
               </td>
-              <td ng-if="data.data['1']!=='0' && data.data['0'].a==undefined">0.00 {{data.suffix}}/s</td>
-              <td ng-if="data.data['1']!=='0' && data.data['0'].a!==undefined"><span data-highlighter="data.profitability">{{data.profitability * data.data['0'].a | number:4}}</span> BTC/Day</td>
-              <td ng-if="data.data['1']!=='0' && data.data['0'].a==undefined">0.0000 BTC/Day</td>
-              <td ng-if="data.data['1']!=='0'"><span data-highlighter="data.data['1']">{{data.data['1']|number:8}}</span> BTC</td>
+              <td ng-if="d.type==='nheqminer'">nheqminer</td>
+              <td ng-if="d.type==='other'">other</td>
+
+              <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'">{{d.algorithm}}</td>
+              <td ng-if="d.type==='claymore-eth'">daggerhashimoto</td>
+              <td ng-if="d.type==='claymore-zec'">equihash</td>
+              <td ng-if="d.type==='claymore-cryptonight'">cryptonight</td>
+              <td ng-if="d.type==='nheqminer'">equihash</td>
+              <td ng-if="d.type==='other'">other</td>
+
+              <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'" ng-class="{danger:d.hashrate==0}">
+                {{d.hashrate
+                |hashrate}}
+              </td>
+              <td ng-if="d.type==='claymore-cryptonight'" ng-class="{danger:d.hashrate/1000==0}">
+                {{d.hashrate/1000
+                |hashrate}}
+              </td>
+              <td ng-if="d.type==='claymore-eth'" ng-class="{danger:d['eth-hashrate']==0}">{{d['eth-hashrate'] |
+                hashrate}}<span
+                        ng-if="d['alt-hashrate']!=='0'"><br/>alt: {{d['alt-hashrate'] | hashrate}}</span></td>
+              <td ng-if="d.type==='claymore-zec'" ng-class="{danger:d['zec-hashrate']==0}">{{d['zec-hashrate'] |
+                solutionrate}}
+              </td>
+              <td ng-if="d.type==='nheqminer'" ng-class="{danger:d.solutionRate==0}">{{d.solutionRate |
+                solutionrate}}
+              </td>
+              <td ng-if="d.type==='other'">-</td>
+
+              <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-cryptonight'">
+                {{d.accepted}}
+              </td>
+              <td ng-if="d.type==='claymore-eth'">{{d['eth-accepted']}}<span
+                      ng-if="d['alt-hashrate']!=='0'"><br/>alt: {{d['alt-accepted']}}</span>
+              </td>
+              <td ng-if="d.type==='claymore-zec'">{{d['zec-accepted']}}</td>
+              <td ng-if="d.type==='other'||d.type==='nheqminer'">-</td>
+
+              <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-cryptonight'"
+                  ng-class="{danger:d.rejected/(d.accepted+d.rejected)>.1}">{{d.rejected}}
+                [{{d.rejected/(d.accepted+d.rejected)*100|number:2}}%]
+              </td>
+              <td ng-if="d.type==='claymore-eth'"
+                  ng-class="{danger:d['eth-rejected']/(d['eth-accepted']+d['eth-rejected'])>.1}">
+                {{d['eth-rejected']}}
+                [{{d['eth-rejected']/(d['eth-accepted']+d['eth-rejected'])*100|number:2}}%]<span
+                      ng-if="d['alt-hashrate']!=='0'"><br/>alt: {{d['alt-rejected']}} [{{d['alt-rejected']/(d['alt-accepted']+d['alt-rejected'])*100|number:2}}%]</span>
+              </td>
+              <td ng-if="d.type==='claymore-zec'"
+                  ng-class="{danger:d['zec-rejected']/(d['zec-accepted']+d['zec-rejected'])>.1}">
+                {{d['zec-rejected']}}
+                [{{d['zec-rejected']/(d['zec-accepted']+d['zec-rejected'])*100|number:2}}%]
+              </td>
+              <td ng-if="d.type==='other'||d.type==='nheqminer'">-</td>
+
+              <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-cryptonight'">
+                {{d.uptime | secondsToTimeString}}
+              </td>
+              <td ng-if="d.type==='other'||d.type==='nheqminer'">-</td>
+
             </tr>
+
+            <tr ng-if="entry.type==='baikal-miner'" ng-repeat="d in entry.devs track by $index">
+
+              <td>baikal-miner</td>
+
+              <td>{{d.Algo}}</td>
+
+              <td ng-class="{danger:d.MHS5s<140}">{{d.MHS5s*1000 |hashrate}}</td>
+
+              <td>{{d.Accepted}}</td>
+
+              <td ng-class="{danger:d.Rejected/d.TotalShares>.1}">{{d.Rejected}} [{{d.Rejected/d.TotalShares*100
+                |number:2}}%]
+              </td>
+
+              <td>{{entry.uptime | secondsToTimeString}}</td>
+
+            </tr>
+
             </tbody>
-            <tr ng-if="statsVm.current.nicehash.stats.sum!==undefined && statsVm.current.nicehash.stats.sum!==null">
-              <td colspan="2" style="font-weight: bold;">Total</td>
-              <td style="font-weight: bold;">{{statsVm.current.nicehash.stats.sum.profitability | number:4}} BTC/Day</td>
-              <td style="font-weight: bold;">{{statsVm.current.nicehash.stats.sum.unpaidBalance | number:8}} BTC</td>
-            </tr>
           </table>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6">
-          <div class="centerAlign">Payments (nicehash:main):</div>
+
+        <div class="col-md-5">
           <table class="table table-bordered table-condensed leftAlign">
             <thead>
-            <tr>
-              <th>Date</th>
-              <th>Amount</th>
+            <tr >
+              <th>Device</th>
+              <th><span data-toggle="tooltip" title="Temperature">Temp</span></th>
+              <th><span data-toggle="tooltip" title="Fanspeed">Fan</span></th>
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="(id, data) in statsVm.current.nicehash.stats.data.payments track by $index">
-              <td>{{data.time * 1000 | date: "yyyy-MM-dd HH:mm"}}</td>
-              <td>{{data.amount}} BTC</td>
+            <tr ng-repeat="(id, data) in entry.devices track by $index">
+              <td>{{data.dev}}</td>
+              <td ng-class="{danger:data.temp>'80'}">{{data.temp}}</td>
+              <td ng-class="{danger:data.fan>'80'}">{{data.fan}}</td>
             </tr>
             </tbody>
           </table>
         </div>
-        <div class="col-md-6">
-          <div class="centerAlign">Wallet balance:</div>
-          <table class="table table-bordered table-condensed leftAlign">
+      </div>
+
+      <div style="float: left;" class="col-md-6" ng-if="entry.type!=='miner-agent'||entry.devices===undefined">
+        <div class="col-md-12">
+          <div style="float: left;font-size:120%;"><a href="{{entry.hostname}}" target="_blank">{{entry.name}}</a></div>
+        </div>
+        <div class="col-md-12">
+          <table class="table table-bordered table-condensed">
             <thead>
             <tr>
-              <th>Wallet</th>
-              <th>Amount</th>
+              <th><span data-toggle="tooltip" title="Miner Type">Type</span></th>
+              <th><span data-toggle="tooltip" title="Algorithm">Algo</span></th>
+              <th><span data-toggle="tooltip" title="Hashrate">Hr</span></th>
+              <th><span data-toggle="tooltip" title="Accepted Shares">Acc</span></th>
+              <th><span data-toggle="tooltip" title="Rejected Shares">Rej</span></th>
+              <th><span data-toggle="tooltip" title="Temperature">Temp</span></th>
+              <th><span data-toggle="tooltip" title="Miner Uptime">Uptime</span></th>
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="(id, data) in statsVm.current.bitcoinBalances track by $index">
-              <td>{{id}}</td>
-              <td><span data-highlighter="data">{{(data / 100000000) | number:8}}</span> BTC</td>
+            <tr ng-if="(entry.type==='miner-agent') && (entry.entries | isEmpty)">
+              <td class="danger">OFFLINE</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
             </tr>
+            <tr ng-if="(entry.type==='baikal-miner') && (entry.devs | isEmpty)">
+              <td class="danger">OFFLINE</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+            </tr>
+            <tr ng-if="entry.type==='miner-agent'" ng-repeat="d in entry.entries track by $index">
+
+              <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'">{{d.miner}}</td>
+              <td ng-if="d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-cryptonight'">
+                {{d.type}}
+                {{d.version}}
+              </td>
+              <td ng-if="d.type==='nheqminer'">nheqminer</td>
+              <td ng-if="d.type==='other'">other</td>
+
+              <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'">{{d.algorithm}}</td>
+              <td ng-if="d.type==='claymore-eth'">daggerhashimoto</td>
+              <td ng-if="d.type==='claymore-zec'">equihash</td>
+              <td ng-if="d.type==='claymore-cryptonight'">cryptonight</td>
+              <td ng-if="d.type==='nheqminer'">equihash</td>
+              <td ng-if="d.type==='other'">other</td>
+
+              <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'" ng-class="{danger:d.hashrate==0}">
+                {{d.hashrate
+                |hashrate}}
+              </td>
+              <td ng-if="d.type==='claymore-cryptonight'" ng-class="{danger:d.hashrate/1000==0}">
+                {{d.hashrate/1000
+                |hashrate}}
+              </td>
+              <td ng-if="d.type==='claymore-eth'" ng-class="{danger:d['eth-hashrate']==0}">{{d['eth-hashrate'] |
+                hashrate}}<span
+                        ng-if="d['alt-hashrate']!=='0'"><br/>alt: {{d['alt-hashrate'] | hashrate}}</span></td>
+              <td ng-if="d.type==='claymore-zec'" ng-class="{danger:d['zec-hashrate']==0}">{{d['zec-hashrate'] |
+                solutionrate}}
+              </td>
+              <td ng-if="d.type==='nheqminer'" ng-class="{danger:d.solutionRate==0}">{{d.solutionRate |
+                solutionrate}}
+              </td>
+              <td ng-if="d.type==='other'">-</td>
+
+              <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-cryptonight'">
+                {{d.accepted}}
+              </td>
+              <td ng-if="d.type==='claymore-eth'">{{d['eth-accepted']}}<span
+                      ng-if="d['alt-hashrate']!=='0'"><br/>alt: {{d['alt-accepted']}}</span>
+              </td>
+              <td ng-if="d.type==='claymore-zec'">{{d['zec-accepted']}}</td>
+              <td ng-if="d.type==='other'||d.type==='nheqminer'">-</td>
+
+              <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-cryptonight'"
+                  ng-class="{danger:d.rejected/(d.accepted+d.rejected)>.1}">{{d.rejected}}
+                [{{d.rejected/(d.accepted+d.rejected)*100|number:2}}%]
+              </td>
+              <td ng-if="d.type==='claymore-eth'"
+                  ng-class="{danger:d['eth-rejected']/(d['eth-accepted']+d['eth-rejected'])>.1}">
+                {{d['eth-rejected']}}
+                [{{d['eth-rejected']/(d['eth-accepted']+d['eth-rejected'])*100|number:2}}%]<span
+                      ng-if="d['alt-hashrate']!=='0'"><br/>alt: {{d['alt-rejected']}} [{{d['alt-rejected']/(d['alt-accepted']+d['alt-rejected'])*100|number:2}}%]</span>
+              </td>
+              <td ng-if="d.type==='claymore-zec'"
+                  ng-class="{danger:d['zec-rejected']/(d['zec-accepted']+d['zec-rejected'])>.1}">
+                {{d['zec-rejected']}}
+                [{{d['zec-rejected']/(d['zec-accepted']+d['zec-rejected'])*100|number:2}}%]
+              </td>
+              <td ng-if="d.type==='other'||d.type==='nheqminer'">-</td>
+
+              <td ng-if="d.type==='cpuminer-opt'&&d.temperature" ng-class="{danger:d.temperature>70}">{{d.temperature}} °C
+              </td>
+              <td ng-if="d.type==='cpuminer-opt'&&!d.temperature">-</td>
+              <td ng-if="d.type==='other'||d.type==='ccminer'||d.type==='nheqminer'||d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-cryptonight'">-</td>
+
+              <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-cryptonight'">
+                {{d.uptime | secondsToTimeString}}
+              </td>
+              <td ng-if="d.type==='other'||d.type==='nheqminer'">-</td>
+
+            </tr>
+
+            <tr ng-if="entry.type==='baikal-miner'" ng-repeat="d in entry.devs track by $index">
+
+              <td>baikal-miner</td>
+
+              <td>{{d.Algo}}</td>
+
+              <td ng-class="{danger:d.MHS5s<140}">{{d.MHS5s*1000 |hashrate}}</td>
+
+              <td>{{d.Accepted}}</td>
+
+              <td ng-class="{danger:d.Rejected/d.TotalShares>.1}">{{d.Rejected}} [{{(d.Rejected/d.TotalShares)*100
+                |number:2}}%]
+              </td>
+
+              <td ng-class="{danger:d.Temperature>45}">{{d.Temperature}} °C</td>
+
+              <td>{{entry.uptime | secondsToTimeString}}</td>
+
+            </tr>
+
             </tbody>
           </table>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12 centerAlign">
-          <a href="https://www.nicehash.com/?p=miners&addr={{statsVm.current.nicehash.addr}}" target="_blank">Nicehash Main</a>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12 centerAlign">
-          <a href="https://www.nicehash.com/" target="_blank">Nicehash Homepage</a>
         </div>
       </div>
     </div>
+    <div class="col-md-7"></div>
+  </div>
 </div>
+
+
+
