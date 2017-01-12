@@ -28,7 +28,7 @@
           <td colspan="100%"></td>
         </tr>
         <tr ng-if="(entry.type==='miner-agent') && (entry.entries | isEmpty)">
-          <td class="danger">{{entry.name}}</td>
+          <td class="danger"><a href="{{entry.hostname}}" target="_blank">{{entry.name}}</a></td>
           <td>-</td>
           <td>-</td>
           <td>-</td>
@@ -43,7 +43,7 @@
           <td>-</td>
         </tr>
         <tr ng-if="(entry.type==='baikal-miner') && (entry.devs | isEmpty)">
-          <td class="danger">{{entry.name}}</td>
+          <td class="danger"><a href="{{entry.hostname}}" target="_blank">{{entry.name}}</a></td>
           <td>-</td>
           <td>-</td>
           <td>-</td>
@@ -59,7 +59,7 @@
         </tr>
         <tr ng-if="entry.type==='miner-agent'" ng-repeat="d in entry.entries track by $index">
 
-          <td class="success">{{entry.name}}</td>
+          <td class="success"><a href="{{entry.hostname}}" target="_blank">{{entry.name}}</a></td>
 
           <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'">{{d.miner}}</td>
           <td ng-if="d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-cryptonight'">{{d.type}}
@@ -151,7 +151,7 @@
 
         <tr ng-if="entry.type==='baikal-miner'" ng-repeat="d in entry.devs track by $index">
 
-          <td class="success">{{entry.name}}</td>
+          <td class="success"><a href="{{entry.hostname}}" target="_blank">{{entry.name}}</a></td>
 
           <td>baikal-miner</td>
 
@@ -196,7 +196,7 @@
             <div class="col-md-12">
               <div class="row" ng-repeat="entry in group.devices | toArray | orderBy:'name'">
                 <div class="col-md-12">
-                  <div style="float: left;font-size:120%;">{{entry.name}}</div>
+                  <div style="float: left;font-size:120%;"><a href="{{entry.hostname}}" target="_blank">{{entry.name}}</a></div>
                 </div>
                 <div class="row" ng-if="entry.type==='miner-agent'&&entry.devices">
                   <div class="col-md-7">

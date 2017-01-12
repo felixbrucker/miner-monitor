@@ -35,6 +35,8 @@
 
     vm.waiting = null;
     vm.updating = null;
+    vm.updatingMiner={};
+    vm.updatingAgent={};
 
     vm.newDevice = {
       id: null,
@@ -65,6 +67,51 @@
     vm.delGroup=delGroup;
     vm.getLocalStorage=getLocalStorage;
     vm.setLocalStorage=setLocalStorage;
+    vm.updateMiner=updateMiner;
+    vm.updateAgent=updateAgent;
+
+
+    /**
+     * @name updateAgent
+     * @desc updates the agent from git
+     * @memberOf configCtrl
+     */
+    function updateAgent(id) {
+      vm.updatingAgent[id]=true;
+      return $http({
+        method: 'POST',
+        url: 'api/config/updateAgent',
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8'
+        },
+        data:{id:id}
+      }).then(function successCallback(response) {
+        setTimeout(function(){vm.updatingAgent[id] = false;},500);
+      }, function errorCallback(response) {
+        console.log(response);
+      });
+    }
+
+    /**
+     * @name updateMiner
+     * @desc updates the miner from git
+     * @memberOf configCtrl
+     */
+    function updateMiner(id) {
+      vm.updatingMiner[id]=true;
+      return $http({
+        method: 'POST',
+        url: 'api/config/updateMiner',
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8'
+        },
+        data:{id:id}
+      }).then(function successCallback(response) {
+        setTimeout(function(){vm.updatingMiner[id] = false;},500);
+      }, function errorCallback(response) {
+        console.log(response);
+      });
+    }
 
     /**
      * @name getLocalStorage

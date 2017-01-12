@@ -73,6 +73,7 @@ function getMinerStats(device) {
                 if (parsed.status!==false){
                   parsed.status.type=device.type;
                   parsed.status.name=device.name;
+                  parsed.status.hostname=device.hostname;
                   if(stats.entries[device.group]!==undefined&&stats.entries[device.group]!==null)
                     stats.entries[device.group][device.id]=parsed.status;
                   else{
@@ -86,13 +87,14 @@ function getMinerStats(device) {
                   if(stats.entries[device.group][device.id]!==undefined&&stats.entries[device.group][device.id]!==null){
                     stats.entries[device.group][device.id].type = device.type;
                     stats.entries[device.group][device.id].name = device.name;
+                    stats.entries[device.group][device.id].hostname = device.hostname;
                     stats.entries[device.group][device.id].entries = parsed.entries;
                   }else{
-                    stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:parsed.entries};
+                    stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:parsed.entries,hostname:device.hostname};
                   }
                 else{
                   stats.entries[device.group]={};
-                  stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:parsed.entries};
+                  stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:parsed.entries,hostname:device.hostname};
                 }
                 break;
             }
@@ -100,10 +102,10 @@ function getMinerStats(device) {
             switch(device.type){
               case "baikal-miner":
                 if(stats.entries[device.group]!==undefined&&stats.entries[device.group]!==null)
-                  stats.entries[device.group][device.id]={type:device.type,name:device.name,devs:{}};
+                  stats.entries[device.group][device.id]={type:device.type,name:device.name,devs:{},hostname:device.hostname};
                 else{
                   stats.entries[device.group]={};
-                  stats.entries[device.group][device.id]={type:device.type,name:device.name,devs:{}};
+                  stats.entries[device.group][device.id]={type:device.type,name:device.name,devs:{},hostname:device.hostname};
                 }
                 break;
               case "miner-agent":
@@ -111,13 +113,14 @@ function getMinerStats(device) {
                   if(stats.entries[device.group][device.id]!==undefined&&stats.entries[device.group][device.id]!==null){
                     stats.entries[device.group][device.id].type = device.type;
                     stats.entries[device.group][device.id].name = device.name;
+                    stats.entries[device.group][device.id].hostname = device.hostname;
                     stats.entries[device.group][device.id].entries = {};
                   }else{
-                    stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:{}};
+                    stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:{},hostname:device.hostname};
                   }
                 else{
                   stats.entries[device.group]={};
-                  stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:{}};
+                  stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:{},hostname:device.hostname};
                 }
                 break;
             }
@@ -127,10 +130,10 @@ function getMinerStats(device) {
         switch(device.type){
           case "baikal-miner":
             if(stats.entries[device.group]!==undefined&&stats.entries[device.group]!==null)
-              stats.entries[device.group][device.id]={type:device.type,name:device.name,devs:{}};
+              stats.entries[device.group][device.id]={type:device.type,name:device.name,devs:{},hostname:device.hostname};
             else{
               stats.entries[device.group]={};
-              stats.entries[device.group][device.id]={type:device.type,name:device.name,devs:{}};
+              stats.entries[device.group][device.id]={type:device.type,name:device.name,devs:{},hostname:device.hostname};
             }
             break;
           case "miner-agent":
@@ -138,13 +141,14 @@ function getMinerStats(device) {
               if(stats.entries[device.group][device.id]!==undefined&&stats.entries[device.group][device.id]!==null){
                 stats.entries[device.group][device.id].type = device.type;
                 stats.entries[device.group][device.id].name = device.name;
+                stats.entries[device.group][device.id].hostname = device.hostname;
                 stats.entries[device.group][device.id].entries = {};
               }else{
-                stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:{}};
+                stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:{},hostname:device.hostname};
               }
             else{
               stats.entries[device.group]={};
-              stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:{}};
+              stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:{},hostname:device.hostname};
             }
             break;
         }
@@ -183,6 +187,7 @@ function getMinerStats(device) {
                 if (parsed.status!==false){
                   parsed.status.type=device.type;
                   parsed.status.name=device.name;
+                  parsed.status.hostname=device.hostname;
                   if(stats.entries[device.group]!==undefined&&stats.entries[device.group]!==null)
                     stats.entries[device.group][device.id]=parsed.status;
                   else{
@@ -196,13 +201,14 @@ function getMinerStats(device) {
                   if(stats.entries[device.group][device.id]!==undefined&&stats.entries[device.group][device.id]!==null){
                     stats.entries[device.group][device.id].type = device.type;
                     stats.entries[device.group][device.id].name = device.name;
+                    stats.entries[device.group][device.id].hostname = device.hostname;
                     stats.entries[device.group][device.id].entries = parsed.entries;
                   }else{
-                    stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:parsed.entries};
+                    stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:parsed.entries,hostname:device.hostname};
                   }
                 else{
                   stats.entries[device.group]={};
-                  stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:parsed.entries};
+                  stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:parsed.entries,hostname:device.hostname};
                 }
                 break;
             }
@@ -210,10 +216,10 @@ function getMinerStats(device) {
             switch(device.type){
               case "baikal-miner":
                 if(stats.entries[device.group]!==undefined&&stats.entries[device.group]!==null)
-                  stats.entries[device.group][device.id]={type:device.type,name:device.name,devs:{}};
+                  stats.entries[device.group][device.id]={type:device.type,name:device.name,devs:{},hostname:device.hostname};
                 else{
                   stats.entries[device.group]={};
-                  stats.entries[device.group][device.id]={type:device.type,name:device.name,devs:{}};
+                  stats.entries[device.group][device.id]={type:device.type,name:device.name,devs:{},hostname:device.hostname};
                 }
                 break;
               case "miner-agent":
@@ -221,13 +227,14 @@ function getMinerStats(device) {
                   if(stats.entries[device.group][device.id]!==undefined&&stats.entries[device.group][device.id]!==null){
                     stats.entries[device.group][device.id].type = device.type;
                     stats.entries[device.group][device.id].name = device.name;
+                    stats.entries[device.group][device.id].hostname = device.hostname;
                     stats.entries[device.group][device.id].entries = {};
                   }else{
-                    stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:{}};
+                    stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:{},hostname:device.hostname};
                   }
                 else{
                   stats.entries[device.group]={};
-                  stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:{}};
+                  stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:{},hostname:device.hostname};
                 }
                 break;
             }
@@ -237,10 +244,10 @@ function getMinerStats(device) {
         switch(device.type){
           case "baikal-miner":
             if(stats.entries[device.group]!==undefined&&stats.entries[device.group]!==null)
-              stats.entries[device.group][device.id]={type:device.type,name:device.name,devs:{}};
+              stats.entries[device.group][device.id]={type:device.type,name:device.name,devs:{},hostname:device.hostname};
             else{
               stats.entries[device.group]={};
-              stats.entries[device.group][device.id]={type:device.type,name:device.name,devs:{}};
+              stats.entries[device.group][device.id]={type:device.type,name:device.name,devs:{},hostname:device.hostname};
             }
             break;
           case "miner-agent":
@@ -248,13 +255,14 @@ function getMinerStats(device) {
               if(stats.entries[device.group][device.id]!==undefined&&stats.entries[device.group][device.id]!==null){
                 stats.entries[device.group][device.id].type = device.type;
                 stats.entries[device.group][device.id].name = device.name;
+                stats.entries[device.group][device.id].hostname = device.hostname;
                 stats.entries[device.group][device.id].entries = {};
               }else{
-                stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:{}};
+                stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:{},hostname:device.hostname};
               }
             else{
               stats.entries[device.group]={};
-              stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:{}};
+              stats.entries[device.group][device.id]={type:device.type,name:device.name,entries:{},hostname:device.hostname};
             }
             break;
         }
@@ -605,7 +613,7 @@ function init() {
   getAllBitcoinbalances();
   interval=setInterval(getAllMinerStats,configModule.config.interval*1000);
   nhinterval=setInterval(getNicehashStats,20000,configModule.config.nicehashAddr);
-  btcBalanceInterval=setInterval(getAllBitcoinbalances,20000);
+  btcBalanceInterval=setInterval(getAllBitcoinbalances,60000);
 }
 
 setTimeout(init, 2000);

@@ -43,6 +43,202 @@ function update(req, res, next) {
   res.send(JSON.stringify({result: true}));
 }
 
+function updateMiner(req, res, next) {
+  var id=req.body.id;
+  for(var j=0;j<configModule.config.devices.length;j++) {
+    var device = configModule.config.devices[j];
+    if (device.id===id){
+      if(device.type!=='baikal-miner'){
+        var arr = device.hostname.split("://");
+        var protocol=arr[0];
+        arr = arr[1].split(":");
+        var path="/api/config/updateMiner";
+        switch(protocol) {
+          case "http":
+            var req = http.request({
+              host: arr[0],
+              path: path,
+              method: 'POST',
+              port: arr[1],
+              headers: {
+                'Content-Type': 'application/json;charset=UTF-8'
+              }
+            }, function (response) {
+              response.setEncoding('utf8');
+              var body = '';
+              response.on('data', function (d) {
+                body += d;
+              });
+              response.on('end', function () {
+                var parsed = null;
+                try {
+                  parsed = JSON.parse(body);
+                } catch (error) {
+                  console.log(colors.red("[" + device.name + "] Error: Unable to update miner"));
+                }
+                if (parsed != null&&parsed.result) {
+                  res.setHeader('Content-Type', 'application/json');
+                  res.send(JSON.stringify({result: true}));
+                }else{
+                  res.setHeader('Content-Type', 'application/json');
+                  res.send(JSON.stringify({result: false}));
+                }
+              });
+            }).on("error", function (error) {
+              console.log(colors.red("[" + device.name + "] Error: Unable to update miner"));
+              console.log(error);
+              res.setHeader('Content-Type', 'application/json');
+              res.send(JSON.stringify({result: false}));
+            });
+            req.end();
+            break;
+          case "https":
+            var req = https.request({
+              host: arr[0],
+              path: path,
+              method: 'POST',
+              port: arr[1],
+              rejectUnauthorized: false,
+              headers: {
+                'Content-Type': 'application/json;charset=UTF-8'
+              }
+            }, function (response) {
+              response.setEncoding('utf8');
+              var body = '';
+              response.on('data', function (d) {
+                body += d;
+              });
+              response.on('end', function () {
+                var parsed = null;
+                try {
+                  parsed = JSON.parse(body);
+                } catch (error) {
+                  console.log(colors.red("[" + device.name + "] Error: Unable to update miner"));
+                }
+                if (parsed != null&&parsed.result) {
+                  res.setHeader('Content-Type', 'application/json');
+                  res.send(JSON.stringify({result: true}));
+                }else{
+                  res.setHeader('Content-Type', 'application/json');
+                  res.send(JSON.stringify({result: false}));
+                }
+              });
+            }).on("error", function (error) {
+              console.log(colors.red("[" + device.name + "] Error: Unable to update miner"));
+              console.log(error);
+              res.setHeader('Content-Type', 'application/json');
+              res.send(JSON.stringify({result: false}));
+            });
+            req.end();
+            break;
+        }
+      }else{
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify({result: false}));
+      }
+      break;
+    }
+  }
+}
+
+function updateAgent(req, res, next) {
+  var id=req.body.id;
+  for(var j=0;j<configModule.config.devices.length;j++) {
+    var device = configModule.config.devices[j];
+    if (device.id===id){
+      if(device.type!=='baikal-miner'){
+        var arr = device.hostname.split("://");
+        var protocol=arr[0];
+        arr = arr[1].split(":");
+        var path="/api/config/update";
+        switch(protocol) {
+          case "http":
+            var req = http.request({
+              host: arr[0],
+              path: path,
+              method: 'POST',
+              port: arr[1],
+              headers: {
+                'Content-Type': 'application/json;charset=UTF-8'
+              }
+            }, function (response) {
+              response.setEncoding('utf8');
+              var body = '';
+              response.on('data', function (d) {
+                body += d;
+              });
+              response.on('end', function () {
+                var parsed = null;
+                try {
+                  parsed = JSON.parse(body);
+                } catch (error) {
+                  console.log(colors.red("[" + device.name + "] Error: Unable to update agent"));
+                }
+                if (parsed != null&&parsed.result) {
+                  res.setHeader('Content-Type', 'application/json');
+                  res.send(JSON.stringify({result: true}));
+                }else{
+                  res.setHeader('Content-Type', 'application/json');
+                  res.send(JSON.stringify({result: false}));
+                }
+              });
+            }).on("error", function (error) {
+              console.log(colors.red("[" + device.name + "] Error: Unable to update agent"));
+              console.log(error);
+              res.setHeader('Content-Type', 'application/json');
+              res.send(JSON.stringify({result: false}));
+            });
+            req.end();
+            break;
+          case "https":
+            var req = https.request({
+              host: arr[0],
+              path: path,
+              method: 'POST',
+              port: arr[1],
+              rejectUnauthorized: false,
+              headers: {
+                'Content-Type': 'application/json;charset=UTF-8'
+              }
+            }, function (response) {
+              response.setEncoding('utf8');
+              var body = '';
+              response.on('data', function (d) {
+                body += d;
+              });
+              response.on('end', function () {
+                var parsed = null;
+                try {
+                  parsed = JSON.parse(body);
+                } catch (error) {
+                  console.log(colors.red("[" + device.name + "] Error: Unable to update agent"));
+                }
+                if (parsed != null&&parsed.result) {
+                  res.setHeader('Content-Type', 'application/json');
+                  res.send(JSON.stringify({result: true}));
+                }else{
+                  res.setHeader('Content-Type', 'application/json');
+                  res.send(JSON.stringify({result: false}));
+                }
+              });
+            }).on("error", function (error) {
+              console.log(colors.red("[" + device.name + "] Error: Unable to update agent"));
+              console.log(error);
+              res.setHeader('Content-Type', 'application/json');
+              res.send(JSON.stringify({result: false}));
+            });
+            req.end();
+            break;
+        }
+      }else{
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify({result: false}));
+      }
+      break;
+    }
+  }
+}
+
 
 function init() {
 }
@@ -53,3 +249,5 @@ exports.getConfig = getConfig;
 exports.setConfig = setConfig;
 exports.update = update;
 exports.getLayout = getLayout;
+exports.updateMiner = updateMiner;
+exports.updateAgent = updateAgent;
