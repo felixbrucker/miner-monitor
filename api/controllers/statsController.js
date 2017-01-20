@@ -653,7 +653,7 @@ function getNicehashStats(addr){
     console.log(error);
   });
   req.on('socket', function (socket) {
-    socket.setTimeout(10000);
+    socket.setTimeout(20000);
     socket.on('timeout', function() {
       req.abort();
     });
@@ -698,7 +698,7 @@ function getNicehashWorkerStats(addr,algo){
     console.log(error);
   });
   req.on('socket', function (socket) {
-    socket.setTimeout(10000);
+    socket.setTimeout(20000);
     socket.on('timeout', function() {
       req.abort();
     });
