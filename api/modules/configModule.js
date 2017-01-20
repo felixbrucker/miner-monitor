@@ -14,7 +14,9 @@ var config = module.exports = {
     devices:[],
     groups:[],
     layout:null,
-    nicehashAddr:""
+    nicehashAddr:"",
+    mailConfig:null,
+    mailTo:null
   },
   configNonPersistent:{
     types:[
@@ -54,10 +56,12 @@ var config = module.exports = {
             config.config.layout="large";
           if(config.config.nicehashAddr===undefined)
             config.config.nicehashAddr="12gotm1HbU1zv9FMnuNfPakpn7rsRjB1no";
+          if(config.config.mailConfig===undefined)
+            config.config.mailConfig=null;
         });
       } else if (err.code == 'ENOENT') {
         //default conf
-        config.config.interval=10;
+        config.config.interval=30;
         config.config.layout="large";
         config.config.nicehashAddr="12gotm1HbU1zv9FMnuNfPakpn7rsRjB1no";
         config.saveConfig();

@@ -8,12 +8,15 @@ var colors = require('colors/safe');
 
 
 var configModule = require(__basedir + 'api/modules/configModule');
+var mailController = require(__basedir + 'api/controllers/mailController');
 
 var stats = {
   entries:{},
   nicehash:{},
   bitcoinBalances:{}
 };
+
+var problemCounter={};
 
 var interval=null;
 var nhinterval=null;
@@ -29,6 +32,123 @@ function getStats(req, res, next) {
   res.send(JSON.stringify({entries:entries,nicehash:{addr:configModule.config.nicehashAddr,stats:stats.nicehash},bitcoinBalances:stats.bitcoinBalances}));
 }
 
+function counterAndSend(problem){
+  if(problemCounter[problem.device.name]===undefined)
+    problemCounter[problem.device.name]={item:{},deviceCounter:0};
+  switch(problem.type){
+    case 'device':
+      if(problem.status==='Problem'){
+        problemCounter[problem.device.name].deviceCounter+=1;
+        if (problemCounter[problem.device.name].deviceCounter===6)
+          mailController.sendMail(problem,function(result){
+            //do something
+          });
+      }else{
+        if (problemCounter[problem.device.name].deviceCounter>=6)
+          mailController.sendMail(problem,function(result){
+            //do something
+          });
+        problemCounter[problem.device.name].deviceCounter=0;
+      }
+
+      break;
+    case 'item':
+      if(problem.status==='Problem') {
+        if (problemCounter[problem.device.name].item[problem.item.name] === undefined)
+          problemCounter[problem.device.name].item[problem.item.name] = {};
+        if (problemCounter[problem.device.name].item[problem.item.name][problem.descriptor] === undefined)
+          problemCounter[problem.device.name].item[problem.item.name][problem.descriptor] = {low: 0, high: 0};
+        problemCounter[problem.device.name].item[problem.item.name][problem.descriptor][problem.item.highLow] += 1;
+        if (problemCounter[problem.device.name].item[problem.item.name][problem.descriptor][problem.item.highLow] === 6)
+          mailController.sendMail(problem, function (result) {
+            // do something
+          });
+      }else{
+        if (problemCounter[problem.device.name].item[problem.item.name] === undefined)
+          problemCounter[problem.device.name].item[problem.item.name] = {};
+        if (problemCounter[problem.device.name].item[problem.item.name][problem.descriptor] === undefined)
+          problemCounter[problem.device.name].item[problem.item.name][problem.descriptor] = {low: 0, high: 0};
+
+        if (problemCounter[problem.device.name].item[problem.item.name][problem.descriptor][problem.item.highLow] >= 6)
+          mailController.sendMail(problem, function (result) {
+            // do something
+          });
+        problemCounter[problem.device.name].item[problem.item.name][problem.descriptor][problem.item.highLow] = 0;
+      }
+      break;
+  }
+
+}
+
+function checkResult(result,device,ohm){
+  switch(device.type){
+    case 'baikal-miner':
+      for(var i=0;i<result.devs.length;i++){
+        var dev=result.devs[i];
+        if(dev.MHS5s<100){
+          var obj={type:'item',status:'Problem',descriptor:'Hashrate',item:{},device:{name:device.name,value:'Up'}};
+          obj.item['dev'+i]={name:'dev'+i,value:dev.MHS5s+'MH/s',highLow:'low'};
+          counterAndSend(obj);
+        }else{
+          var obj={type:'item',status:'OK',descriptor:'Hashrate',item:{},device:{name:device.name,value:'Up'}};
+          obj.item['dev'+i]={name:'dev'+i,value:dev.MHS5s+'MH/s',highLow:'low'};
+          counterAndSend(obj);
+        }
+        if(dev.Rejected/dev.TotalShares>0.1){
+          var obj={type:'item',status:'Problem',descriptor:'Rejects',item:{},device:{name:device.name,value:'Up'}};
+          obj.item['dev'+i]={name:'dev'+i,value:((dev.Rejected/dev.TotalShares)*100)+'%',highLow:'high'};
+          counterAndSend(obj);
+        }else{
+          var obj={type:'item',status:'OK',descriptor:'Rejects',item:{},device:{name:device.name,value:'Up'}};
+          obj.item['dev'+i]={name:'dev'+i,value:((dev.Rejected/dev.TotalShares)*100)+'%',highLow:'high'};
+          counterAndSend(obj);
+        }
+      }
+
+      break;
+    case 'miner-agent':
+      if(ohm){
+        for(var i=0;i<result.length;i++){
+          var ohmDevice=result[i];
+          //temp
+          if(ohmDevice.temp!==undefined&&ohmDevice.temp>"80"){
+            var obj={type:'item',status:'Problem',descriptor:'Temperature',item:{},device:{name:device.name,value:'Up'}};
+            obj.item[ohmDevice.dev]={name:ohmDevice.dev,value:ohmDevice.temp,highLow:'high'};
+            counterAndSend(obj);
+          }else{
+            var obj={type:'item',status:'OK',descriptor:'Temperature',item:{},device:{name:device.name,value:'Up'}};
+            obj.item[ohmDevice.dev]={name:ohmDevice.dev,value:ohmDevice.temp,highLow:'high'};
+            counterAndSend(obj);
+          }
+          //fan speed
+          if(ohmDevice.fan!==undefined&&ohmDevice.fan>"80"){
+            var obj={type:'item',status:'Problem',descriptor:'Fan Speed',item:{},device:{name:device.name,value:'Up'}};
+            obj.item[ohmDevice.dev]={name:ohmDevice.dev,value:ohmDevice.fan,highLow:'high'};
+            counterAndSend(obj);
+          }else{
+            var obj={type:'item',status:'OK',descriptor:'Fan Speed',item:{},device:{name:device.name,value:'Up'}};
+            obj.item[ohmDevice.dev]={name:ohmDevice.dev,value:ohmDevice.fan,highLow:'high'};
+            counterAndSend(obj);
+          }
+          /*
+          //load
+          if(ohmDevice.load!==undefined&&ohmDevice.load<"70"){
+            var obj={type:'item',status:'Problem',descriptor:'Load',item:{},device:{name:device.name,value:'Up'}};
+            obj.item[ohmDevice.dev]={name:ohmDevice.dev,value:ohmDevice.load,highLow:'high'};
+            counterAndSend(obj);
+          }else{
+            var obj={type:'item',status:'OK',descriptor:'Load',item:{},device:{name:device.name,value:'Up'}};
+            obj.item[ohmDevice.dev]={name:ohmDevice.dev,value:ohmDevice.load,highLow:'high'};
+            counterAndSend(obj);
+          }
+          */
+        }
+      }else{
+        //nothing for now
+      }
+      break;
+  }
+}
 
 function getMinerStats(device) {
   var arr = device.hostname.split("://");
@@ -66,14 +186,17 @@ function getMinerStats(device) {
             parsed=JSON.parse(body);
           }catch(error){
             console.log(colors.red("["+device.name+"] Error: Unable to get stats data"));
+            counterAndSend({type:'device',status:'Problem',descriptor:'',item:{},device:{name:device.name,value:'Down'}});
           }
           if (parsed != null){
+            counterAndSend({type:'device',status:'OK',descriptor:'',item:{},device:{name:device.name,value:'Up'}});
             switch(device.type){
               case "baikal-miner":
                 if (parsed.status!==false){
                   parsed.status.type=device.type;
                   parsed.status.name=device.name;
                   parsed.status.hostname=device.hostname;
+                  checkResult(parsed.status,device,false);
                   if(stats.entries[device.group]!==undefined&&stats.entries[device.group]!==null)
                     stats.entries[device.group][device.id]=parsed.status;
                   else{
@@ -127,6 +250,7 @@ function getMinerStats(device) {
           }
         });
       }).on("error", function(error) {
+        counterAndSend({type:'device',status:'Problem',descriptor:'',item:{},device:{name:device.name,value:'Down'}});
         switch(device.type){
           case "baikal-miner":
             if(stats.entries[device.group]!==undefined&&stats.entries[device.group]!==null)
@@ -155,6 +279,12 @@ function getMinerStats(device) {
         console.log(colors.red("["+device.name+"] Error: Unable to get stats data"));
         console.log(error);
       });
+      req.on('socket', function (socket) {
+        socket.setTimeout(10000);
+        socket.on('timeout', function() {
+          req.abort();
+        });
+      });
       req.end();
       break;
     case "https":
@@ -180,14 +310,17 @@ function getMinerStats(device) {
             parsed=JSON.parse(body);
           }catch(error){
             console.log(colors.red("["+device.name+"] Error: Unable to get stats data"));
+            counterAndSend({type:'device',status:'Problem',descriptor:'',item:{},device:{name:device.name,value:'Down'}});
           }
           if (parsed != null){
+            counterAndSend({type:'device',status:'OK',descriptor:'',item:{},device:{name:device.name,value:'Up'}});
             switch(device.type){
               case "baikal-miner":
                 if (parsed.status!==false){
                   parsed.status.type=device.type;
                   parsed.status.name=device.name;
                   parsed.status.hostname=device.hostname;
+                  checkResult(parsed.status,device,false);
                   if(stats.entries[device.group]!==undefined&&stats.entries[device.group]!==null)
                     stats.entries[device.group][device.id]=parsed.status;
                   else{
@@ -241,6 +374,7 @@ function getMinerStats(device) {
           }
         });
       }).on("error", function(error) {
+        counterAndSend({type:'device',status:'Problem',descriptor:'',item:{},device:{name:device.name,value:'Down'}});
         switch(device.type){
           case "baikal-miner":
             if(stats.entries[device.group]!==undefined&&stats.entries[device.group]!==null)
@@ -268,6 +402,12 @@ function getMinerStats(device) {
         }
         console.log(colors.red("["+device.name+"] Error: Unable to get stats data"));
         console.log(error);
+      });
+      req.on('socket', function (socket) {
+        socket.setTimeout(10000);
+        socket.on('timeout', function() {
+          req.abort();
+        });
       });
       req.end();
       break;
@@ -323,6 +463,7 @@ function getOhmStats(device){
               if (egliable)
                 devices.push(ohmdevice);
             }
+            checkResult(devices,device,true);
             if(stats.entries[device.group]!==undefined&&stats.entries[device.group]!==null)
               if(stats.entries[device.group][device.id]!==undefined&&stats.entries[device.group][device.id]!==null){
                 stats.entries[device.group][device.id].devices = devices;
@@ -359,6 +500,12 @@ function getOhmStats(device){
         }
         console.log(colors.red("["+device.name+"] Error: Unable to get ohm stats data"));
         console.log(error);
+      });
+      req.on('socket', function (socket) {
+        socket.setTimeout(10000);
+        socket.on('timeout', function() {
+          req.abort();
+        });
       });
       req.end();
       break;
@@ -405,6 +552,7 @@ function getOhmStats(device){
               if (egliable)
                 devices.push(ohmdevice);
             }
+            checkResult(devices,device,true);
             if(stats.entries[device.group]!==undefined&&stats.entries[device.group]!==null)
               if(stats.entries[device.group][device.id]!==undefined&&stats.entries[device.group][device.id]!==null){
                 stats.entries[device.group][device.id].devices = devices;
@@ -441,6 +589,12 @@ function getOhmStats(device){
         }
         console.log(colors.red("["+device.name+"] Error: Unable to get ohm stats data"));
         console.log(error);
+      });
+      req.on('socket', function (socket) {
+        socket.setTimeout(10000);
+        socket.on('timeout', function() {
+          req.abort();
+        });
       });
       req.end();
       break;
@@ -498,6 +652,12 @@ function getNicehashStats(addr){
     console.log(colors.red("Error: Unable to get nicehash stats data"));
     console.log(error);
   });
+  req.on('socket', function (socket) {
+    socket.setTimeout(10000);
+    socket.on('timeout', function() {
+      req.abort();
+    });
+  });
   req.end();
 }
 
@@ -536,6 +696,12 @@ function getNicehashWorkerStats(addr,algo){
   }).on("error", function(error) {
     console.log(colors.red("Error: Unable to get nicehash worker data"));
     console.log(error);
+  });
+  req.on('socket', function (socket) {
+    socket.setTimeout(10000);
+    socket.on('timeout', function() {
+      req.abort();
+    });
   });
   req.end();
 }
@@ -579,6 +745,12 @@ function getBitcoinBalance(name,addr){
     console.log(colors.red("Error: Unable to get bitcoin balance data"));
     console.log(error);
   });
+  req.on('socket', function (socket) {
+    socket.setTimeout(10000);
+    socket.on('timeout', function() {
+      req.abort();
+    });
+  });
   req.end();
 }
 
@@ -600,6 +772,7 @@ function getAllMinerStats(){
 
 function cleanup(){
   stats.entries={};
+  problemCounter={};
 }
 
 function restartInterval(){

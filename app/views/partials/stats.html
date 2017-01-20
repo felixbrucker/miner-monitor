@@ -157,11 +157,11 @@
 
           <td>{{d.Algo}}</td>
 
-          <td ng-class="{danger:d.MHS5s<140}">{{d.MHS5s*1000 |hashrate}}</td>
+          <td ng-class="{danger:d.MHS5s<100}">{{d.MHS5s*1000 |hashrate}}</td>
 
           <td>{{d.Accepted}}</td>
 
-          <td ng-class="{danger:d.Rejected/d.TotalShares>.1}">{{d.Rejected}} [{{d.Rejected/d.TotalShares |number:2}}%]
+          <td ng-class="{danger:d.Rejected/d.TotalShares>.1}">{{d.Rejected}} [{{d.Rejected/d.TotalShares*100 |number:2}}%]
           </td>
 
           <td ng-class="{danger:d.Temperature>45}">{{d.Temperature}} °C</td>
@@ -381,7 +381,7 @@
 
               <td>{{d.Algo}}</td>
 
-              <td ng-class="{danger:d.MHS5s<140}">{{d.MHS5s*1000 |hashrate}}</td>
+              <td ng-class="{danger:d.MHS5s<100}">{{d.MHS5s*1000 |hashrate}}</td>
 
               <td>{{d.Accepted}}</td>
 
@@ -533,7 +533,7 @@
 
               <td>{{d.Algo}}</td>
 
-              <td ng-class="{danger:d.MHS5s<140}">{{d.MHS5s*1000 |hashrate}}</td>
+              <td ng-class="{danger:d.MHS5s<100}">{{d.MHS5s*1000 |hashrate}}</td>
 
               <td>{{d.Accepted}}</td>
 

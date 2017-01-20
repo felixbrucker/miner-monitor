@@ -7,6 +7,7 @@ var colors = require('colors/safe');
 
 var configModule = require(__basedir + 'api/modules/configModule');
 var statsController = require(__basedir + 'api/controllers/statsController');
+var mailController = require(__basedir + 'api/controllers/mailController');
 
 Array.prototype.contains = function (element) {
   return this.indexOf(element) > -1;
@@ -28,17 +29,28 @@ function setConfig(req, res, next) {
   if (prev!==req.body.interval)
     statsController.restartInterval();
   configModule.saveConfig();
+  mailController.reloadTransport();
   res.setHeader('Content-Type', 'application/json');
   res.send(JSON.stringify({result: true}));
 }
 
 function update(req, res, next) {
   const spawn = require('cross-spawn');
-  const child = spawn('git', ['pull'], {
-    detached: true,
-    stdio: 'ignore',
-    shell: true
-  });
+  var isWin = /^win/.test(process.platform);
+  if (isWin){
+    const child = spawn('helpers\\update.bat', [], {
+      detached: true,
+      stdio: 'ignore',
+      shell: true
+    });
+  }else{
+    const child = spawn('helpers\\update.sh', [], {
+      detached: true,
+      stdio: 'ignore',
+      shell: true
+    });
+  }
+
   res.setHeader('Content-Type', 'application/json');
   res.send(JSON.stringify({result: true}));
 }
@@ -239,6 +251,12 @@ function updateAgent(req, res, next) {
   }
 }
 
+function verifyTransport(req,res,next){
+  mailController.verifyTransport(function(result){
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({result: result}));
+  });
+}
 
 function init() {
 }
@@ -251,3 +269,4 @@ exports.update = update;
 exports.getLayout = getLayout;
 exports.updateMiner = updateMiner;
 exports.updateAgent = updateAgent;
+exports.verifyTransport = verifyTransport;

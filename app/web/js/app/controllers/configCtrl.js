@@ -25,7 +25,9 @@
       interval: null,
       layout:null,
       layouts:null,
-      nicehashAddr:null
+      nicehashAddr:null,
+      mailConfig:null,
+      mailTo:null
     };
 
     vm.localStorage={
@@ -35,6 +37,8 @@
 
     vm.waiting = null;
     vm.updating = null;
+    vm.waitingVerify = null;
+    vm.verifySuccess=null;
     vm.updatingMiner={};
     vm.updatingAgent={};
 
@@ -69,7 +73,30 @@
     vm.setLocalStorage=setLocalStorage;
     vm.updateMiner=updateMiner;
     vm.updateAgent=updateAgent;
+    vm.verifyTransport = verifyTransport;
 
+
+
+    /**
+     * @name verifyTransport
+     * @desc verifies the mail transport
+     * @memberOf configCtrl
+     */
+    function verifyTransport() {
+      vm.waitingVerify=true;
+      return $http({
+        method: 'GET',
+        url: 'api/config/verifyTransport',
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8'
+        }
+      }).then(function successCallback(response) {
+        setTimeout(function(){vm.waitingVerify = false;},500);
+        vm.verifySuccess=response.data.result;
+      }, function errorCallback(response) {
+        console.log(response);
+      });
+    }
 
     /**
      * @name updateAgent
@@ -249,6 +276,11 @@
         vm.config.layout = response.data.layout;
         vm.config.layouts = response.data.layouts;
         vm.config.nicehashAddr = response.data.nicehashAddr;
+        if(response.data.mailConfig===null)
+          vm.config.mailConfig ={host:null,port:null,secure:null,auth:{user:null,pass:null}};
+        else
+          vm.config.mailConfig = response.data.mailConfig;
+        vm.config.mailTo = response.data.mailTo;
         vm.config.devices = $filter('orderBy')(vm.config.devices, ['group','name']);
         vm.config.groups = $filter('orderBy')(vm.config.groups, 'name');
       }, function errorCallback(response) {
@@ -263,6 +295,10 @@
      * @memberOf configCtrl
      */
     function setConfig() {
+      var config=JSON.parse(JSON.stringify(vm.config));
+      if(vm.config.mailConfig === {host:null,port:null,secure:null,auth:{user:null,pass:null}}){
+        config.mailConfig=null;
+      }
       vm.waiting = true;
       return $http({
         method: 'POST',
@@ -270,7 +306,7 @@
         headers: {
           'Content-Type': 'application/json;charset=UTF-8'
         },
-        data: vm.config
+        data: config
       }).then(function successCallback(response) {
         setTimeout(function () {
           vm.waiting = false;
