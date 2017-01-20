@@ -86,21 +86,17 @@ function checkResult(result,device,ohm){
       for(var i=0;i<result.devs.length;i++){
         var dev=result.devs[i];
         if(dev.MHS5s<100){
-          var obj={type:'item',status:'Problem',descriptor:'Hashrate',item:{},device:{name:device.name,value:'Up'}};
-          obj.item['dev'+i]={name:'dev'+i,value:dev.MHS5s+'MH/s',highLow:'low'};
+          var obj={type:'item',status:'Problem',descriptor:'Hashrate',item:{name:'dev'+i,value:dev.MHS5s+'MH/s',highLow:'low'},device:{name:device.name,value:'Up'}};
           counterAndSend(obj);
         }else{
-          var obj={type:'item',status:'OK',descriptor:'Hashrate',item:{},device:{name:device.name,value:'Up'}};
-          obj.item['dev'+i]={name:'dev'+i,value:dev.MHS5s+'MH/s',highLow:'low'};
+          var obj={type:'item',status:'OK',descriptor:'Hashrate',item:{name:'dev'+i,value:dev.MHS5s+'MH/s',highLow:'low'},device:{name:device.name,value:'Up'}};
           counterAndSend(obj);
         }
         if(dev.Rejected/dev.TotalShares>0.1){
-          var obj={type:'item',status:'Problem',descriptor:'Rejects',item:{},device:{name:device.name,value:'Up'}};
-          obj.item['dev'+i]={name:'dev'+i,value:((dev.Rejected/dev.TotalShares)*100)+'%',highLow:'high'};
+          var obj={type:'item',status:'Problem',descriptor:'Rejects',item:{name:'dev'+i,value:((dev.Rejected/dev.TotalShares)*100)+'%',highLow:'high'},device:{name:device.name,value:'Up'}};
           counterAndSend(obj);
         }else{
-          var obj={type:'item',status:'OK',descriptor:'Rejects',item:{},device:{name:device.name,value:'Up'}};
-          obj.item['dev'+i]={name:'dev'+i,value:((dev.Rejected/dev.TotalShares)*100)+'%',highLow:'high'};
+          var obj={type:'item',status:'OK',descriptor:'Rejects',item:{name:'dev'+i,value:((dev.Rejected/dev.TotalShares)*100)+'%',highLow:'high'},device:{name:device.name,value:'Up'}};
           counterAndSend(obj);
         }
       }
@@ -112,33 +108,27 @@ function checkResult(result,device,ohm){
           var ohmDevice=result[i];
           //temp
           if(ohmDevice.temp!==undefined&&ohmDevice.temp>"80"){
-            var obj={type:'item',status:'Problem',descriptor:'Temperature',item:{},device:{name:device.name,value:'Up'}};
-            obj.item[ohmDevice.dev]={name:ohmDevice.dev,value:ohmDevice.temp,highLow:'high'};
+            var obj={type:'item',status:'Problem',descriptor:'Temperature',item:{name:i+': '+ohmDevice.dev,value:ohmDevice.temp,highLow:'high'},device:{name:device.name,value:'Up'}};
             counterAndSend(obj);
           }else{
-            var obj={type:'item',status:'OK',descriptor:'Temperature',item:{},device:{name:device.name,value:'Up'}};
-            obj.item[ohmDevice.dev]={name:ohmDevice.dev,value:ohmDevice.temp,highLow:'high'};
+            var obj={type:'item',status:'OK',descriptor:'Temperature',item:{name:i+': '+ohmDevice.dev,value:ohmDevice.temp,highLow:'high'},device:{name:device.name,value:'Up'}};
             counterAndSend(obj);
           }
           //fan speed
           if(ohmDevice.fan!==undefined&&ohmDevice.fan>"80"){
-            var obj={type:'item',status:'Problem',descriptor:'Fan Speed',item:{},device:{name:device.name,value:'Up'}};
-            obj.item[ohmDevice.dev]={name:ohmDevice.dev,value:ohmDevice.fan,highLow:'high'};
+            var obj={type:'item',status:'Problem',descriptor:'Fan Speed',item:{name:i+': '+ohmDevice.dev,value:ohmDevice.fan,highLow:'high'},device:{name:device.name,value:'Up'}};
             counterAndSend(obj);
           }else{
-            var obj={type:'item',status:'OK',descriptor:'Fan Speed',item:{},device:{name:device.name,value:'Up'}};
-            obj.item[ohmDevice.dev]={name:ohmDevice.dev,value:ohmDevice.fan,highLow:'high'};
+            var obj={type:'item',status:'OK',descriptor:'Fan Speed',item:{name:i+': '+ohmDevice.dev,value:ohmDevice.fan,highLow:'high'},device:{name:device.name,value:'Up'}};
             counterAndSend(obj);
           }
           /*
           //load
           if(ohmDevice.load!==undefined&&ohmDevice.load<"70"){
-            var obj={type:'item',status:'Problem',descriptor:'Load',item:{},device:{name:device.name,value:'Up'}};
-            obj.item[ohmDevice.dev]={name:ohmDevice.dev,value:ohmDevice.load,highLow:'high'};
+            var obj={type:'item',status:'Problem',descriptor:'Load',item:{name:i+': '+ohmDevice.dev,value:ohmDevice.load,highLow:'low'},device:{name:device.name,value:'Up'}};
             counterAndSend(obj);
           }else{
-            var obj={type:'item',status:'OK',descriptor:'Load',item:{},device:{name:device.name,value:'Up'}};
-            obj.item[ohmDevice.dev]={name:ohmDevice.dev,value:ohmDevice.load,highLow:'high'};
+            var obj={type:'item',status:'OK',descriptor:'Load',item:{name:i+': '+ohmDevice.dev,value:ohmDevice.load,highLow:'low'},device:{name:device.name,value:'Up'}};
             counterAndSend(obj);
           }
           */
