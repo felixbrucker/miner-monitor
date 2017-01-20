@@ -44,7 +44,7 @@ function update(req, res, next) {
       shell: true
     });
   }else{
-    const child = spawn('helpers\update.sh', [], {
+    const child = spawn('helpers/update.sh', [], {
       detached: true,
       stdio: 'ignore',
       shell: true
