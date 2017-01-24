@@ -278,7 +278,7 @@
         <div class="col-md-12">
           <div style="float: left;font-size:120%;"><a href="{{entry.hostname}}" target="_blank">{{entry.name}}</a></div>
         </div>
-        <div class="col-md-7 table-responsive">
+        <div class="col-md-7 table-responsive" style="overflow:visible;">
           <table class="table table-bordered table-condensed">
             <thead>
             <tr>
@@ -399,7 +399,7 @@
           </table>
         </div>
 
-        <div class="col-md-5 table-responsive">
+        <div class="col-md-5 table-responsive" style="overflow:visible;">
           <table class="table table-bordered table-condensed">
             <thead>
             <tr >
@@ -419,7 +419,7 @@
         </div>
       </div>
 
-      <div style="float: left;" class="col-md-6 table-responsive" ng-if="entry.type!=='miner-agent'||entry.devices===undefined">
+      <div style="float: left;overflow:visible;" class="col-md-6 table-responsive" ng-if="entry.type!=='miner-agent'||entry.devices===undefined">
         <div class="col-md-12">
           <div style="float: left;font-size:120%;"><a href="{{entry.hostname}}" target="_blank">{{entry.name}}</a></div>
         </div>
