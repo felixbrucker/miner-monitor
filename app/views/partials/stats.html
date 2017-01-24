@@ -369,7 +369,8 @@
                 [{{d['zec-rejected']/(d['zec-accepted']+d['zec-rejected'])*100|number:2}}%]
               </td>
               <td class='ellipsis' ng-if="d.type==='other'||d.type==='nheqminer'">-</td>
-
+                
+                
               <td class='ellipsis' ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-cryptonight'||d.type==='optiminer-zec'||d.type==='sgminer-gm'">
                 {{d.uptime | secondsToTimeString}}
               </td>
@@ -518,6 +519,13 @@
               </td>
               <td class='ellipsis' ng-if="d.type==='other'||d.type==='nheqminer'">-</td>
 
+                <td ng-if="d.type==='cpuminer-opt'&&d.temperature" ng-class="{danger:d.temperature>70}">{{d.temperature}} °C</td>
+                <td ng-if="d.type==='cpuminer-opt'&&!d.temperature">-</td>
+                <td ng-if="d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-cryptonight'"><span style="margin-right: 4px;" ng-repeat="temp in d.temps"><span class="label"
+																   ng-class="{'label-danger':temp>80,'label-info':temp<=80}">{{temp}} °C</span></span>
+                </td>
+                <td ng-if="d.type==='other'||d.type==='ccminer'||d.type==='nheqminer'||d.type==='optiminer-zec'||d.type==='sgminer-gm'">-</td>
+                
               <td class='ellipsis' ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-cryptonight'||d.type==='optiminer-zec'||d.type==='sgminer-gm'">
                 {{d.uptime | secondsToTimeString}}
               </td>
