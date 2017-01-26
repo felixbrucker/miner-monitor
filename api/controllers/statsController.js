@@ -99,6 +99,13 @@ function checkResult(result,device,ohm){
           var obj={type:'item',status:'OK',descriptor:'Rejects',item:{name:'dev'+i,value:((dev.Rejected/dev.TotalShares)*100)+'%',highLow:'high'},device:{name:device.name,value:'Up'}};
           counterAndSend(obj);
         }
+        if(dev.Temperature>=45){
+          var obj={type:'item',status:'Problem',descriptor:'Temperature',item:{name:'dev'+i,value:dev.Temperature+' °C',highLow:'high'},device:{name:device.name,value:'Up'}};
+          counterAndSend(obj);
+        }else{
+          var obj={type:'item',status:'OK',descriptor:'Temperature',item:{name:'dev'+i,value:dev.Temperature+' °C',highLow:'high'},device:{name:device.name,value:'Up'}};
+          counterAndSend(obj);
+        }
       }
 
       break;
