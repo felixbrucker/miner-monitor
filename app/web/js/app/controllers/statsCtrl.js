@@ -25,6 +25,7 @@
       bitcoinBalances:null
     };
     vm.layout="";
+    vm.enabled={};
 
 
     // controller API
@@ -47,6 +48,14 @@
           vm.layout = layout;
         else
           vm.getLayout();
+
+        var enabled=localStorage.getItem('enabled');
+        if (enabled!==null&&enabled!==""&&enabled!=="NaN")
+          vm.enabled = JSON.parse(enabled);
+        else
+          vm.enabled = {
+            nh:true
+          };
 
         var interval=localStorage.getItem('refreshInterval');
         if (interval!==null&&interval!==""&&interval!=="NaN")

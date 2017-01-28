@@ -32,6 +32,7 @@
 
     vm.localStorage={
       layout:null,
+      enabled:null,
       refreshInterval:null
     };
 
@@ -147,6 +148,10 @@
      */
     function getLocalStorage(){
       vm.localStorage.layout=localStorage.getItem('layout');
+      if(localStorage.getItem('enabled')!==null&&localStorage.getItem('enabled')!==""&&localStorage.getItem('enabled')!=="NaN")
+        vm.localStorage.enabled=JSON.parse(localStorage.getItem('enabled'));
+      else
+        vm.localStorage.enabled={nh:true};
       vm.localStorage.refreshInterval=parseInt(localStorage.getItem('refreshInterval'));
     }
 
@@ -160,6 +165,9 @@
         localStorage.setItem('layout', vm.localStorage.layout);
       else
         localStorage.removeItem('layout');
+
+      localStorage.setItem('enabled', JSON.stringify(vm.localStorage.enabled));
+
       if(vm.localStorage.refreshInterval!==null)
         localStorage.setItem('refreshInterval', vm.localStorage.refreshInterval.toString());
       else
