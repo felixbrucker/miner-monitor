@@ -22,7 +22,8 @@
     vm.current = {
       entries:null,
       nicehash:null,
-      bitcoinBalances:null
+      bitcoinBalances:null,
+      nanoPascal:null
     };
     vm.layout="";
     vm.enabled={};
@@ -54,7 +55,8 @@
           vm.enabled = JSON.parse(enabled);
         else
           vm.enabled = {
-            nh:true
+            nh:true,
+            nanoPascal:false
           };
 
         var interval=localStorage.getItem('refreshInterval');
@@ -80,6 +82,7 @@
         vm.current.entries = response.data.entries;
         vm.current.nicehash = response.data.nicehash;
         vm.current.bitcoinBalances=response.data.bitcoinBalances;
+        vm.current.nanoPascal=response.data.nanoPascal;
       }, function errorCallback(response) {
         console.log(response);
       });

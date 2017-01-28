@@ -13,7 +13,8 @@ var mailController = require(__basedir + 'api/controllers/mailController');
 var stats = {
   entries:{},
   nicehash:{},
-  bitcoinBalances:{}
+  bitcoinBalances:{},
+  nanoPascal:{}
 };
 
 var problemCounter={};
@@ -21,6 +22,7 @@ var problemCounter={};
 var interval=null;
 var nhinterval=null;
 var btcBalanceInterval=null;
+var nanoPascalInterval=null;
 
 function getStats(req, res, next) {
   var entries=[];
@@ -29,7 +31,7 @@ function getStats(req, res, next) {
     entries.push({name:key,devices:arr});
   });
   res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify({entries:entries,nicehash:{addr:configModule.config.nicehashAddr,stats:stats.nicehash},bitcoinBalances:stats.bitcoinBalances}));
+  res.send(JSON.stringify({entries:entries,nicehash:{addr:configModule.config.nicehashAddr,stats:stats.nicehash},bitcoinBalances:stats.bitcoinBalances,nanoPascal:stats.nanoPascal}));
 }
 
 function counterAndSend(problem){
@@ -751,6 +753,63 @@ function getBitcoinBalance(name,addr){
   req.end();
 }
 
+function getNanoPascal(){
+  if(configModule.config.nanoPascalAddr!==undefined&&configModule.config.nanoPascalAddr!==null&&configModule.config.nanoPascalAddr!==""){
+    var req= https.request({
+      host: 'api.nanopool.org',
+      path: '/v1/pasc/user/'+configModule.config.nanoPascalAddr,
+      method: 'GET',
+      port: 443,
+      rejectUnauthorized: false,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8'
+      }
+    }, function (response) {
+      response.setEncoding('utf8');
+      var body = '';
+      response.on('data', function (d) {
+        body += d;
+      });
+      response.on('end', function () {
+        var parsed = null;
+        try{
+          parsed=JSON.parse(body);
+        }catch(error){
+          console.log(colors.red("Error: Unable to get nanoPascal stats data"));
+        }
+        if (parsed != null&&parsed.status){
+          parsed.data.hashrate=parsed.data.hashrate/4;
+          parsed.data.avgHashrate.h1=parsed.data.avgHashrate.h1/4;
+          parsed.data.avgHashrate.h3=parsed.data.avgHashrate.h3/4;
+          parsed.data.avgHashrate.h6=parsed.data.avgHashrate.h6/4;
+          parsed.data.avgHashrate.h12=parsed.data.avgHashrate.h12/4;
+          parsed.data.avgHashrate.h24=parsed.data.avgHashrate.h24/4;
+          for(var i=0;i<parsed.data.workers.length;i++){
+            parsed.data.workers[i].hashrate=parsed.data.workers[i].hashrate/4;
+            parsed.data.workers[i]["avg_h1"]=parsed.data.workers[i]["avg_h1"]/4;
+            parsed.data.workers[i]["avg_h3"]=parsed.data.workers[i]["avg_h3"]/4;
+            parsed.data.workers[i]["avg_h6"]=parsed.data.workers[i]["avg_h6"]/4;
+            parsed.data.workers[i]["avg_h12"]=parsed.data.workers[i]["avg_h12"]/4;
+            parsed.data.workers[i]["avg_h24"]=parsed.data.workers[i]["avg_h24"]/4;
+            parsed.data.workers[i].lastShare=(new Date() - new Date(parsed.data.workers[i].lastShare*1000))/1000;
+          }
+          stats.nanoPascal=parsed;
+        }
+      });
+    }).on("error", function(error) {
+      console.log(colors.red("Error: Unable to get nanoPascal stats data"));
+      console.log(error);
+    });
+    req.on('socket', function (socket) {
+      socket.setTimeout(10000);
+      socket.on('timeout', function() {
+        req.abort();
+      });
+    });
+    req.end();
+  }
+}
+
 function getAllMinerStats(){
   for(var i=0;i<configModule.config.groups.length;i++){
     var group=configModule.config.groups[i];
@@ -781,6 +840,8 @@ function init() {
   getAllMinerStats();
   getNicehashStats(configModule.config.nicehashAddr);
   getAllBitcoinbalances();
+  getNanoPascal();
+  nanoPascalInterval=setInterval(getNanoPascal,30000);
   interval=setInterval(getAllMinerStats,configModule.config.interval*1000);
   nhinterval=setInterval(getNicehashStats,20000,configModule.config.nicehashAddr);
   btcBalanceInterval=setInterval(getAllBitcoinbalances,60000);

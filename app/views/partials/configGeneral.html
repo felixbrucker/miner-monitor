@@ -26,6 +26,11 @@
           </div>
         </div>
         <div class="row" style="margin-bottom: 10px;">
+          <div  class="col-md-12">
+            nanoPascal addr: <input type="text" size="42" ng-model="configVm.config.nanoPascalAddr">
+          </div>
+        </div>
+        <div class="row" style="margin-bottom: 10px;">
           <div  class="col-md-5">
             SMTP hostname: <input type="text" ng-model="configVm.config.mailConfig.host">
           </div>
@@ -111,6 +116,11 @@
       <div class="row" style="margin-bottom: 10px;">
         <div  class="col-md-12">
           enable nicehash dashboard: <input type="checkbox" ng-model="configVm.localStorage.enabled.nh">
+        </div>
+      </div>
+      <div class="row" style="margin-bottom: 10px;">
+        <div  class="col-md-12">
+          enable nanopool Pascal dashboard: <input type="checkbox" ng-model="configVm.localStorage.enabled.nanoPascal">
         </div>
       </div>
       <div class="row" style="margin-bottom: 10px;">

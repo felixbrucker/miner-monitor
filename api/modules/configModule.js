@@ -15,6 +15,7 @@ var config = module.exports = {
     groups:[],
     layout:null,
     nicehashAddr:"",
+    nanoPascalAddr:"",
     mailConfig:null,
     mailTo:null
   },
@@ -55,15 +56,18 @@ var config = module.exports = {
           if(config.config.layout===undefined)
             config.config.layout="large";
           if(config.config.nicehashAddr===undefined)
-            config.config.nicehashAddr="12gotm1HbU1zv9FMnuNfPakpn7rsRjB1no";
+            config.config.nicehashAddr="";
           if(config.config.mailConfig===undefined)
             config.config.mailConfig=null;
+          if(config.config.nanoPascalAddr===undefined)
+            config.config.nanoPascalAddr="";
         });
       } else if (err.code == 'ENOENT') {
         //default conf
         config.config.interval=30;
         config.config.layout="large";
-        config.config.nicehashAddr="12gotm1HbU1zv9FMnuNfPakpn7rsRjB1no";
+        config.config.nicehashAddr="";
+        config.config.nanoPascalAddr="";
         config.saveConfig();
         setTimeout(function(){
           config.loadConfig();

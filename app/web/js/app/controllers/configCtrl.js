@@ -26,6 +26,7 @@
       layout:null,
       layouts:null,
       nicehashAddr:null,
+      nanoPascalAddr:null,
       mailConfig:null,
       mailTo:null
     };
@@ -284,6 +285,7 @@
         vm.config.layout = response.data.layout;
         vm.config.layouts = response.data.layouts;
         vm.config.nicehashAddr = response.data.nicehashAddr;
+        vm.config.nanoPascalAddr = response.data.nanoPascalAddr;
         if(response.data.mailConfig===null)
           vm.config.mailConfig ={host:null,port:null,secure:null,auth:{user:null,pass:null}};
         else
