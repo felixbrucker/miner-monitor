@@ -778,19 +778,7 @@ function getNanoPascal(){
           console.log(colors.red("Error: Unable to get nanoPascal stats data"));
         }
         if (parsed != null&&parsed.status){
-          parsed.data.hashrate=parsed.data.hashrate/4;
-          parsed.data.avgHashrate.h1=parsed.data.avgHashrate.h1/4;
-          parsed.data.avgHashrate.h3=parsed.data.avgHashrate.h3/4;
-          parsed.data.avgHashrate.h6=parsed.data.avgHashrate.h6/4;
-          parsed.data.avgHashrate.h12=parsed.data.avgHashrate.h12/4;
-          parsed.data.avgHashrate.h24=parsed.data.avgHashrate.h24/4;
           for(var i=0;i<parsed.data.workers.length;i++){
-            parsed.data.workers[i].hashrate=parsed.data.workers[i].hashrate/4;
-            parsed.data.workers[i]["avg_h1"]=parsed.data.workers[i]["avg_h1"]/4;
-            parsed.data.workers[i]["avg_h3"]=parsed.data.workers[i]["avg_h3"]/4;
-            parsed.data.workers[i]["avg_h6"]=parsed.data.workers[i]["avg_h6"]/4;
-            parsed.data.workers[i]["avg_h12"]=parsed.data.workers[i]["avg_h12"]/4;
-            parsed.data.workers[i]["avg_h24"]=parsed.data.workers[i]["avg_h24"]/4;
             parsed.data.workers[i].lastShare=(new Date() - new Date(parsed.data.workers[i].lastShare*1000))/1000;
           }
           stats.nanoPascal=parsed;
