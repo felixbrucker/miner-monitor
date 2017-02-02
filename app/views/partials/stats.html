@@ -62,11 +62,10 @@
           <td class="success"><a href="{{entry.hostname}}" target="_blank">{{entry.name}}</a></td>
 
           <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='sgminer-gm'">{{d.miner}}</td>
-          <td ng-if="d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-cryptonight'">{{d.type}}
+          <td ng-if="d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-cryptonight'||d.type==='optiminer-zec'">{{d.type}}
             {{d.version}}
           </td>
           <td ng-if="d.type==='nheqminer'">nheqminer</td>
-          <td ng-if="d.type==='optiminer-zec'">optiminer-zec</td>
           <td ng-if="d.type==='other'">other</td>
 
           <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='sgminer-gm'">{{d.algorithm}}</td>
@@ -367,11 +366,10 @@
             <tr ng-if="entry.type==='miner-agent'" ng-repeat="d in entry.entries track by $index">
 
               <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='sgminer-gm'">{{d.miner}}</td>
-              <td ng-if="d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-cryptonight'">
+              <td ng-if="d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-cryptonight'||d.type==='optiminer-zec'">
                 {{d.type}}
                 {{d.version}}
               </td>
-              <td ng-if="d.type==='optiminer-zec'">{{d.type}}</td>
               <td ng-if="d.type==='nheqminer'">nheqminer</td>
               <td ng-if="d.type==='other'">other</td>
 
@@ -516,11 +514,10 @@
             <tr ng-if="entry.type==='miner-agent'" ng-repeat="d in entry.entries track by $index">
 
               <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='sgminer-gm'">{{d.miner}}</td>
-              <td ng-if="d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-cryptonight'">
+              <td ng-if="d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-cryptonight'||d.type==='optiminer-zec'">
                 {{d.type}}
                 {{d.version}}
               </td>
-              <td ng-if="d.type==='optiminer-zec'">{{d.type}}</td>
               <td ng-if="d.type==='nheqminer'">nheqminer</td>
               <td ng-if="d.type==='other'">other</td>
 
