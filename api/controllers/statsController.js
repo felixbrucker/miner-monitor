@@ -689,7 +689,12 @@ function getNicehashWorkerStats(addr,algo){
           if(a[0]>b[0]) return 1;
           return 0;
         });
-        algo.worker = parsed.result.workers;
+        var workers=[];
+        for(var i=0;i<parsed.result.workers.length;i++){
+          if(parsed.result.workers[i][0]!=="")
+            workers.push(parsed.result.workers[i]);
+        }
+        algo.worker = workers;
       }
     });
   }).on("error", function(error) {
