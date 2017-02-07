@@ -76,6 +76,7 @@
     vm.updateMiner=updateMiner;
     vm.updateAgent=updateAgent;
     vm.verifyTransport = verifyTransport;
+    vm.rebootSystem=rebootSystem;
 
 
 
@@ -348,6 +349,27 @@
       }, function errorCallback(response) {
         console.log(response);
       });
+    }
+
+    /**
+     * @name rebootSystem
+     * @desc reboots the system if confirmed
+     * @memberOf configCtrl
+     */
+    function rebootSystem(id) {
+      if(confirm('Are you sure you want to reboot this System?')){
+        return $http({
+          method: 'POST',
+          url: 'api/config/rebootSystem',
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8'
+          },
+          data:{id:id}
+        }).then(function successCallback(response) {
+        }, function errorCallback(response) {
+          console.log(response);
+        });
+      }
     }
 
 

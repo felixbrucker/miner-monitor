@@ -251,6 +251,82 @@ function updateAgent(req, res, next) {
   }
 }
 
+function rebootSystem(req, res, next) {
+  var id=req.body.id;
+  for(var j=0;j<configModule.config.devices.length;j++) {
+    var device = configModule.config.devices[j];
+    if (device.id===id){
+      if(device.type!=='baikal-miner'){
+        var arr = device.hostname.split("://");
+        var protocol=arr[0];
+        arr = arr[1].split(":");
+        var path="/api/config/reboot";
+        switch(protocol) {
+          case "http":
+            var req = http.request({
+              host: arr[0],
+              path: path,
+              method: 'POST',
+              port: arr[1],
+              headers: {
+                'Content-Type': 'application/json;charset=UTF-8'
+              }
+            }, function (response) {
+              response.setEncoding('utf8');
+              var body = '';
+              response.on('data', function (d) {
+                body += d;
+              });
+              response.on('end', function () {
+                res.setHeader('Content-Type', 'application/json');
+                res.send(JSON.stringify({result: false}));
+              });
+            }).on("error", function (error) {
+              console.log(colors.red("[" + device.name + "] Error: Unable to reboot system"));
+              console.log(error);
+              res.setHeader('Content-Type', 'application/json');
+              res.send(JSON.stringify({result: false}));
+            });
+            req.end();
+            break;
+          case "https":
+            var req = https.request({
+              host: arr[0],
+              path: path,
+              method: 'POST',
+              port: arr[1],
+              rejectUnauthorized: false,
+              headers: {
+                'Content-Type': 'application/json;charset=UTF-8'
+              }
+            }, function (response) {
+              response.setEncoding('utf8');
+              var body = '';
+              response.on('data', function (d) {
+                body += d;
+              });
+              response.on('end', function () {
+                res.setHeader('Content-Type', 'application/json');
+                res.send(JSON.stringify({result: true}));
+              });
+            }).on("error", function (error) {
+              console.log(colors.red("[" + device.name + "] Error: Unable to reboot system"));
+              console.log(error);
+              res.setHeader('Content-Type', 'application/json');
+              res.send(JSON.stringify({result: false}));
+            });
+            req.end();
+            break;
+        }
+      }else{
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify({result: false}));
+      }
+      break;
+    }
+  }
+}
+
 function verifyTransport(req,res,next){
   mailController.verifyTransport(function(result){
     res.setHeader('Content-Type', 'application/json');
@@ -270,3 +346,4 @@ exports.getLayout = getLayout;
 exports.updateMiner = updateMiner;
 exports.updateAgent = updateAgent;
 exports.verifyTransport = verifyTransport;
+exports.rebootSystem=rebootSystem;

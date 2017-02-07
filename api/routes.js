@@ -15,6 +15,7 @@ module.exports = function(app) {
   router.post('/config/update', configController.update);
   router.post('/config/updateMiner', configController.updateMiner);
   router.post('/config/updateAgent', configController.updateAgent);
+  router.post('/config/rebootSystem', configController.rebootSystem);
 
   router.get('/mining/stats', statsController.getStats);
 
