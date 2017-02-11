@@ -83,69 +83,71 @@ function counterAndSend(problem){
 }
 
 function checkResult(result,device,ohm){
-  switch(device.type){
-    case 'baikal-miner':
-      for(var i=0;i<result.devs.length;i++){
-        var dev=result.devs[i];
-        if(dev.MHS5s<100){
-          var obj={type:'item',status:'Problem',descriptor:'Hashrate',item:{name:'dev'+i,value:dev.MHS5s+'MH/s',highLow:'low'},device:{name:device.name,value:'Up'}};
-          counterAndSend(obj);
-        }else{
-          var obj={type:'item',status:'OK',descriptor:'Hashrate',item:{name:'dev'+i,value:dev.MHS5s+'MH/s',highLow:'low'},device:{name:device.name,value:'Up'}};
-          counterAndSend(obj);
+  if(!device.mailDisabled){
+    switch(device.type){
+      case 'baikal-miner':
+        for(var i=0;i<result.devs.length;i++){
+          var dev=result.devs[i];
+          if(dev.MHS5s<100){
+            var obj={type:'item',status:'Problem',descriptor:'Hashrate',item:{name:'dev'+i,value:dev.MHS5s+'MH/s',highLow:'low'},device:{name:device.name,value:'Up'}};
+            counterAndSend(obj);
+          }else{
+            var obj={type:'item',status:'OK',descriptor:'Hashrate',item:{name:'dev'+i,value:dev.MHS5s+'MH/s',highLow:'low'},device:{name:device.name,value:'Up'}};
+            counterAndSend(obj);
+          }
+          if(dev.Rejected/dev.TotalShares>0.1){
+            var obj={type:'item',status:'Problem',descriptor:'Rejects',item:{name:'dev'+i,value:((dev.Rejected/dev.TotalShares)*100)+'%',highLow:'high'},device:{name:device.name,value:'Up'}};
+            counterAndSend(obj);
+          }else{
+            var obj={type:'item',status:'OK',descriptor:'Rejects',item:{name:'dev'+i,value:((dev.Rejected/dev.TotalShares)*100)+'%',highLow:'high'},device:{name:device.name,value:'Up'}};
+            counterAndSend(obj);
+          }
+          if(dev.Temperature>=45){
+            var obj={type:'item',status:'Problem',descriptor:'Temperature',item:{name:'dev'+i,value:dev.Temperature+' °C',highLow:'high'},device:{name:device.name,value:'Up'}};
+            counterAndSend(obj);
+          }else{
+            var obj={type:'item',status:'OK',descriptor:'Temperature',item:{name:'dev'+i,value:dev.Temperature+' °C',highLow:'high'},device:{name:device.name,value:'Up'}};
+            counterAndSend(obj);
+          }
         }
-        if(dev.Rejected/dev.TotalShares>0.1){
-          var obj={type:'item',status:'Problem',descriptor:'Rejects',item:{name:'dev'+i,value:((dev.Rejected/dev.TotalShares)*100)+'%',highLow:'high'},device:{name:device.name,value:'Up'}};
-          counterAndSend(obj);
-        }else{
-          var obj={type:'item',status:'OK',descriptor:'Rejects',item:{name:'dev'+i,value:((dev.Rejected/dev.TotalShares)*100)+'%',highLow:'high'},device:{name:device.name,value:'Up'}};
-          counterAndSend(obj);
-        }
-        if(dev.Temperature>=45){
-          var obj={type:'item',status:'Problem',descriptor:'Temperature',item:{name:'dev'+i,value:dev.Temperature+' °C',highLow:'high'},device:{name:device.name,value:'Up'}};
-          counterAndSend(obj);
-        }else{
-          var obj={type:'item',status:'OK',descriptor:'Temperature',item:{name:'dev'+i,value:dev.Temperature+' °C',highLow:'high'},device:{name:device.name,value:'Up'}};
-          counterAndSend(obj);
-        }
-      }
 
-      break;
-    case 'miner-agent':
-      if(ohm){
-        for(var i=0;i<result.length;i++){
-          var ohmDevice=result[i];
-          //temp
-          if(ohmDevice.temp!==undefined&&ohmDevice.temp>"80"){
-            var obj={type:'item',status:'Problem',descriptor:'Temperature',item:{name:i+': '+ohmDevice.dev,value:ohmDevice.temp,highLow:'high'},device:{name:device.name,value:'Up'}};
-            counterAndSend(obj);
-          }else{
-            var obj={type:'item',status:'OK',descriptor:'Temperature',item:{name:i+': '+ohmDevice.dev,value:ohmDevice.temp,highLow:'high'},device:{name:device.name,value:'Up'}};
-            counterAndSend(obj);
+        break;
+      case 'miner-agent':
+        if(ohm){
+          for(var i=0;i<result.length;i++){
+            var ohmDevice=result[i];
+            //temp
+            if(ohmDevice.temp!==undefined&&ohmDevice.temp>"80"){
+              var obj={type:'item',status:'Problem',descriptor:'Temperature',item:{name:i+': '+ohmDevice.dev,value:ohmDevice.temp,highLow:'high'},device:{name:device.name,value:'Up'}};
+              counterAndSend(obj);
+            }else{
+              var obj={type:'item',status:'OK',descriptor:'Temperature',item:{name:i+': '+ohmDevice.dev,value:ohmDevice.temp,highLow:'high'},device:{name:device.name,value:'Up'}};
+              counterAndSend(obj);
+            }
+            //fan speed
+            if(ohmDevice.fan!==undefined&&ohmDevice.fan>"80"){
+              var obj={type:'item',status:'Problem',descriptor:'Fan Speed',item:{name:i+': '+ohmDevice.dev,value:ohmDevice.fan,highLow:'high'},device:{name:device.name,value:'Up'}};
+              counterAndSend(obj);
+            }else{
+              var obj={type:'item',status:'OK',descriptor:'Fan Speed',item:{name:i+': '+ohmDevice.dev,value:ohmDevice.fan,highLow:'high'},device:{name:device.name,value:'Up'}};
+              counterAndSend(obj);
+            }
+            /*
+             //load
+             if(ohmDevice.load!==undefined&&ohmDevice.load<"70"){
+             var obj={type:'item',status:'Problem',descriptor:'Load',item:{name:i+': '+ohmDevice.dev,value:ohmDevice.load,highLow:'low'},device:{name:device.name,value:'Up'}};
+             counterAndSend(obj);
+             }else{
+             var obj={type:'item',status:'OK',descriptor:'Load',item:{name:i+': '+ohmDevice.dev,value:ohmDevice.load,highLow:'low'},device:{name:device.name,value:'Up'}};
+             counterAndSend(obj);
+             }
+             */
           }
-          //fan speed
-          if(ohmDevice.fan!==undefined&&ohmDevice.fan>"80"){
-            var obj={type:'item',status:'Problem',descriptor:'Fan Speed',item:{name:i+': '+ohmDevice.dev,value:ohmDevice.fan,highLow:'high'},device:{name:device.name,value:'Up'}};
-            counterAndSend(obj);
-          }else{
-            var obj={type:'item',status:'OK',descriptor:'Fan Speed',item:{name:i+': '+ohmDevice.dev,value:ohmDevice.fan,highLow:'high'},device:{name:device.name,value:'Up'}};
-            counterAndSend(obj);
-          }
-          /*
-          //load
-          if(ohmDevice.load!==undefined&&ohmDevice.load<"70"){
-            var obj={type:'item',status:'Problem',descriptor:'Load',item:{name:i+': '+ohmDevice.dev,value:ohmDevice.load,highLow:'low'},device:{name:device.name,value:'Up'}};
-            counterAndSend(obj);
-          }else{
-            var obj={type:'item',status:'OK',descriptor:'Load',item:{name:i+': '+ohmDevice.dev,value:ohmDevice.load,highLow:'low'},device:{name:device.name,value:'Up'}};
-            counterAndSend(obj);
-          }
-          */
+        }else{
+          //nothing for now
         }
-      }else{
-        //nothing for now
-      }
-      break;
+        break;
+    }
   }
 }
 

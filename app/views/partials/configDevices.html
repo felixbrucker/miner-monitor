@@ -13,6 +13,7 @@
           <th class="centerAlign">type</th>
           <th class="centerAlign">hostname</th>
           <th class="centerAlign"><a href="http://openhardwaremonitor.org/" target="_blank">ohm</a> address</th>
+          <th class="centerAlign"><span title="up/down mails will still be sent">disable Mails</span></th>
           <th class="centerAlign">group</th>
           <th class="centerAlign">action</th>
         </tr>
@@ -23,6 +24,7 @@
           <td><input type="text" name="hostname-{{entry.name}}" ng-model="entry.hostname" placeholder="http://192.168.0.101:80" size="26" required></td>
           <td ng-if="entry.type==='miner-agent'"><input type="text" name="ohm-{{entry.name}}" ng-model="entry.ohm" placeholder="http://192.168.0.101:8085" size="26"></td>
           <td ng-if="entry.type==='baikal-miner'"><input type="text" name="ohm-{{entry.name}}" ng-model="entry.ohm" placeholder="http://192.168.0.101:8085" size="26" disabled></td>
+          <td><input type="checkbox" ng-model="entry.mailDisabled" ng-click="configVm.setConfig()"></td>
           <td><select name="groupSelect-{{entry.name}}" ng-options="group.name as group.name for group in configVm.config.groups" ng-model="entry.group" required></select></td>
           <td><button ng-if="entry.type==='miner-agent'" ng-show="!configVm.updatingAgent[entry.id]" type="button" class="btn btn-info" ng-click="configVm.updateAgent(entry.id)"><i class="fa fa-cloud-download" aria-hidden="true"></i> Git Pull</button><button ng-if="entry.type==='miner-agent'" ng-show="configVm.updatingAgent[entry.id]" type="button" class="btn btn-success" disabled><i class="fa fa-refresh" aria-hidden="true"></i> update running..</button> <button ng-if="entry.type==='miner-agent'" ng-show="!configVm.updatingMiner[entry.id]" type="button" class="btn btn-info" ng-click="configVm.updateMiner(entry.id)"><i class="fa fa-cloud-download" aria-hidden="true"></i> Update Miner</button><button ng-if="entry.type==='miner-agent'" ng-show="configVm.updatingMiner[entry.id]" type="button" class="btn btn-success" disabled><i class="fa fa-refresh" aria-hidden="true"></i> update running..</button> <button ng-if="entry.type==='miner-agent'" type="button" class="btn btn-danger" ng-click="configVm.rebootSystem(entry.id)"><i class="fa fa-repeat" aria-hidden="true"></i></button> <button type="button" class="btn btn-warning" ng-click="configVm.delDevice(entry.id)">remove Device</button></td>
         </tr>
@@ -33,6 +35,7 @@
           <td><input type="text" name="hostname-newDevice" ng-model="configVm.newDevice.hostname" placeholder="http://192.168.0.101:80" size="26"></td>
           <td ng-if="configVm.newDevice.type==='miner-agent'"><input type="text" name="ohm-NewDevice" ng-model="configVm.newDevice.ohm" placeholder="http://192.168.0.101:8085" size="26"></td>
           <td ng-if="configVm.newDevice.type==='baikal-miner'"><input type="text" name="ohm-NewDevice" ng-model="configVm.newDevice.ohm" placeholder="http://192.168.0.101:8085" size="26" disabled></td>
+          <td><input type="checkbox" ng-model="configVm.newDevice.mailDisabled"></td>
           <td><select name="groupSelect-newDevice" ng-options="group.name as group.name for group in configVm.config.groups" ng-model="configVm.newDevice.group"></select></td>
           <td><button type="button" class="btn btn-success" ng-click="configVm.addDevice()">add Device</button></td>
         </tr>
