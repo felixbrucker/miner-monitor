@@ -909,8 +909,8 @@ function getBitcoinBalance(name,addr){
         console.log(colors.red("Error: Unable to get bitcoin balance data"));
       }
       if (parsed != null){
-        if(!parsed['final_balance'])
-          console.log(colors.red("Error: "+parsed));
+        if(parsed['final_balance']===undefined)
+          console.log(colors.red("Error: "+JSON.stringify(parsed,null,2)));
         else
           stats.bitcoinBalances[name]=parsed['final_balance'];
       }
