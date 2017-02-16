@@ -271,56 +271,34 @@
       </div>
     </div>
   </div>
-  <div class="col-md-6" ng-if="statsVm.enabled.nanoPascal">
+  <div class="col-md-6" ng-if="statsVm.enabled.mph">
     <div class="row">
       <div class="col-md-12  table-responsive">
-        <div class="centerAlign">Stats (nanoPascal):</div>
+        <div class="centerAlign">Stats (mph):</div>
         <table class="table table-bordered table-condensed leftAlign">
           <thead>
           <tr>
-            <th>Hr Now</th>
-            <th>Hr 6h</th>
-            <th>Hr 12h</th>
-            <th>Hr 24h</th>
+            <th>Coin</th>
+            <th>Hashrate</th>
             <th>Balance</th>
-            <th>Unconfirmed</th>
+            <th>Balance (AE)</th>
+            <th>On Exchange</th>
           </tr>
           </thead>
           <tbody>
-          <tr>
-            <td>{{statsVm.current.nanoPascal.data.hashrate}} MH/s</td>
-            <td>{{statsVm.current.nanoPascal.data.avgHashrate.h6}} MH/s</td>
-            <td>{{statsVm.current.nanoPascal.data.avgHashrate.h12}} MH/s</td>
-            <td>{{statsVm.current.nanoPascal.data.avgHashrate.h24}} MH/s</td>
-            <td>{{statsVm.current.nanoPascal.data.balance}} PASC</td>
-            <td>{{statsVm.current.nanoPascal.data["unconfirmed_balance"]}} PASC</td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12 table-responsive">
-        <div class="centerAlign">Workers (nanoPascal):</div>
-        <table class="table table-bordered table-condensed leftAlign">
-          <thead>
-          <tr>
-            <th class="leftAlign">Name</th>
-            <th class="leftAlign">Hr Now</th>
-            <th class="leftAlign">Hr 6h</th>
-            <th class="leftAlign">Hr 12h</th>
-            <th class="leftAlign">Hr 24h</th>
-            <th class="leftAlign">Last Share</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr ng-repeat="(id, data) in statsVm.current.nanoPascal.data.workers track by $index">
-            <td>{{data.id}}</td>
-            <td>{{data.hashrate}} MH/s</td>
-            <td>{{data["avg_h6"]}} MH/s</td>
-            <td>{{data["avg_h12"]}} MH/s</td>
-            <td>{{data["avg_h24"]}} MH/s</td>
-            <td>{{data.lastShare | secondsToTimeString}} ago</td>
+          <tr ng-repeat="(id, data) in statsVm.current.mph | orderBy:'name' track by $index">
+            <td ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">{{data.name}}</td>
+            <td ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">{{data.hashrate|hashrate}}
+          <span ng-if="data.workers!==[]" style="font-size:small;">
+              <span ng-repeat="(key, value) in data.workers track by $index">
+                  <br/>
+                  {{value.username}}: {{value.hashrate|hashrate}}<span class="nomobile"> (diff: {{value.difficulty}})</span>
+              </span>
+          </span>
+            </td>
+            <td ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">{{data.balance.confirmed}} ({{data.balance.unconfirmed}})</td>
+            <td ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">{{data.balance_ae.confirmed}} ({{data.balance_ae.unconfirmed}})</td>
+            <td ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">{{data.onExchange}}</td>
           </tr>
           </tbody>
         </table>

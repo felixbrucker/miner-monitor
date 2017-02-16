@@ -25,8 +25,7 @@
       interval: null,
       layout:null,
       layouts:null,
-      nicehashAddr:null,
-      nanoPascalAddr:null,
+      poolConfig:{},
       mailConfig:null,
       mailTo:null
     };
@@ -285,8 +284,7 @@
         vm.config.interval = response.data.interval;
         vm.config.layout = response.data.layout;
         vm.config.layouts = response.data.layouts;
-        vm.config.nicehashAddr = response.data.nicehashAddr;
-        vm.config.nanoPascalAddr = response.data.nanoPascalAddr;
+        vm.config.poolConfig = response.data.poolConfig;
         if(response.data.mailConfig===null)
           vm.config.mailConfig ={host:null,port:null,secure:null,auth:{user:null,pass:null}};
         else

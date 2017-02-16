@@ -14,7 +14,7 @@ var stats = {
   entries:{},
   nicehash:{},
   bitcoinBalances:{},
-  nanoPascal:{}
+  mph:{}
 };
 
 var problemCounter={};
@@ -22,7 +22,7 @@ var problemCounter={};
 var interval=null;
 var nhinterval=null;
 var btcBalanceInterval=null;
-var nanoPascalInterval=null;
+var mphInterval=null;
 
 function getStats(req, res, next) {
   var entries=[];
@@ -31,7 +31,7 @@ function getStats(req, res, next) {
     entries.push({name:key,devices:arr});
   });
   res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify({entries:entries,nicehash:{addr:configModule.config.nicehashAddr,stats:stats.nicehash},bitcoinBalances:stats.bitcoinBalances,nanoPascal:stats.nanoPascal}));
+  res.send(JSON.stringify({entries:entries,nicehash:{addr:configModule.config.poolConfig.nicehash.address,stats:stats.nicehash},bitcoinBalances:stats.bitcoinBalances,mph:stats.mph}));
 }
 
 function counterAndSend(problem){
@@ -603,63 +603,67 @@ function getOhmStats(device){
 }
 
 function getNicehashStats(addr){
-  var req= https.request({
-    host: 'www.nicehash.com',
-    path: '/api?method=stats.provider.ex&addr='+addr,
-    method: 'GET',
-    port: 443,
-    rejectUnauthorized: false,
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8'
-    }
-  }, function (response) {
-    response.setEncoding('utf8');
-    var body = '';
-    response.on('data', function (d) {
-      body += d;
-    });
-    response.on('end', function () {
-      var parsed = null;
-      try{
-        parsed=JSON.parse(body);
-      }catch(error){
-        console.log(colors.red("Error: Unable to get nicehash stats data"));
+  if(addr!==""&&addr!==null){
+    var req= https.request({
+      host: 'www.nicehash.com',
+      path: '/api?method=stats.provider.ex&addr='+addr,
+      method: 'GET',
+      port: 443,
+      rejectUnauthorized: false,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8'
       }
-      if (parsed != null){
-        if(parsed.result.error)
-          console.log(colors.red("Error: "+parsed.result.error));
-        var unpaidBalance=0;
-        var profitability=0;
-        var current=parsed.result.current;
-        var payments=parsed.result.payments;
-        for(var i=0;i<current.length;i++){
-          var algo=current[i];
-          if (algo.data['1'] !== '0') {
-            unpaidBalance += parseFloat(algo.data['1']);
-            if (algo.data['0'].a !== undefined) {
-              profitability += parseFloat(algo.data['0'].a) * parseFloat(algo.profitability);
-              getNicehashWorkerStats(addr,algo);
+    }, function (response) {
+      response.setEncoding('utf8');
+      var body = '';
+      response.on('data', function (d) {
+        body += d;
+      });
+      response.on('end', function () {
+        var parsed = null;
+        try{
+          parsed=JSON.parse(body);
+        }catch(error){
+          console.log(colors.red("Error: Unable to get nicehash stats data"));
+        }
+        if (parsed != null){
+          if(parsed.result.error)
+            console.log(colors.red("Error: "+parsed.result.error));
+          else{
+            var unpaidBalance=0;
+            var profitability=0;
+            var current=parsed.result.current;
+            var payments=parsed.result.payments;
+            for(var i=0;i<current.length;i++){
+              var algo=current[i];
+              if (algo.data['1'] !== '0') {
+                unpaidBalance += parseFloat(algo.data['1']);
+                if (algo.data['0'].a !== undefined) {
+                  profitability += parseFloat(algo.data['0'].a) * parseFloat(algo.profitability);
+                  getNicehashWorkerStats(addr,algo);
+                }
+              }
             }
+            // ugly
+            setTimeout(function(){
+              stats.nicehash.sum={profitability:profitability,unpaidBalance:unpaidBalance};
+              stats.nicehash.data={current:current,payments:payments};
+            },5000);
           }
         }
-        // ugly
-        setTimeout(function(){
-          stats.nicehash.sum={profitability:profitability,unpaidBalance:unpaidBalance};
-          stats.nicehash.data={current:current,payments:payments};
-        },5000);
-      }
+      });
+    }).on("error", function(error) {
+      console.log(colors.red("Error: Unable to get nicehash stats data"));
+      console.log(error);
     });
-  }).on("error", function(error) {
-    console.log(colors.red("Error: Unable to get nicehash stats data"));
-    console.log(error);
-  });
-  req.on('socket', function (socket) {
-    socket.setTimeout(20000);
-    socket.on('timeout', function() {
-      req.abort();
+    req.on('socket', function (socket) {
+      socket.setTimeout(20000);
+      socket.on('timeout', function() {
+        req.abort();
+      });
     });
-  });
-  req.end();
+    req.end();
+  }
 }
 
 function getNicehashWorkerStats(addr,algo){
@@ -713,8 +717,171 @@ function getNicehashWorkerStats(addr,algo){
 }
 
 function getAllBitcoinbalances(){
-  if(configModule.config.nicehashAddr!==undefined&&configModule.config.nicehashAddr!==null&&configModule.config.nicehashAddr!=="")
-    getBitcoinBalance("Mining",configModule.config.nicehashAddr);
+  if(configModule.config.poolConfig.nicehash.address!==undefined&&configModule.config.poolConfig.nicehash.address!==null&&configModule.config.poolConfig.nicehash.address!=="")
+    getBitcoinBalance("Mining",configModule.config.poolConfig.nicehash.address);
+}
+
+function getMPHWorkerStats(coinName,callback){
+  var req= https.request({
+    host: coinName+'.miningpoolhub.com',
+    path: '/index.php?page=api&action=getuserworkers&api_key='+configModule.config.poolConfig.mph.api_key+'&id='+configModule.config.poolConfig.mph.user_id,
+    method: 'GET',
+    port: 443,
+    rejectUnauthorized: false,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8'
+    }
+  }, function (response) {
+    response.setEncoding('utf8');
+    var body = '';
+    response.on('data', function (d) {
+      body += d;
+    });
+    response.on('end', function () {
+      var parsed = null;
+      try{
+        parsed=JSON.parse(body);
+      }catch(error){
+        console.log(colors.red("Error: Unable to get mph worker stats data"));
+      }
+      if (parsed != null&&parsed.getuserworkers){
+        callback(parsed.getuserworkers.data);
+      }else{
+        callback(null);
+      }
+    });
+  }).on("error", function(error) {
+    console.log(colors.red("Error: Unable to get mph worker stats data"));
+    console.log(error);
+    callback(null);
+  });
+  req.on('socket', function (socket) {
+    socket.setTimeout(20000);
+    socket.on('timeout', function() {
+      req.abort();
+    });
+  });
+  req.end();
+}
+
+function getMPHCoinStats(coinName,callback){
+  var req= https.request({
+    host: coinName+'.miningpoolhub.com',
+    path: '/index.php?page=api&action=getdashboarddata&api_key='+configModule.config.poolConfig.mph.api_key+'&id='+configModule.config.poolConfig.mph.user_id,
+    method: 'GET',
+    port: 443,
+    rejectUnauthorized: false,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8'
+    }
+  }, function (response) {
+    response.setEncoding('utf8');
+    var body = '';
+    response.on('data', function (d) {
+      body += d;
+    });
+    response.on('end', function () {
+      var parsed = null;
+      try{
+        parsed=JSON.parse(body);
+      }catch(error){
+        console.log(colors.red("Error: Unable to get mph coin stats data"));
+      }
+      if (parsed != null&&parsed.getdashboarddata){
+        callback(parsed.getdashboarddata.data);
+      }else{
+        callback(null);
+      }
+    });
+  }).on("error", function(error) {
+    console.log(colors.red("Error: Unable to get mph coin stats data"));
+    console.log(error);
+    callback(null);
+  });
+  req.on('socket', function (socket) {
+    socket.setTimeout(20000);
+    socket.on('timeout', function() {
+      req.abort();
+    });
+  });
+  req.end();
+}
+
+function getMPHStats(){
+  if(configModule.config.poolConfig.mph.api_key!==""&&configModule.config.poolConfig.mph.api_key!==null&&configModule.config.poolConfig.mph.user_id!==""&&configModule.config.poolConfig.mph.user_id!==null){
+    var statsData=[];
+    var req= https.request({
+      host: 'miningpoolhub.com',
+      path: '/index.php?page=api&action=getminingandprofitsstatistics',
+      method: 'GET',
+      port: 443,
+      rejectUnauthorized: false,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8'
+      }
+    }, function (response) {
+      response.setEncoding('utf8');
+      var body = '';
+      response.on('data', function (d) {
+        body += d;
+      });
+      response.on('end', function () {
+        var parsed = null;
+        try{
+          parsed=JSON.parse(body);
+        }catch(error){
+          console.log(colors.red("Error: Unable to get mph stats data"));
+        }
+        if (parsed != null&&parsed.success){
+          for(var i=0;i<parsed.return.length;i++){
+            (function (i){
+              getMPHCoinStats(parsed.return[i].coin_name,function(result){
+                if(result!==null) {
+                  var data = {
+                    name: parsed.return[i].coin_name.charAt(0).toUpperCase()+parsed.return[i].coin_name.slice(1),
+                    balance: result.balance,
+                    balance_ae: result.balance_for_auto_exchange,
+                    onExchange: result.balance_on_exchange,
+                    workers: [],
+                    hashrate:result.raw.personal.hashrate //kh/s
+                  };
+
+                  (function (data) {
+                    getMPHWorkerStats(parsed.return[i].coin_name, function (result) {
+                      if (result !== null) {
+                        for (var j = 0; j < result.length; j++) {
+                          if (result[j].hashrate !== 0) {
+                            var arr = result[j].username.split(".");
+                            result[j].username=arr[(arr.length === 1 ? 0 : 1)];
+                            data.workers.push(result[j]);
+                          }
+                        }
+                        statsData.push(data);
+                      }
+                    });
+                  })(data);
+                }
+              });
+            })(i);
+          }
+          // ugly
+          setTimeout(function(){
+            stats.mph=statsData;
+          },10000)
+        }
+      });
+    }).on("error", function(error) {
+      console.log(colors.red("Error: Unable to get mph stats data"));
+      console.log(error);
+    });
+    req.on('socket', function (socket) {
+      socket.setTimeout(20000);
+      socket.on('timeout', function() {
+        req.abort();
+      });
+    });
+    req.end();
+  }
 }
 
 function getBitcoinBalance(name,addr){
@@ -760,51 +927,6 @@ function getBitcoinBalance(name,addr){
   req.end();
 }
 
-function getNanoPascal(){
-  if(configModule.config.nanoPascalAddr!==undefined&&configModule.config.nanoPascalAddr!==null&&configModule.config.nanoPascalAddr!==""){
-    var req= https.request({
-      host: 'api.nanopool.org',
-      path: '/v1/pasc/user/'+configModule.config.nanoPascalAddr,
-      method: 'GET',
-      port: 443,
-      rejectUnauthorized: false,
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8'
-      }
-    }, function (response) {
-      response.setEncoding('utf8');
-      var body = '';
-      response.on('data', function (d) {
-        body += d;
-      });
-      response.on('end', function () {
-        var parsed = null;
-        try{
-          parsed=JSON.parse(body);
-        }catch(error){
-          console.log(colors.red("Error: Unable to get nanoPascal stats data"));
-        }
-        if (parsed != null&&parsed.status){
-          for(var i=0;i<parsed.data.workers.length;i++){
-            parsed.data.workers[i].lastShare=(new Date() - new Date(parsed.data.workers[i].lastShare*1000))/1000;
-          }
-          stats.nanoPascal=parsed;
-        }
-      });
-    }).on("error", function(error) {
-      console.log(colors.red("Error: Unable to get nanoPascal stats data"));
-      console.log(error);
-    });
-    req.on('socket', function (socket) {
-      socket.setTimeout(10000);
-      socket.on('timeout', function() {
-        req.abort();
-      });
-    });
-    req.end();
-  }
-}
-
 function getAllMinerStats(){
   for(var i=0;i<configModule.config.groups.length;i++){
     var group=configModule.config.groups[i];
@@ -833,12 +955,12 @@ function restartInterval(){
 
 function init() {
   getAllMinerStats();
-  getNicehashStats(configModule.config.nicehashAddr);
+  getNicehashStats(configModule.config.poolConfig.nicehash.address);
   getAllBitcoinbalances();
-  getNanoPascal();
-  nanoPascalInterval=setInterval(getNanoPascal,30000);
+  getMPHStats();
+  mphInterval=setInterval(getMPHStats,30000);
   interval=setInterval(getAllMinerStats,configModule.config.interval*1000);
-  nhinterval=setInterval(getNicehashStats,20000,configModule.config.nicehashAddr);
+  nhinterval=setInterval(getNicehashStats,20000,configModule.config.poolConfig.nicehash.address);
   btcBalanceInterval=setInterval(getAllBitcoinbalances,60000);
 }
 

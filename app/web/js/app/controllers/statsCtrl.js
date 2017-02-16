@@ -23,7 +23,7 @@
       entries:null,
       nicehash:null,
       bitcoinBalances:null,
-      nanoPascal:null
+      mph:null
     };
     vm.layout="";
     vm.enabled={};
@@ -56,7 +56,7 @@
         else
           vm.enabled = {
             nh:true,
-            nanoPascal:false
+            mph:false
           };
 
         var interval=localStorage.getItem('refreshInterval');
@@ -82,7 +82,7 @@
         vm.current.entries = response.data.entries;
         vm.current.nicehash = response.data.nicehash;
         vm.current.bitcoinBalances=response.data.bitcoinBalances;
-        vm.current.nanoPascal=response.data.nanoPascal;
+        vm.current.mph=response.data.mph;
       }, function errorCallback(response) {
         console.log(response);
       });

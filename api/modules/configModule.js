@@ -14,10 +14,17 @@ var config = module.exports = {
     devices:[],
     groups:[],
     layout:null,
-    nicehashAddr:"",
-    nanoPascalAddr:"",
     mailConfig:null,
-    mailTo:null
+    mailTo:null,
+    poolConfig:{
+      nicehash:{
+        address:""
+      },
+      mph:{
+        api_key:"",
+        user_id:""
+      }
+    }
   },
   configNonPersistent:{
     types:[
@@ -55,19 +62,32 @@ var config = module.exports = {
             config.config.groups=[];
           if(config.config.layout===undefined)
             config.config.layout="large";
-          if(config.config.nicehashAddr===undefined)
-            config.config.nicehashAddr="";
+          if(config.config.poolConfig===undefined)
+            config.config.poolConfig={
+              nicehash:{
+                address:""
+              },
+              mph:{
+                api_key:"",
+                user_id:""
+              }
+            };
           if(config.config.mailConfig===undefined)
             config.config.mailConfig=null;
-          if(config.config.nanoPascalAddr===undefined)
-            config.config.nanoPascalAddr="";
         });
       } else if (err.code == 'ENOENT') {
         //default conf
         config.config.interval=30;
         config.config.layout="large";
-        config.config.nicehashAddr="";
-        config.config.nanoPascalAddr="";
+        config.config.poolConfig={
+          nicehash:{
+            address:""
+          },
+          mph:{
+            api_key:"",
+            user_id:""
+          }
+        };
         config.saveConfig();
         setTimeout(function(){
           config.loadConfig();

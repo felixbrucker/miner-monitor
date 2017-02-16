@@ -22,12 +22,17 @@
         </div>
         <div class="row" style="margin-bottom: 10px;">
           <div  class="col-md-12">
-            nh addr: <input type="text" size="42" ng-model="configVm.config.nicehashAddr">
+            nh addr: <input type="text" size="42" ng-model="configVm.config.poolConfig.nicehash.address">
           </div>
         </div>
         <div class="row" style="margin-bottom: 10px;">
           <div  class="col-md-12">
-            nanoPascal addr: <input type="text" size="42" ng-model="configVm.config.nanoPascalAddr">
+            mph api_key: <input type="text" size="42" ng-model="configVm.config.poolConfig.mph.api_key">
+          </div>
+        </div>
+        <div class="row" style="margin-bottom: 10px;">
+          <div  class="col-md-12">
+            mph user_id: <input type="text" size="7" ng-model="configVm.config.poolConfig.mph.user_id">
           </div>
         </div>
         <div class="row" style="margin-bottom: 10px;">
@@ -120,7 +125,7 @@
       </div>
       <div class="row" style="margin-bottom: 10px;">
         <div  class="col-md-12">
-          enable nanopool Pascal dashboard: <input type="checkbox" ng-model="configVm.localStorage.enabled.nanoPascal">
+          enable mph dashboard: <input type="checkbox" ng-model="configVm.localStorage.enabled.mph">
         </div>
       </div>
       <div class="row" style="margin-bottom: 10px;">
