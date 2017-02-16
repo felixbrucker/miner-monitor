@@ -602,11 +602,11 @@ function getOhmStats(device){
   }
 }
 
-function getNicehashStats(addr){
-  if(addr!==""&&addr!==null){
+function getNicehashStats(){
+  if(configModule.config.poolConfig.nicehash.address!==""&&configModule.config.poolConfig.nicehash.address!==null){
     var req= https.request({
       host: 'www.nicehash.com',
-      path: '/api?method=stats.provider.ex&addr='+addr,
+      path: '/api?method=stats.provider.ex&addr='+configModule.config.poolConfig.nicehash.address,
       method: 'GET',
       port: 443,
       rejectUnauthorized: false,
@@ -640,7 +640,7 @@ function getNicehashStats(addr){
                 unpaidBalance += parseFloat(algo.data['1']);
                 if (algo.data['0'].a !== undefined) {
                   profitability += parseFloat(algo.data['0'].a) * parseFloat(algo.profitability);
-                  getNicehashWorkerStats(addr,algo);
+                  getNicehashWorkerStats(configModule.config.poolConfig.nicehash.address,algo);
                 }
               }
             }
@@ -955,12 +955,12 @@ function restartInterval(){
 
 function init() {
   getAllMinerStats();
-  getNicehashStats(configModule.config.poolConfig.nicehash.address);
+  getNicehashStats();
   getAllBitcoinbalances();
   getMPHStats();
   mphInterval=setInterval(getMPHStats,30000);
   interval=setInterval(getAllMinerStats,configModule.config.interval*1000);
-  nhinterval=setInterval(getNicehashStats,20000,configModule.config.poolConfig.nicehash.address);
+  nhinterval=setInterval(getNicehashStats,20000);
   btcBalanceInterval=setInterval(getAllBitcoinbalances,60000);
 }
 
