@@ -189,7 +189,7 @@
   <div class="col-md-6" ng-if="statsVm.enabled.nh">
     <div class="row">
       <div class="col-md-12 table-responsive">
-        <div class="centerAlign">Workers (nicehash:main):</div>
+        <div class="centerAlign">Stats (nicehash):</div>
         <table class="table table-bordered table-condensed leftAlign">
           <thead>
           <tr>
@@ -274,7 +274,7 @@
   <div class="col-md-6" ng-if="statsVm.enabled.mph">
     <div class="row">
       <div class="col-md-12  table-responsive">
-        <div class="centerAlign">Stats (mph):</div>
+        <div class="centerAlign">Stats (MPH):</div>
         <table class="table table-bordered table-condensed leftAlign">
           <thead>
           <tr>
@@ -306,7 +306,11 @@
         </table>
       </div>
     </div>
-
+    <div class="row">
+      <div class="col-md-12 centerAlign">
+        <a href="https://miningpoolhub.com/" target="_blank">MPH Homepage</a>
+      </div>
+    </div>
   </div>
   <div ng-repeat="(id,group) in statsVm.current.entries | orderBy:'name'">
     <div ng-repeat="entry in group.devices | toArray | orderBy:'name'">
