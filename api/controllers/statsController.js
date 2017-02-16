@@ -839,6 +839,7 @@ function getMPHStats(){
                 if(result!==null) {
                   var data = {
                     name: parsed.return[i].coin_name.charAt(0).toUpperCase()+parsed.return[i].coin_name.slice(1),
+                    profitability:parsed.return[i].profit/1000000.0, //make gh/s->kh/s for easier calculation
                     balance: result.balance,
                     balance_ae: result.balance_for_auto_exchange,
                     onExchange: result.balance_on_exchange,

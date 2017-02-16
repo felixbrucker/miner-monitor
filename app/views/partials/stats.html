@@ -280,6 +280,7 @@
           <tr>
             <th>Coin</th>
             <th>Hashrate</th>
+            <th>Profitability</th>
             <th>Balance</th>
             <th>Balance (AE)</th>
             <th>On Exchange</th>
@@ -296,6 +297,7 @@
               </span>
           </span>
             </td>
+            <td ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">{{data.profitability*data.hashrate|number:4}} BTC/Day</td>
             <td ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">{{data.balance.confirmed}} ({{data.balance.unconfirmed}})</td>
             <td ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">{{data.balance_ae.confirmed}} ({{data.balance_ae.unconfirmed}})</td>
             <td ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">{{data.onExchange}}</td>
