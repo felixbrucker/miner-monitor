@@ -32,6 +32,7 @@
     vm.getStats = getStats;
     vm.getLayout = getLayout;
     vm.parseName = parseName;
+    vm.atLeastOneBalanceDashboard=atLeastOneBalanceDashboard;
 
 
     /**
@@ -62,6 +63,14 @@
 
     function parseName(name){
       return (isNaN(name.charAt(0)) ? name : name.substr(1));
+    }
+
+    function atLeastOneBalanceDashboard(){
+      for(var i=0;i<vm.current.dashboardData.length;i++){
+        if(vm.current.dashboardData[i].enabled&&vm.current.dashboardData[i].type==='bitcoinBalance')
+          return true;
+      }
+      return false;
     }
 
     /**
