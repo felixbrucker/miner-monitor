@@ -25,7 +25,8 @@
       interval: null,
       layout:null,
       layouts:null,
-      poolConfig:{},
+      dashboardData:[],
+      dashboardTypes:null,
       mailConfig:null,
       mailTo:null
     };
@@ -59,6 +60,18 @@
       name: ""
     };
 
+    vm.newDashboard = {
+      id: null,
+      enabled: true,
+      name: "",
+      type: "",
+      baseUrl: "",
+      address:"",
+      api_key:"",
+      user_id:"",
+      hrModifier:1
+    };
+
 
 
     // controller API
@@ -76,6 +89,8 @@
     vm.updateAgent=updateAgent;
     vm.verifyTransport = verifyTransport;
     vm.rebootSystem=rebootSystem;
+    vm.addDashboard=addDashboard;
+    vm.delDashboard=delDashboard;
 
 
 
@@ -149,10 +164,6 @@
      */
     function getLocalStorage(){
       vm.localStorage.layout=localStorage.getItem('layout');
-      if(localStorage.getItem('enabled')!==null&&localStorage.getItem('enabled')!==""&&localStorage.getItem('enabled')!=="NaN")
-        vm.localStorage.enabled=JSON.parse(localStorage.getItem('enabled'));
-      else
-        vm.localStorage.enabled={nh:true};
       vm.localStorage.refreshInterval=parseInt(localStorage.getItem('refreshInterval'));
     }
 
@@ -166,8 +177,6 @@
         localStorage.setItem('layout', vm.localStorage.layout);
       else
         localStorage.removeItem('layout');
-
-      localStorage.setItem('enabled', JSON.stringify(vm.localStorage.enabled));
 
       if(vm.localStorage.refreshInterval!==null)
         localStorage.setItem('refreshInterval', vm.localStorage.refreshInterval.toString());
@@ -232,6 +241,51 @@
     }
 
     /**
+     * @name addDashboard
+     * @desc add new dashboard to array
+     * @memberOf configCtrl
+     */
+    function addDashboard() {
+      if (vm.newDashboard.name !== "" && vm.newDashboard.type !== "") {
+        //gen unique id
+        vm.newDashboard.id = Date.now();
+        //replace / if exists at the end of the hostname
+        vm.newDashboard.baseUrl = vm.newDashboard.baseUrl.replace(/\/$/, "");
+        //add to array
+        vm.config.dashboardData.push(JSON.parse(JSON.stringify(vm.newDashboard)));
+        //clear variables
+        vm.newDashboard = {
+          id: null,
+          enabled: true,
+          name: "",
+          type: "",
+          baseUrl: "",
+          address:"",
+          api_key:"",
+          user_id:"",
+          hrModifier:1
+        };
+        vm.setConfig();
+      } else {
+        return false;
+      }
+    }
+
+    /**
+     * @name delDashboard
+     * @desc delete dashboard from array
+     * @memberOf configCtrl
+     */
+    function delDashboard(id) {
+      vm.config.dashboardData.forEach(function (entry, index, array) {
+        if (entry.id === id) {
+          vm.config.dashboardData.splice(index, 1);
+        }
+      });
+      vm.setConfig();
+    }
+
+    /**
      * @name addGroup
      * @desc add new group to array
      * @memberOf configCtrl
@@ -284,7 +338,8 @@
         vm.config.interval = response.data.interval;
         vm.config.layout = response.data.layout;
         vm.config.layouts = response.data.layouts;
-        vm.config.poolConfig = response.data.poolConfig;
+        vm.config.dashboardData = response.data.dashboardData;
+        vm.config.dashboardTypes = response.data.dashboardTypes;
         if(response.data.mailConfig===null)
           vm.config.mailConfig ={host:null,port:null,secure:null,auth:{user:null,pass:null}};
         else

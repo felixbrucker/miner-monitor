@@ -167,6 +167,15 @@
           pageTitle: 'Miner-Monitor General Config'
         }
       })
+      .state('dashboardConfig', {
+        url: '/dashboardConfig',
+        templateUrl: 'views/partials/configDashboards.html',
+        controller: 'configCtrl',
+        controllerAs: 'configVm',
+        data: {
+          pageTitle: 'Miner-Monitor Dashboard Config'
+        }
+      })
       .state('deviceConfig', {
         url: '/deviceConfig',
         templateUrl: 'views/partials/configDevices.html',

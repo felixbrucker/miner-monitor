@@ -12,9 +12,7 @@ var mailController = require(__basedir + 'api/controllers/mailController');
 
 var stats = {
   entries:{},
-  nicehash:{},
-  bitcoinBalances:{},
-  mph:{}
+  dashboardData:{}
 };
 
 var problemCounter={};
@@ -23,6 +21,7 @@ var interval=null;
 var nhinterval=null;
 var btcBalanceInterval=null;
 var mphInterval=null;
+var mposInterval=null;
 
 function getStats(req, res, next) {
   var entries=[];
@@ -30,8 +29,17 @@ function getStats(req, res, next) {
     var arr=Object.keys(stats.entries[key]).map(function (key2) { return stats.entries[key][key2]; });
     entries.push({name:key,devices:arr});
   });
+  var dashboardData=[];
+  Object.keys(stats.dashboardData).forEach(function(key,index) {
+    dashboardData.push({name:key,enabled:stats.dashboardData[key].enabled,data:stats.dashboardData[key].data,type:stats.dashboardData[key].type});
+  });
+  dashboardData.sort(function(a,b){
+    if(a.name<b.name) return -1;
+    if(a.name>b.name) return 1;
+    return 0;
+  });
   res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify({entries:entries,nicehash:{addr:configModule.config.poolConfig.nicehash.address,stats:stats.nicehash},bitcoinBalances:stats.bitcoinBalances,mph:stats.mph}));
+  res.send(JSON.stringify({entries:entries,dashboardData:dashboardData}));
 }
 
 function counterAndSend(problem){
@@ -602,11 +610,19 @@ function getOhmStats(device){
   }
 }
 
-function getNicehashStats(){
-  if(configModule.config.poolConfig.nicehash.address!==""&&configModule.config.poolConfig.nicehash.address!==null){
+function getAllNicehashStats(){
+  for(var i=0;i<configModule.config.dashboardData.length;i++){
+    if(configModule.config.dashboardData[i].type==='nicehash'&&configModule.config.dashboardData[i].enabled){
+      getNicehashStats(configModule.config.dashboardData[i]);
+    }
+  }
+}
+
+function getNicehashStats(obj){
+
     var req= https.request({
       host: 'www.nicehash.com',
-      path: '/api?method=stats.provider.ex&addr='+configModule.config.poolConfig.nicehash.address,
+      path: '/api?method=stats.provider.ex&addr='+obj.address,
       method: 'GET',
       port: 443,
       rejectUnauthorized: false,
@@ -640,14 +656,13 @@ function getNicehashStats(){
                 unpaidBalance += parseFloat(algo.data['1']);
                 if (algo.data['0'].a !== undefined) {
                   profitability += parseFloat(algo.data['0'].a) * parseFloat(algo.profitability);
-                  getNicehashWorkerStats(configModule.config.poolConfig.nicehash.address,algo);
+                  getNicehashWorkerStats(obj.address,algo);
                 }
               }
             }
             // ugly
             setTimeout(function(){
-              stats.nicehash.sum={profitability:profitability,unpaidBalance:unpaidBalance};
-              stats.nicehash.data={current:current,payments:payments};
+              stats.dashboardData[obj.name]={data:{sum:{profitability:profitability,unpaidBalance:unpaidBalance},current:current,payments:payments,address:obj.address},enabled:obj.enabled,type:obj.type};
             },5000);
           }
         }
@@ -663,7 +678,6 @@ function getNicehashStats(){
       });
     });
     req.end();
-  }
 }
 
 function getNicehashWorkerStats(addr,algo){
@@ -717,14 +731,17 @@ function getNicehashWorkerStats(addr,algo){
 }
 
 function getAllBitcoinbalances(){
-  if(configModule.config.poolConfig.nicehash.address!==undefined&&configModule.config.poolConfig.nicehash.address!==null&&configModule.config.poolConfig.nicehash.address!=="")
-    getBitcoinBalance("Mining",configModule.config.poolConfig.nicehash.address);
+  for(var i=0;i<configModule.config.dashboardData.length;i++){
+    if(configModule.config.dashboardData[i].type==='bitcoinBalance'&&configModule.config.dashboardData[i].enabled){
+      getBitcoinBalance(configModule.config.dashboardData[i]);
+    }
+  }
 }
 
-function getMPHWorkerStats(coinName,callback){
+function getMPHWorkerStats(obj,coinName,callback){
   var req= https.request({
     host: coinName+'.miningpoolhub.com',
-    path: '/index.php?page=api&action=getuserworkers&api_key='+configModule.config.poolConfig.mph.api_key+'&id='+configModule.config.poolConfig.mph.user_id,
+    path: '/index.php?page=api&action=getuserworkers&api_key='+obj.api_key+'&id='+obj.user_id,
     method: 'GET',
     port: 443,
     rejectUnauthorized: false,
@@ -764,10 +781,10 @@ function getMPHWorkerStats(coinName,callback){
   req.end();
 }
 
-function getMPHCoinStats(coinName,callback){
+function getMPHCoinStats(obj,coinName,callback){
   var req= https.request({
     host: coinName+'.miningpoolhub.com',
-    path: '/index.php?page=api&action=getdashboarddata&api_key='+configModule.config.poolConfig.mph.api_key+'&id='+configModule.config.poolConfig.mph.user_id,
+    path: '/index.php?page=api&action=getdashboarddata&api_key='+obj.api_key+'&id='+obj.user_id,
     method: 'GET',
     port: 443,
     rejectUnauthorized: false,
@@ -807,8 +824,15 @@ function getMPHCoinStats(coinName,callback){
   req.end();
 }
 
-function getMPHStats(){
-  if(configModule.config.poolConfig.mph.api_key!==""&&configModule.config.poolConfig.mph.api_key!==null&&configModule.config.poolConfig.mph.user_id!==""&&configModule.config.poolConfig.mph.user_id!==null){
+function getAllMPHStats(){
+  for(var i=0;i<configModule.config.dashboardData.length;i++){
+    if(configModule.config.dashboardData[i].type==='miningpoolhub'&&configModule.config.dashboardData[i].enabled){
+      getMPHStats(configModule.config.dashboardData[i]);
+    }
+  }
+}
+
+function getMPHStats(obj){
     var statsData=[];
     var req= https.request({
       host: 'miningpoolhub.com',
@@ -835,7 +859,7 @@ function getMPHStats(){
         if (parsed != null&&parsed.success){
           for(var i=0;i<parsed.return.length;i++){
             (function (i){
-              getMPHCoinStats(parsed.return[i].coin_name,function(result){
+              getMPHCoinStats(obj,parsed.return[i].coin_name,function(result){
                 if(result!==null) {
                   var data = {
                     name: parsed.return[i].coin_name.charAt(0).toUpperCase()+parsed.return[i].coin_name.slice(1),
@@ -844,11 +868,12 @@ function getMPHStats(){
                     balance_ae: result.balance_for_auto_exchange,
                     onExchange: result.balance_on_exchange,
                     workers: [],
-                    hashrate:result.raw.personal.hashrate //kh/s
+                    hashrate:result.raw.personal.hashrate, //kh/s
+                    symbol:result.pool.info.currency
                   };
 
                   (function (data) {
-                    getMPHWorkerStats(parsed.return[i].coin_name, function (result) {
+                    getMPHWorkerStats(obj,parsed.return[i].coin_name, function (result) {
                       if (result !== null) {
                         for (var j = 0; j < result.length; j++) {
                           if (result[j].hashrate !== 0) {
@@ -867,7 +892,7 @@ function getMPHStats(){
           }
           // ugly
           setTimeout(function(){
-            stats.mph=statsData;
+            stats.dashboardData[obj.name]={data:statsData,type:obj.type,enabled:obj.enabled};
           },10000)
         }
       });
@@ -882,13 +907,12 @@ function getMPHStats(){
       });
     });
     req.end();
-  }
 }
 
-function getBitcoinBalance(name,addr){
+function getBitcoinBalance(obj){
   var req= https.request({
     host: 'blockchain.info',
-    path: '/address/'+addr+'?format=json&limit=0',
+    path: '/address/'+obj.address+'?format=json&limit=0',
     method: 'GET',
     port: 443,
     rejectUnauthorized: false,
@@ -912,7 +936,7 @@ function getBitcoinBalance(name,addr){
         if(parsed['final_balance']===undefined)
           console.log(colors.red("Error: "+JSON.stringify(parsed,null,2)));
         else
-          stats.bitcoinBalances[name]=parsed['final_balance'];
+          stats.dashboardData[obj.name]={type:obj.type,data:parsed['final_balance'],enabled:obj.enabled};
       }
     });
   }).on("error", function(error) {
@@ -927,6 +951,141 @@ function getBitcoinBalance(name,addr){
   });
   req.end();
 }
+
+function getAllMPOSStats(){
+  for(var i=0;i<configModule.config.dashboardData.length;i++){
+    if(configModule.config.dashboardData[i].type==='genericMPOS'&&configModule.config.dashboardData[i].enabled){
+      getMPOSStats(configModule.config.dashboardData[i]);
+    }
+  }
+}
+
+
+
+function getMPOSMethodData(obj,method,callback){
+  var arr = obj.baseUrl.split("://");
+  var protocol = arr[0];
+  var url = arr[1];
+  arr = arr[1].split(":");
+  var req=null;
+  switch(protocol) {
+    case "https":
+      req= https.request({
+        host: url,
+        path: '/index.php?page=api&action='+method+'&api_key='+obj.api_key+'&id='+obj.user_id,
+        method: 'GET',
+        port: (arr.length===1 ? 443 : arr[1]),
+        rejectUnauthorized: false,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8'
+        }
+      }, function (response) {
+        response.setEncoding('utf8');
+        var body = '';
+        response.on('data', function (d) {
+          body += d;
+        });
+        response.on('end', function () {
+          var parsed = null;
+          try{
+            parsed=JSON.parse(body);
+          }catch(error){
+            console.log(colors.red("Error: Unable to get MPOS "+method+" stats data"));
+          }
+          if (parsed != null&&parsed[method]){
+            callback(parsed[method].data);
+          }else{
+            callback(null);
+          }
+        });
+      });
+      break;
+    case "http":
+      req= https.request({
+        host: url,
+        path: '/index.php?page=api&action=getdashboarddata&api_key='+obj.api_key+'&id='+obj.user_id,
+        method: 'GET',
+        port: (arr.length===1 ? 80 : arr[1]),
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8'
+        }
+      }, function (response) {
+        response.setEncoding('utf8');
+        var body = '';
+        response.on('data', function (d) {
+          body += d;
+        });
+        response.on('end', function () {
+          var parsed = null;
+          try{
+            parsed=JSON.parse(body);
+          }catch(error){
+            console.log(colors.red("Error: Unable to get MPOS "+method+" stats data"));
+          }
+          if (parsed != null&&parsed[method]){
+            callback(parsed[method].data);
+          }else{
+            callback(null);
+          }
+        });
+      });
+      break;
+  }
+  req.on("error", function(error) {
+    console.log(colors.red("Error: Unable to get MPOS "+method+" stats data"));
+    console.log(error);
+    callback(null);
+  });
+  req.on('socket', function (socket) {
+    socket.setTimeout(20000);
+    socket.on('timeout', function() {
+      req.abort();
+    });
+  });
+  req.end();
+}
+
+function getMPOSStats(obj){
+
+  if(stats.dashboardData[obj.name]===undefined)
+    stats.dashboardData[obj.name]={type:obj.type,enabled:obj.enabled,data:{baseUrl:obj.baseUrl}};
+
+  getMPOSMethodData(obj,"getdashboarddata",function(result){
+    if(result!==null){
+      stats.dashboardData[obj.name].data.hashrate=result.raw.personal.hashrate/obj.hrModifier;
+      stats.dashboardData[obj.name].data.symbol=result.pool.info.currency;
+      stats.dashboardData[obj.name].data.estimated=result.personal.estimates.payout;
+    }
+  });
+
+  getMPOSMethodData(obj,"getuserworkers",function(result){
+    if(result!==null){
+      var workers=[];
+      result.sort(function(a,b){
+        if(a.username< b.username) return -1;
+        if(a.username> b.username) return 1;
+        return 0;
+      });
+      for (var j = 0; j < result.length; j++) {
+        if (result[j].hashrate !== 0) {
+          var arr = result[j].username.split(".");
+          result[j].username=arr[(arr.length === 1 ? 0 : 1)];
+          result[j].hashrate=result[j].hashrate/obj.hrModifier;
+          workers.push(result[j]);
+        }
+      }
+      stats.dashboardData[obj.name].data.workers=workers;
+    }
+  });
+
+  getMPOSMethodData(obj,"getuserbalance",function(result){
+    if(result!==null){
+      stats.dashboardData[obj.name].data.confirmed=result.confirmed;
+      stats.dashboardData[obj.name].data.unconfirmed=result.unconfirmed;
+    }
+  });
+}
+
 
 function getAllMinerStats(){
   for(var i=0;i<configModule.config.groups.length;i++){
@@ -946,6 +1105,7 @@ function getAllMinerStats(){
 
 function cleanup(){
   stats.entries={};
+  stats.dashboardData={};
   problemCounter={};
 }
 
@@ -956,13 +1116,15 @@ function restartInterval(){
 
 function init() {
   getAllMinerStats();
-  getNicehashStats();
+  getAllNicehashStats();
   getAllBitcoinbalances();
-  getMPHStats();
-  mphInterval=setInterval(getMPHStats,30000);
+  getAllMPHStats();
+  getAllMPOSStats();
+  mphInterval=setInterval(getAllMPHStats,30000);
   interval=setInterval(getAllMinerStats,configModule.config.interval*1000);
-  nhinterval=setInterval(getNicehashStats,20000);
+  nhinterval=setInterval(getAllNicehashStats,20000);
   btcBalanceInterval=setInterval(getAllBitcoinbalances,60000);
+  mposInterval=setInterval(getAllMPOSStats,30000);
 }
 
 setTimeout(init, 2000);

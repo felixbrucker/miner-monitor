@@ -1,0 +1,68 @@
+<form name="config">
+  <div class="row" style="margin-bottom: 10px;">
+    <div class="col-md-12 centerAlign" style="margin-bottom: 10px;">
+      <span style="font-size:120%;">Dashboards:</span>
+    </div>
+  </div>
+  <div class="row" style="margin-bottom: 10px;">
+    <div class="col-md-12 centerAlign">
+      <table class='table table-borderless table-condensed'>
+        <tr>
+          <th class="centerAlign">enabled</th>
+          <th class="centerAlign">name (unique)</th>
+          <th class="centerAlign">type</th>
+          <th class="centerAlign">address</th>
+          <th class="centerAlign">base url</th>
+          <th class="centerAlign">api_key</th>
+          <th class="centerAlign">user_id</th>
+          <th class="centerAlign">hashrate Modifier</th>
+          <th class="centerAlign">action</th>
+        </tr>
+        <tr ng-repeat="entry in configVm.config.dashboardData track by $index">
+          <td><input type="checkbox" ng-model="entry.enabled" ng-click="configVm.setConfig()"></td>
+          <td><input type="text" name="{{entry.name}}" ng-model="entry.name" placeholder="name" size="26" required></td>
+          <td><select name="typeSelect-{{entry.name}}" ng-options="type for type in configVm.config.dashboardTypes" ng-model="entry.type" required></select></td>
+          <td ng-if="entry.type==='nicehash'||entry.type==='bitcoinBalance'"><input type="text" name="address-{{entry.name}}" ng-model="entry.address" placeholder="1FeLiXbjMPY8LghCDe1jTQ3AS7iCZGuaJU" size="26" required></td>
+          <td ng-if="entry.type!=='nicehash'&&entry.type!=='bitcoinBalance'"><input type="text" name="address-{{entry.name}}" ng-model="entry.address" placeholder="" size="26" disabled></td>
+          <td ng-if="entry.type==='genericMPOS'"><input type="text" name="baseUrl-{{entry.name}}" ng-model="entry.baseUrl" placeholder="https://zec.suprnova.cc" size="26" required></td>
+          <td ng-if="entry.type!=='genericMPOS'"><input type="text" name="baseUrl-{{entry.name}}" ng-model="entry.baseUrl" placeholder="" size="26" disabled></td>
+          <td ng-if="entry.type==='genericMPOS'||entry.type==='miningpoolhub'"><input type="text" name="api_key-{{entry.name}}" ng-model="entry.api_key" placeholder="" size="26" required></td>
+          <td ng-if="entry.type!=='genericMPOS'&&entry.type!=='miningpoolhub'"><input type="text" name="address-{{entry.name}}" ng-model="entry.api_key" placeholder="" size="26" disabled></td>
+          <td ng-if="entry.type==='genericMPOS'||entry.type==='miningpoolhub'"><input type="text" name="user_id-{{entry.name}}" ng-model="entry.user_id" placeholder="" size="7" required></td>
+          <td ng-if="entry.type!=='genericMPOS'&&entry.type!=='miningpoolhub'"><input type="text" name="user_id-{{entry.name}}" ng-model="entry.user_id" placeholder="" size="7" disabled></td>
+          <td ng-if="entry.type==='genericMPOS'"><input type="number" name="hrModifier-{{entry.name}}" ng-model="entry.hrModifier" placeholder="1" required></td>
+          <td ng-if="entry.type!=='genericMPOS'"><input type="number" name="hrModifier-{{entry.name}}" ng-model="entry.hrModifier" placeholder="" disabled></td>
+          <td><button type="button" class="btn btn-warning" ng-click="configVm.delDashboard(entry.id)">remove Dashboard</button></td>
+        </tr>
+        <tr style="border-top: 1px solid lightgrey;">
+          <td><input type="checkbox" ng-model="configVm.newDashboard.enabled"></td>
+          <td><input type="text" name="newDeviceName" ng-model="configVm.newDashboard.name" placeholder="name" size="26"></td>
+          <td><select name="typeSelect-{{entry.name}}" ng-options="type for type in configVm.config.dashboardTypes" ng-model="configVm.newDashboard.type"></select></td>
+          <td ng-if="configVm.newDashboard.type==='nicehash'||configVm.newDashboard.type==='bitcoinBalance'"><input type="text" name="address-{{configVm.newDashboard.name}}" ng-model="configVm.newDashboard.address" placeholder="1FeLiXbjMPY8LghCDe1jTQ3AS7iCZGuaJU" size="26"></td>
+          <td ng-if="configVm.newDashboard.type!=='nicehash'&&configVm.newDashboard.type!=='bitcoinBalance'"><input type="text" name="address-{{configVm.newDashboard.name}}" ng-model="configVm.newDashboard.address" placeholder="" size="26" disabled></td>
+          <td ng-if="configVm.newDashboard.type==='genericMPOS'"><input type="text" name="baseUrl-{{configVm.newDashboard.name}}" ng-model="configVm.newDashboard.baseUrl" placeholder="https://zec.suprnova.cc" size="26"></td>
+          <td ng-if="configVm.newDashboard.type!=='genericMPOS'"><input type="text" name="baseUrl-{{configVm.newDashboard.name}}" ng-model="configVm.newDashboard.baseUrl" placeholder="" size="26" disabled></td>
+          <td ng-if="configVm.newDashboard.type==='genericMPOS'||configVm.newDashboard.type==='miningpoolhub'"><input type="text" name="api_key-{{configVm.newDashboard.name}}" ng-model="configVm.newDashboard.api_key" placeholder="" size="26"></td>
+          <td ng-if="configVm.newDashboard.type!=='genericMPOS'&&configVm.newDashboard.type!=='miningpoolhub'"><input type="text" name="address-{{configVm.newDashboard.name}}" ng-model="configVm.newDashboard.api_key" placeholder="" size="26" disabled></td>
+          <td ng-if="configVm.newDashboard.type==='genericMPOS'||configVm.newDashboard.type==='miningpoolhub'"><input type="text" name="user_id-{{configVm.newDashboard.name}}" ng-model="configVm.newDashboard.user_id" placeholder="" size="7"></td>
+          <td ng-if="configVm.newDashboard.type!=='genericMPOS'&&configVm.newDashboard.type!=='miningpoolhub'"><input type="text" name="user_id-{{configVm.newDashboard.name}}" ng-model="configVm.newDashboard.user_id" placeholder="" size="7" disabled></td>
+          <td ng-if="configVm.newDashboard.type==='genericMPOS'"><input type="number" name="hrModifier-{{configVm.newDashboard.name}}" ng-model="configVm.newDashboard.hrModifier" placeholder="1"></td>
+          <td ng-if="configVm.newDashboard.type!=='genericMPOS'"><input type="number" name="hrModifier-{{configVm.newDashboard.name}}" ng-model="configVm.newDashboard.hrModifier" placeholder="" disabled></td>
+          <td><button type="button" class="btn btn-success" ng-click="configVm.addDashboard()">add Dashboard</button></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</form>
+
+
+<div class="row" style="margin-bottom: 10px;">
+  <div class="col-md-12 centerAlign">
+    <button ng-show="!configVm.waiting" type="button" class="btn btn-primary" ng-click="configVm.setConfig()" ng-disabled="config.$invalid"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save
+    </button>
+    <button ng-show="configVm.waiting" type="button" class="btn btn-success" disabled><i class="fa fa-refresh" aria-hidden="true"></i> Saving..
+    </button>
+    <i ng-show="configVm.waiting" class="fa fa-cog fa-spin fa-lg fa-fw"></i>
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>

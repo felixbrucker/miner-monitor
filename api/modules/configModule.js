@@ -16,32 +16,32 @@ var config = module.exports = {
     layout:null,
     mailConfig:null,
     mailTo:null,
-    poolConfig:{
-      nicehash:{
-        address:""
-      },
-      mph:{
-        api_key:"",
-        user_id:""
-      }
-    }
+    dashboardData:[]
   },
   configNonPersistent:{
     types:[
       "baikal-miner",
       "miner-agent"
     ],
-    layouts:["small","large"]
+    layouts:["small","large"],
+    dashboardTypes:[
+      "nicehash",
+      "bitcoinBalance",
+      "miningpoolhub",
+      "genericMPOS"
+    ]
   },
   getConfig: function () {
     var obj=config.config;
     obj.types=config.configNonPersistent.types;
     obj.layouts=config.configNonPersistent.layouts;
+    obj.dashboardTypes=config.configNonPersistent.dashboardTypes;
     return obj;
   },
   setConfig: function (newConfig) {
     delete newConfig.types;
     delete newConfig.layouts;
+    delete newConfig.dashboardTypes;
     config.config = newConfig;
   },
   saveConfig: function () {
@@ -62,16 +62,8 @@ var config = module.exports = {
             config.config.groups=[];
           if(config.config.layout===undefined)
             config.config.layout="large";
-          if(config.config.poolConfig===undefined)
-            config.config.poolConfig={
-              nicehash:{
-                address:""
-              },
-              mph:{
-                api_key:"",
-                user_id:""
-              }
-            };
+          if(config.config.dashboardData===undefined)
+            config.config.dashboardData=[];
           if(config.config.mailConfig===undefined)
             config.config.mailConfig=null;
         });
@@ -79,15 +71,7 @@ var config = module.exports = {
         //default conf
         config.config.interval=30;
         config.config.layout="large";
-        config.config.poolConfig={
-          nicehash:{
-            address:""
-          },
-          mph:{
-            api_key:"",
-            user_id:""
-          }
-        };
+        config.config.dashboardData={};
         config.saveConfig();
         setTimeout(function(){
           config.loadConfig();

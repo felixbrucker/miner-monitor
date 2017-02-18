@@ -21,9 +21,7 @@
     vm.statsInterval = null;
     vm.current = {
       entries:null,
-      nicehash:null,
-      bitcoinBalances:null,
-      mph:null
+      dashboardData:null
     };
     vm.layout="";
     vm.enabled={};
@@ -33,6 +31,7 @@
     vm.init = init;
     vm.getStats = getStats;
     vm.getLayout = getLayout;
+    vm.parseName = parseName;
 
 
     /**
@@ -50,14 +49,6 @@
         else
           vm.getLayout();
 
-        var enabled=localStorage.getItem('enabled');
-        if (enabled!==null&&enabled!==""&&enabled!=="NaN")
-          vm.enabled = JSON.parse(enabled);
-        else
-          vm.enabled = {
-            nh:true,
-            mph:false
-          };
 
         var interval=localStorage.getItem('refreshInterval');
         if (interval!==null&&interval!==""&&interval!=="NaN")
@@ -67,6 +58,10 @@
 
         vm.getStats();
       });
+    }
+
+    function parseName(name){
+      return (isNaN(name.charAt(0)) ? name : name.substr(1));
     }
 
     /**
@@ -80,9 +75,7 @@
         url: 'api/mining/stats'
       }).then(function successCallback(response) {
         vm.current.entries = response.data.entries;
-        vm.current.nicehash = response.data.nicehash;
-        vm.current.bitcoinBalances=response.data.bitcoinBalances;
-        vm.current.mph=response.data.mph;
+        vm.current.dashboardData=response.data.dashboardData;
       }, function errorCallback(response) {
         console.log(response);
       });
