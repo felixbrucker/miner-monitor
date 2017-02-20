@@ -711,7 +711,7 @@ function getNicehashWorkerStats(addr,algo){
         });
         var workers=[];
         for(var i=0;i<parsed.result.workers.length;i++){
-          if(parsed.result.workers[i][0]!=="")
+          if(parsed.result.workers[i][0]!==""&&parsed.result.workers[i][1]!=={})
             workers.push(parsed.result.workers[i]);
         }
         algo.worker = workers;
