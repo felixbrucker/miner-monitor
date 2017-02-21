@@ -272,7 +272,7 @@
         <span ng-if="data.workers!==[]" style="font-size:small;">
             <span ng-repeat="(key, value) in data.workers track by $index">
                 <br/>
-                {{value.username}}: {{value.hashrate|hashrate}}<span class="nomobile"> (diff: {{value.difficulty}})</span>
+                {{value.username}}: {{value.hashrate|hashrate}}<span class="nomobile"> (diff: {{value.difficulty|number:0}})</span>
             </span>
         </span>
             </td>
