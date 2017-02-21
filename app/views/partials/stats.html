@@ -268,7 +268,7 @@
           <tbody>
           <tr ng-repeat="(id, data) in dashboard.data | orderBy:'name' track by $index">
             <td ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">{{data.name}}</td>
-            <td ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">{{data.hashrate|hashrate}}
+            <td class='ellipsis' ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">{{data.hashrate|hashrate}}
         <span ng-if="data.workers!==[]" style="font-size:small;">
             <span ng-repeat="(key, value) in data.workers track by $index">
                 <br/>
