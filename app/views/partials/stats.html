@@ -276,10 +276,10 @@
             </span>
         </span>
             </td>
-            <td ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">{{data.profitability*data.hashrate|number:4}} BTC/Day</td>
-            <td ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">{{data.balance.confirmed}} ({{data.balance.unconfirmed}}) {{data.symbol}}</td>
-            <td ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">{{data.balance_ae.confirmed}} ({{data.balance_ae.unconfirmed}}) {{data.symbol}}</td>
-            <td ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">{{data.onExchange}} {{data.symbol}}</td>
+            <td class='ellipsis' ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">{{data.profitability*data.hashrate|number:4}} BTC/Day</td>
+            <td class='ellipsis' ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">{{data.balance.confirmed}} ({{data.balance.unconfirmed}}) {{data.symbol}}</td>
+            <td class='ellipsis' ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">{{data.balance_ae.confirmed}} ({{data.balance_ae.unconfirmed}}) {{data.symbol}}</td>
+            <td class='ellipsis' ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">{{data.onExchange}} {{data.symbol}}</td>
           </tr>
           </tbody>
         </table>
@@ -302,6 +302,7 @@
           </tr>
           </thead>
           <tbody>
+              <tr>
             <td>{{dashboard.data.hashrate|hashrate}}
         <span ng-if="dashboard.data.workers!==[]" style="font-size:small;">
             <span ng-repeat="(key, value) in dashboard.data.workers track by $index">
@@ -315,7 +316,7 @@
             <td>{{dashboard.data.estimated}} {{dashboard.data.symbol}}</td>
           </tr>
           </tbody>
-        </table>
+        </table> 
       </div>
       <div class="col-md-12 centerAlign">
         <a href="{{dashboard.data.baseUrl}}/index.php?page=statistics&action=pool" target="_blank">Pool Homepage</a>
