@@ -285,8 +285,7 @@ function getMinerStats(device) {
             }
             break;
         }
-        console.log(colors.red("["+device.name+"] Error: Unable to get stats data"));
-        console.log(error);
+        console.log(colors.red("["+device.name+"] Error: Unable to get stats data ("+error.errno+")"));
       });
       req.on('socket', function (socket) {
         socket.setTimeout(10000);
@@ -409,8 +408,7 @@ function getMinerStats(device) {
             }
             break;
         }
-        console.log(colors.red("["+device.name+"] Error: Unable to get stats data"));
-        console.log(error);
+        console.log(colors.red("["+device.name+"] Error: Unable to get stats data ("+error.errno+")"));
       });
       req.on('socket', function (socket) {
         socket.setTimeout(10000);
@@ -507,8 +505,7 @@ function getOhmStats(device){
           stats.entries[device.group]={};
           stats.entries[device.group][device.id]={devices:[]};
         }
-        console.log(colors.red("["+device.name+"] Error: Unable to get ohm stats data"));
-        console.log(error);
+        console.log(colors.red("["+device.name+"] Error: Unable to get ohm stats data ("+error.errno+")"));
       });
       req.on('socket', function (socket) {
         socket.setTimeout(10000);
@@ -596,8 +593,7 @@ function getOhmStats(device){
           stats.entries[device.group]={};
           stats.entries[device.group][device.id]={devices:[]};
         }
-        console.log(colors.red("["+device.name+"] Error: Unable to get ohm stats data"));
-        console.log(error);
+        console.log(colors.red("["+device.name+"] Error: Unable to get ohm stats data ("+error.errno+")"));
       });
       req.on('socket', function (socket) {
         socket.setTimeout(10000);
@@ -668,8 +664,7 @@ function getNicehashStats(obj){
         }
       });
     }).on("error", function(error) {
-      console.log(colors.red("Error: Unable to get nicehash stats data"));
-      console.log(error);
+      console.log(colors.red("Error: Unable to get nicehash stats data ("+error.errno+")"));
     });
     req.on('socket', function (socket) {
       socket.setTimeout(20000);
@@ -718,8 +713,7 @@ function getNicehashWorkerStats(addr,algo){
       }
     });
   }).on("error", function(error) {
-    console.log(colors.red("Error: Unable to get nicehash worker data"));
-    console.log(error);
+    console.log(colors.red("Error: Unable to get nicehash worker data ("+error.errno+")"));
   });
   req.on('socket', function (socket) {
     socket.setTimeout(20000);
@@ -768,8 +762,7 @@ function getMPHWorkerStats(obj,coinName,callback){
       }
     });
   }).on("error", function(error) {
-    console.log(colors.red("Error: Unable to get mph worker stats data"));
-    console.log(error);
+    console.log(colors.red("Error: Unable to get mph worker stats data ("+error.errno+")"));
     callback(null);
   });
   req.on('socket', function (socket) {
@@ -811,8 +804,7 @@ function getMPHCoinStats(obj,coinName,callback){
       }
     });
   }).on("error", function(error) {
-    console.log(colors.red("Error: Unable to get mph coin stats data"));
-    console.log(error);
+    console.log(colors.red("Error: Unable to get mph coin stats data ("+error.errno+")"));
     callback(null);
   });
   req.on('socket', function (socket) {
@@ -897,8 +889,7 @@ function getMPHStats(obj){
         }
       });
     }).on("error", function(error) {
-      console.log(colors.red("Error: Unable to get mph stats data"));
-      console.log(error);
+      console.log(colors.red("Error: Unable to get mph stats data ("+error.errno+")"));
     });
     req.on('socket', function (socket) {
       socket.setTimeout(20000);
@@ -940,8 +931,7 @@ function getBitcoinBalance(obj){
       }
     });
   }).on("error", function(error) {
-    console.log(colors.red("Error: Unable to get bitcoin balance data"));
-    console.log(error);
+    console.log(colors.red("Error: Unable to get bitcoin balance data ("+error.errno+")"));
   });
   req.on('socket', function (socket) {
     socket.setTimeout(10000);
@@ -1032,8 +1022,7 @@ function getMPOSMethodData(obj,method,callback){
       break;
   }
   req.on("error", function(error) {
-    console.log(colors.red("Error: Unable to get MPOS "+method+" stats data"));
-    console.log(error);
+    console.log(colors.red("Error: Unable to get MPOS "+method+" stats data ("+error.errno+")"));
     callback(null);
   });
   req.on('socket', function (socket) {
