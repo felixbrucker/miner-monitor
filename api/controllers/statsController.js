@@ -2,6 +2,7 @@
 
 const https = require('https');
 const http = require('http');
+const getExchangeRates = require("get-exchange-rates");
 var fs = require('fs');
 var path = require('path');
 var colors = require('colors/safe');
@@ -14,6 +15,11 @@ var stats = {
   entries:{},
   dashboardData:{}
 };
+
+let exchangeRates = {
+  eurPerBTC: 0,
+  usdPerBTC: 0,
+}
 
 var problemCounter={};
 
@@ -658,7 +664,21 @@ function getNicehashStats(obj){
             }
             // ugly
             setTimeout(function(){
-              stats.dashboardData[obj.name]={data:{sum:{profitability:profitability,unpaidBalance:unpaidBalance},current:current,payments:payments,address:obj.address},enabled:obj.enabled,type:obj.type};
+              stats.dashboardData[obj.name]={
+                data:{
+                  sum:{
+                    profitability:profitability,
+                    unpaidBalance:unpaidBalance,
+                    profitabilityEur: profitability * exchangeRates.eurPerBTC,
+                    unpaidBalanceEur: unpaidBalance * exchangeRates.eurPerBTC,
+                  },
+                  current:current,
+                  payments:payments,
+                  address:obj.address
+                },
+                enabled:obj.enabled,
+                type:obj.type
+              };
             },5000);
           }
         }
@@ -1092,6 +1112,17 @@ function getAllMinerStats(){
   }
 }
 
+function updateExchangeRates() {
+  getExchangeRates()
+  .then(rates => {
+    exchangeRates.eurPerBTC = 1 / rates.BTC;
+    exchangeRates.usdPerBTC = exchangeRates.eurPerBTC * rates.USD;
+  })
+  .catch(err => {
+    console.log(err);
+  });
+}
+
 function cleanup(){
   stats.entries={};
   stats.dashboardData={};
@@ -1114,6 +1145,7 @@ function init() {
   nhinterval=setInterval(getAllNicehashStats,20000);
   btcBalanceInterval=setInterval(getAllBitcoinbalances,60000);
   mposInterval=setInterval(getAllMPOSStats,30000);
+  setInterval(updateExchangeRates, 3 * 60 * 1000);
 }
 
 setTimeout(init, 2000);
