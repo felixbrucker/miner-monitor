@@ -217,8 +217,8 @@
             </tbody>
             <tr ng-if="dashboard.data.sum!==undefined && dashboard.data.sum!==null">
               <td colspan="2" style="font-weight: bold;">Total</td>
-              <td style="font-weight: bold;">{{dashboard.data.sum.profitability | number:4}} BTC/Day</td>
-              <td style="font-weight: bold;">{{dashboard.data.sum.unpaidBalance | number:8}} BTC</td>
+              <td style="font-weight: bold;">{{dashboard.data.sum.profitability | number:4}} BTC/Day<br />{{dashboard.data.sum.profitabilityEur | number:2}} EUR/Day</td>
+              <td style="font-weight: bold;">{{dashboard.data.sum.unpaidBalance | number:8}} BTC<br />{{dashboard.data.sum.unpaidBalanceEur | number:2}} EUR</td>
             </tr>
           </table>
         </div>
