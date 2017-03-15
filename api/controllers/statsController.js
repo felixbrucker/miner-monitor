@@ -1140,6 +1140,7 @@ function init() {
   getAllBitcoinbalances();
   getAllMPHStats();
   getAllMPOSStats();
+  updateExchangeRates();
   mphInterval=setInterval(getAllMPHStats,30000);
   interval=setInterval(getAllMinerStats,configModule.config.interval*1000);
   nhinterval=setInterval(getAllNicehashStats,20000);
