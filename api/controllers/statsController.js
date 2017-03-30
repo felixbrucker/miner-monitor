@@ -38,6 +38,9 @@ function getStats(req, res, next) {
   var dashboardData=[];
   Object.keys(stats.dashboardData).forEach(function(key,index) {
     dashboardData.push({name:key,enabled:stats.dashboardData[key].enabled,data:stats.dashboardData[key].data,type:stats.dashboardData[key].type});
+    if(stats.dashboardData[key].ticker){
+      dashboardData.ticker = stats.dashboardData[key].ticker;
+    }
   });
   dashboardData.sort(function(a,b){
     if(a.name<b.name) return -1;
