@@ -28,7 +28,8 @@ var config = module.exports = {
       "nicehash",
       "bitcoinBalance",
       "miningpoolhub",
-      "genericMPOS"
+      "genericMPOS",
+      "cryptoidBalance",
     ]
   },
   getConfig: function () {
