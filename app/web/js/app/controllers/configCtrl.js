@@ -67,6 +67,7 @@
       type: "",
       baseUrl: "",
       address:"",
+      ticker: "",
       api_key:"",
       user_id:"",
       hrModifier:1
@@ -261,6 +262,7 @@
           type: "",
           baseUrl: "",
           address:"",
+          ticker: "",
           api_key:"",
           user_id:"",
           hrModifier:1

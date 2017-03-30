@@ -962,6 +962,45 @@ function getBitcoinBalance(obj){
   req.end();
 }
 
+function getAllCryptoidBalances(){
+  for(var i=0;i<configModule.config.dashboardData.length;i++){
+    if(configModule.config.dashboardData[i].type==='cryptoidBalance'&&configModule.config.dashboardData[i].enabled){
+      getCryptoidBalance(configModule.config.dashboardData[i]);
+    }
+  }
+}
+
+function getCryptoidBalance(obj){
+  var req= https.request({
+    host: 'chainz.cryptoid.info',
+    path: `/${obj.ticker}/'api.dws?q=getbalance&a=${obj.address}`,
+    method: 'GET',
+    port: 443,
+    rejectUnauthorized: false,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8'
+    }
+  }, function (response) {
+    response.setEncoding('utf8');
+    var body = '';
+    response.on('data', function (d) {
+      body += d;
+    });
+    response.on('end', function () {
+      stats.dashboardData[obj.name]={type:obj.type,data:parseFloat(body),enabled:obj.enabled, ticker: obj.ticker.toUpperCase()};
+    });
+  }).on("error", function(error) {
+    console.log(colors.red("Error: Unable to get cryptoid balance data ("+error.code+")"));
+  });
+  req.on('socket', function (socket) {
+    socket.setTimeout(10000);
+    socket.on('timeout', function() {
+      req.abort();
+    });
+  });
+  req.end();
+}
+
 function getAllMPOSStats(){
   for(var i=0;i<configModule.config.dashboardData.length;i++){
     if(configModule.config.dashboardData[i].type==='genericMPOS'&&configModule.config.dashboardData[i].enabled){
@@ -1141,12 +1180,14 @@ function init() {
   getAllMPHStats();
   getAllMPOSStats();
   updateExchangeRates();
+  getAllCryptoidBalances();
   mphInterval=setInterval(getAllMPHStats,30000);
   interval=setInterval(getAllMinerStats,configModule.config.interval*1000);
   nhinterval=setInterval(getAllNicehashStats,20000);
-  btcBalanceInterval=setInterval(getAllBitcoinbalances,60000);
+  btcBalanceInterval=setInterval(getAllBitcoinbalances, 3 * 60 * 1000);
   mposInterval=setInterval(getAllMPOSStats,30000);
   setInterval(updateExchangeRates, 3 * 60 * 1000);
+  setInterval(getAllCryptoidBalances, 3 * 60 * 1000);
 }
 
 setTimeout(init, 2000);

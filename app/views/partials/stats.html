@@ -344,7 +344,23 @@
         </tbody>
       </table>
     </div>
-
+    <div class="col-md-4">
+      <div class="centerAlign">CryptoID balances:</div>
+      <table class="table table-bordered table-condensed leftAlign">
+        <thead>
+        <tr>
+          <th>Wallet</th>
+          <th>Amount</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="(id, dashboard) in statsVm.current.dashboardData track by $index">
+          <td ng-if="dashboard.type==='cryptoidBalance'&&dashboard.enabled">{{dashboard.name}}</td>
+          <td ng-if="dashboard.type==='cryptoidBalance'&&dashboard.enabled"><span data-highlighter="dashboard.data">{{dashboard.data | number:8}}</span> {{dashboard.ticker}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <div ng-repeat="(id,group) in statsVm.current.entries | orderBy:'name'">
