@@ -143,13 +143,13 @@ function checkResult(result,device,ohm){
               counterAndSend(obj);
             }
             //fan speed
-            if(ohmDevice.fan!==undefined&&ohmDevice.fan>"80"){
+            /*if(ohmDevice.fan!==undefined&&ohmDevice.fan>"80"){
               var obj={type:'item',status:'Problem',descriptor:'Fan Speed',item:{name:i+': '+ohmDevice.dev,value:ohmDevice.fan,highLow:'high'},device:{name:device.name,value:'Up'}};
               counterAndSend(obj);
             }else{
               var obj={type:'item',status:'OK',descriptor:'Fan Speed',item:{name:i+': '+ohmDevice.dev,value:ohmDevice.fan,highLow:'high'},device:{name:device.name,value:'Up'}};
               counterAndSend(obj);
-            }
+            }*/
             /*
              //load
              if(ohmDevice.load!==undefined&&ohmDevice.load<"70"){
