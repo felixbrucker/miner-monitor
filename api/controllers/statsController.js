@@ -977,7 +977,7 @@ function getAllCryptoidBalances(){
 function getCryptoidBalance(obj){
   var req= https.request({
     host: 'chainz.cryptoid.info',
-    path: `/${obj.ticker}/api.dws?q=getbalance&a=${obj.address}`,
+    path: `/${obj.ticker}/api.dws?q=getbalance&a=${obj.address}${obj.api_key ? '&key='+obj.api_key : ''}`,
     method: 'GET',
     port: 443,
     rejectUnauthorized: false,
