@@ -57,7 +57,8 @@
     vm.newGroup = {
       id: null,
       enabled: true,
-      name: ""
+      name: "",
+      interval:null,
     };
 
     vm.newDashboard = {
@@ -302,7 +303,8 @@
         vm.newGroup={
           id:null,
           enabled:true,
-          name:""
+          name:"",
+          interval:null,
         };
         vm.setConfig();
       }

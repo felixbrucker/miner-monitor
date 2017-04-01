@@ -19,15 +19,16 @@ var stats = {
 let exchangeRates = {
   eurPerBTC: 0,
   usdPerBTC: 0,
-}
+};
 
 var problemCounter={};
 
-var interval=null;
 var nhinterval=null;
 var btcBalanceInterval=null;
 var mphInterval=null;
 var mposInterval=null;
+
+let groupIntervals=[];
 
 function getStats(req, res, next) {
   var entries=[];
@@ -1155,6 +1156,24 @@ function getAllMinerStats(){
   }
 }
 
+function initAllMinerStats(){
+  for(var i=0;i<configModule.config.groups.length;i++){
+    var group=configModule.config.groups[i];
+    if(group.enabled){
+      groupIntervals.push(setInterval((group) => {
+        for(var j=0;j<configModule.config.devices.length;j++){
+          var device=configModule.config.devices[j];
+          if(device.enabled&&device.group===group.name){
+            getMinerStats(JSON.parse(JSON.stringify(device)));
+            if(device.ohm!==undefined&&device.ohm!==null&&device.ohm!=="")
+              getOhmStats(JSON.parse(JSON.stringify(device)));
+          }
+        }
+      }, (group.interval ? group.interval : configModule.config.interval) * 1000));
+    }
+  }
+}
+
 function updateExchangeRates() {
   getExchangeRates()
   .then(rates => {
@@ -1169,16 +1188,18 @@ function updateExchangeRates() {
 function cleanup(){
   stats.entries={};
   stats.dashboardData={};
-  problemCounter={};
+  // problemCounter={};
 }
 
 function restartInterval(){
-  clearInterval(interval);
-  interval=setInterval(getAllMinerStats,configModule.config.interval*1000);
+  groupIntervals.forEach((interval) => {
+    clearInterval(interval);
+  });
+  groupIntervals=[];
 }
 
 function init() {
-  getAllMinerStats();
+  initAllMinerStats();
   getAllNicehashStats();
   getAllBitcoinbalances();
   getAllMPHStats();
@@ -1186,7 +1207,6 @@ function init() {
   updateExchangeRates();
   getAllCryptoidBalances();
   mphInterval=setInterval(getAllMPHStats,30000);
-  interval=setInterval(getAllMinerStats,configModule.config.interval*1000);
   nhinterval=setInterval(getAllNicehashStats,20000);
   btcBalanceInterval=setInterval(getAllBitcoinbalances, 3 * 60 * 1000);
   mposInterval=setInterval(getAllMPOSStats,30000);
