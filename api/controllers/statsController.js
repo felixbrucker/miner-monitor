@@ -1143,6 +1143,16 @@ function initAllMinerStats(){
   for(var i=0;i<configModule.config.groups.length;i++){
     var group=configModule.config.groups[i];
     ((group) => {
+      if(group.enabled){
+        for(var j=0;j<configModule.config.devices.length;j++){
+          var device=configModule.config.devices[j];
+          if(device.enabled&&device.group===group.name){
+            getMinerStats(JSON.parse(JSON.stringify(device)));
+            if(device.ohm!==undefined&&device.ohm!==null&&device.ohm!=="")
+              getOhmStats(JSON.parse(JSON.stringify(device)));
+          }
+        }
+      }
       groupIntervals.push(setInterval(() => {
         if(group.enabled){
           for(var j=0;j<configModule.config.devices.length;j++){
