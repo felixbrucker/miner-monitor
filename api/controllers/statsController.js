@@ -1142,9 +1142,9 @@ function getMPOSStats(obj){
 function initAllMinerStats(){
   for(var i=0;i<configModule.config.groups.length;i++){
     var group=configModule.config.groups[i];
-    if(group.enabled){
-      ((group) => {
-        groupIntervals.push(setInterval(() => {
+    ((group) => {
+      groupIntervals.push(setInterval(() => {
+        if(group.enabled){
           for(var j=0;j<configModule.config.devices.length;j++){
             var device=configModule.config.devices[j];
             if(device.enabled&&device.group===group.name){
@@ -1153,9 +1153,9 @@ function initAllMinerStats(){
                 getOhmStats(JSON.parse(JSON.stringify(device)));
             }
           }
-        }, (group.interval ? group.interval : configModule.config.interval) * 1000));
-      })(group);
-    }
+        }
+      }, (group.interval ? group.interval : configModule.config.interval) * 1000));
+    })(group);
   }
 }
 
