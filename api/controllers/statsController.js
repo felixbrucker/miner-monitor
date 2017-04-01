@@ -1181,6 +1181,7 @@ function restartInterval(){
     clearInterval(interval);
   });
   groupIntervals=[];
+  initAllMinerStats();
 }
 
 function init() {
