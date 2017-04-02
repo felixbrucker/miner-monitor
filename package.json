@@ -10,7 +10,8 @@
     "net":"^1.0.2",
     "path":"^0.12.7",
     "nodemailer":"^2.7.0",
-    "get-exchange-rates":"^1.0.0"
+    "get-exchange-rates":"^1.0.0",
+    "rx": "^4.1.0"
   },
   "scripts": {
     "start": "node main.js"

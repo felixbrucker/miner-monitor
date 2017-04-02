@@ -1,12 +1,13 @@
-'use strict';
-
 const https = require('https');
 const http = require('http');
 const getExchangeRates = require("get-exchange-rates");
 var fs = require('fs');
 var path = require('path');
 var colors = require('colors/safe');
+const Rx = require('rx');
 
+
+const timeEvents = Rx.Observable.interval(500);
 
 var configModule = require(__basedir + 'api/modules/configModule');
 var mailController = require(__basedir + 'api/controllers/mailController');
@@ -171,6 +172,7 @@ function checkResult(result,device,ohm){
 }
 
 function getMinerStats(device) {
+  console.log(device.name);
   var arr = device.hostname.split("://");
   var protocol=arr[0];
   arr = arr[1].split(":");
@@ -1139,30 +1141,47 @@ function getMPOSStats(obj){
   });
 }
 
+
 function initAllMinerStats(){
   for(var i=0;i<configModule.config.groups.length;i++){
     var group=configModule.config.groups[i];
     ((group) => {
       if(group.enabled){
+        const deviceArr = [];
         for(var j=0;j<configModule.config.devices.length;j++){
           var device=configModule.config.devices[j];
           if(device.enabled&&device.group===group.name){
+            deviceArr.push(device);
+          }
+        }
+        const deviceEvents = Rx.Observable
+          .fromArray(deviceArr);
+
+        Rx.Observable.zip(timeEvents, deviceEvents, (i, device) => device)
+          .subscribe(device => {
             getMinerStats(JSON.parse(JSON.stringify(device)));
             if(device.ohm!==undefined&&device.ohm!==null&&device.ohm!=="")
               getOhmStats(JSON.parse(JSON.stringify(device)));
-          }
-        }
+          });
       }
       groupIntervals.push(setInterval(() => {
         if(group.enabled){
+          const deviceArr = [];
           for(var j=0;j<configModule.config.devices.length;j++){
             var device=configModule.config.devices[j];
             if(device.enabled&&device.group===group.name){
-              getMinerStats(JSON.parse(JSON.stringify(device)));
-              if(device.ohm!==undefined&&device.ohm!==null&&device.ohm!=="")
-                getOhmStats(JSON.parse(JSON.stringify(device)));
+              deviceArr.push(device);
             }
           }
+          const deviceEvents = Rx.Observable
+            .fromArray(deviceArr);
+
+          Rx.Observable.zip(timeEvents, deviceEvents, (i, device) => device)
+            .subscribe(device => {
+                getMinerStats(JSON.parse(JSON.stringify(device)));
+                if(device.ohm!==undefined&&device.ohm!==null&&device.ohm!=="")
+                  getOhmStats(JSON.parse(JSON.stringify(device)));
+            });
         }
       }, (group.interval ? group.interval : configModule.config.interval) * 1000));
     })(group);
