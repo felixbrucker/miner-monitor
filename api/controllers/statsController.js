@@ -172,7 +172,6 @@ function checkResult(result,device,ohm){
 }
 
 function getMinerStats(device) {
-  console.log(device.name);
   var arr = device.hostname.split("://");
   var protocol=arr[0];
   arr = arr[1].split(":");
