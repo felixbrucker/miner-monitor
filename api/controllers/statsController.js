@@ -875,13 +875,20 @@ function getMPHStats(obj){
           console.log(colors.red("Error: Unable to get mph stats data"));
         }
         if (parsed != null&&parsed.success){
+          const coinArr = [];
           for(var i=0;i<parsed.return.length;i++){
-            (function (i){
-              getMPHCoinStats(obj,parsed.return[i].coin_name,function(result){
+            coinArr.push(parsed.return[i]);
+          }
+          const coinEvents = Rx.Observable
+            .fromArray(coinArr);
+
+          Rx.Observable.zip(timeEvents, coinEvents, (i, coin) => coin)
+            .subscribe(coin => {
+              getMPHCoinStats(obj,coin.coin_name,function(result){
                 if(result!==null) {
                   var data = {
-                    name: parsed.return[i].coin_name.charAt(0).toUpperCase()+parsed.return[i].coin_name.slice(1),
-                    profitability:parsed.return[i].profit/1000000.0, //make gh/s->kh/s for easier calculation
+                    name: coin.coin_name.charAt(0).toUpperCase()+coin.coin_name.slice(1),
+                    profitability:coin.profit/1000000.0, //make gh/s->kh/s for easier calculation
                     balance: result.balance,
                     balance_ae: result.balance_for_auto_exchange,
                     onExchange: result.balance_on_exchange,
@@ -891,7 +898,7 @@ function getMPHStats(obj){
                   };
 
                   (function (data) {
-                    getMPHWorkerStats(obj,parsed.return[i].coin_name, function (result) {
+                    getMPHWorkerStats(obj,coin.coin_name, function (result) {
                       if (result !== null) {
                         for (var j = 0; j < result.length; j++) {
                           if (result[j].hashrate !== 0) {
@@ -906,12 +913,13 @@ function getMPHStats(obj){
                   })(data);
                 }
               });
-            })(i);
-          }
-          // ugly
-          setTimeout(function(){
-            stats.dashboardData[obj.name]={data:statsData,type:obj.type,enabled:obj.enabled};
-          },10000)
+            }, err => {
+              console.log(err);
+            }, () => {
+              setTimeout(() => {
+                stats.dashboardData[obj.name]={data:statsData,type:obj.type,enabled:obj.enabled};
+              }, 3000);
+            });
         }
       });
     }).on("error", function(error) {
