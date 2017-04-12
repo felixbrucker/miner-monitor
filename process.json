@@ -1,12 +1,10 @@
 {
-  apps : {
-    "name" : "miner-monitor",
-    "script" : "main.js",
-    "watch" : true,
-    "ignore_watch" : ["node_modules", "app", "data", ".git"],
-    "watch_options": {
-      "awaitWriteFinish":true
-    }
+  "name" : "miner-monitor",
+  "script" : "main.js",
+  "watch" : true,
+  "ignore_watch" : ["node_modules", "app", "data", ".git"],
+  "watch_options": {
+    "awaitWriteFinish":true
   }
 }
 
