@@ -5,6 +5,7 @@ var fs = require('fs');
 var path = require('path');
 var colors = require('colors/safe');
 const Rx = require('rx');
+const dnode = require('dnode');
 
 
 const timeEvents = Rx.Observable.interval(500);
@@ -1148,6 +1149,40 @@ function getMPOSStats(obj){
   });
 }
 
+function getStorjshareDaemonStats(device) {
+  let arr = device.hostname.split("://");
+  arr = arr[arr.length === 1 ? 0 : 1 ];
+  arr = arr.split(":");
+  const hostname = arr[0];
+  const port = arr[1];
+
+  const sock = dnode.connect(hostname, port);
+
+  sock.on('error', () => {
+    console.log(colors.red(`Error: daemon for device ${device.name} not running`));
+  });
+
+  sock.on('remote', (remote) => {
+    remote.status((err, shares) => {
+      shares.forEach((share) => {
+        share.meta.farmerState.lastActivity = (Date.now() - share.meta.farmerState.lastActivity) / 1000;
+      });
+      shares.sort(function(a,b){
+        if(a.config.storagePath<b.config.storagePath) return -1;
+        if(a.config.storagePath>b.config.storagePath) return 1;
+        return 0;
+      });
+      const obj = {shares, type: device.type, name: device.name};
+      if(stats.entries[device.group] !== undefined && stats.entries[device.group] !== null) {
+        stats.entries[device.group][device.id] = obj;
+      } else {
+        stats.entries[device.group] = {};
+        stats.entries[device.group][device.id] = obj;
+      }
+      sock.end();
+    });
+  });
+}
 
 function initAllMinerStats(){
   for(var i=0;i<configModule.config.groups.length;i++){
@@ -1166,9 +1201,13 @@ function initAllMinerStats(){
 
         Rx.Observable.zip(timeEvents, deviceEvents, (i, device) => device)
           .subscribe(device => {
-            getMinerStats(JSON.parse(JSON.stringify(device)));
-            if(device.ohm!==undefined&&device.ohm!==null&&device.ohm!=="")
-              getOhmStats(JSON.parse(JSON.stringify(device)));
+            if (device.type === 'storjshare-daemon') {
+              getStorjshareDaemonStats(device);
+            } else {
+              getMinerStats(JSON.parse(JSON.stringify(device)));
+              if(device.ohm!==undefined&&device.ohm!==null&&device.ohm!=="")
+                getOhmStats(JSON.parse(JSON.stringify(device)));
+            }
           });
       }
       groupIntervals.push(setInterval(() => {
@@ -1185,9 +1224,13 @@ function initAllMinerStats(){
 
           Rx.Observable.zip(timeEvents, deviceEvents, (i, device) => device)
             .subscribe(device => {
+              if (device.type === 'storjshare-daemon') {
+                getStorjshareDaemonStats(device);
+              } else {
                 getMinerStats(JSON.parse(JSON.stringify(device)));
                 if(device.ohm!==undefined&&device.ohm!==null&&device.ohm!=="")
                   getOhmStats(JSON.parse(JSON.stringify(device)));
+              }
             });
         }
       }, (group.interval ? group.interval : configModule.config.interval) * 1000));

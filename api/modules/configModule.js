@@ -21,7 +21,8 @@ var config = module.exports = {
   configNonPersistent:{
     types:[
       "baikal-miner",
-      "miner-agent"
+      "miner-agent",
+      'storjshare-daemon'
     ],
     layouts:["small","large"],
     dashboardTypes:[

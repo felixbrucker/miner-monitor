@@ -66,9 +66,11 @@
     }
 
     function atLeastOneBalanceDashboard(){
-      for(var i=0;i<vm.current.dashboardData.length;i++){
-        if(vm.current.dashboardData[i].enabled&&vm.current.dashboardData[i].type==='bitcoinBalance')
-          return true;
+      if (vm.current.dashboardData) {
+        for(var i=0;i<vm.current.dashboardData.length;i++){
+          if(vm.current.dashboardData[i].enabled&&vm.current.dashboardData[i].type==='bitcoinBalance')
+            return true;
+        }
       }
       return false;
     }

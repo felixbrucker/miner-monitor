@@ -509,7 +509,7 @@
           </table>
         </div>
       </div>
-      <div style="float: left;display:inline-block;" class="col-md-4 table-responsive" ng-if="entry.type!=='miner-agent'||entry.devices===undefined">
+      <div style="float: left;display:inline-block;" class="col-md-4 table-responsive" ng-if="entry.type !=='storjshare-daemon' && (entry.type!=='miner-agent'||entry.devices===undefined)">
         <div class="col-md-12">
           <div style="float: left;font-size:120%;"><a href="{{entry.hostname}}" target="_blank">{{entry.name}}</a></div>
         </div>
@@ -641,6 +641,47 @@
 
             </tr>
 
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div style="float: left;display:inline-block;" class="col-md-6 table-responsive" ng-if="entry.type==='storjshare-daemon'">
+        <div class="col-md-12">
+          <div style="float: left;font-size:120%;">{{entry.name}}</div>
+        </div>
+        <div class="col-md-12 table-responsive">
+          <table class="table table-bordered table-condensed">
+            <thead>
+            <tr>
+              <th>Location</th>
+              <th><span data-toggle="tooltip" title="Status">S</span></th>
+              <th><span data-toggle="tooltip" title="Restarts">R</span></th>
+              <th><span data-toggle="tooltip" title="Peers">P</span></th>
+              <th><span data-toggle="tooltip" title="Shared space (% used)">Shared</span></th>
+              <th>Last Activity</th>
+              <th><span data-toggle="tooltip" title="Share Uptime">Uptime</span></th>
+            </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="share in entry.shares track by $index">
+
+                <td class='ellipsis'><i class="fa fa-hdd-o" aria-hidden="true"></i> {{share.config.storagePath}}</td>
+
+                <td ng-if="share.state===0"><span data-toggle="tooltip" title="stopped"><i class="fa fa-stop-circle-o" aria-hidden="true" style="color:red"></i></span></td>
+                <td ng-if="share.state===1"><span data-toggle="tooltip" title="running"><i class="fa fa-check-circle-o" aria-hidden="true" style="color:green"></i></span></td>
+                <td ng-if="share.state===2"><span data-toggle="tooltip" title="error"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="color:red"></i></span></td>
+
+                <td>{{share.meta.numRestarts || 0}}</td>
+
+                <td>{{share.meta.farmerState.totalPeers || 0}}</td>
+
+                <td>{{share.meta.farmerState.spaceUsed}} ({{share.meta.farmerState.percentUsed}}%)</td>
+
+                <td>{{share.meta.farmerState.lastActivity | secondsToTimeString}} ago</td>
+
+                <td>{{share.meta.uptimeMs/1000 | secondsToTimeString}}</td>
+
+              </tr>
             </tbody>
           </table>
         </div>
