@@ -1,8 +1,7 @@
-'use strict';
-
 const https = require('https');
 const http = require('http');
-var colors = require('colors/safe');
+const dnode = require('dnode');
+const colors = require('colors/safe');
 
 
 var configModule = require(__basedir + 'api/modules/configModule');
@@ -332,6 +331,37 @@ function verifyTransport(req,res,next){
   });
 }
 
+function restartStorjshareShares(req, res, next) {
+  var id=req.body.id;
+  for(var j=0;j<configModule.config.devices.length;j++) {
+    var device = configModule.config.devices[j];
+    if (device.id===id){
+      let arr = device.hostname.split("://");
+      arr = arr[arr.length === 1 ? 0 : 1 ];
+      arr = arr.split(":");
+      const hostname = arr[0];
+      const port = arr[1];
+
+      const sock = dnode.connect(hostname, port);
+
+      sock.on('error', () => {
+        console.log(colors.red(`Error: daemon for device ${device.name} not running`));
+      });
+
+      sock.on('remote', (remote) => {
+        remote.restart('*', (err) => {
+          if (err) {
+            console.error(`cannot restart node, reason: ${err.message}`);
+          }
+          sock.end();
+          res.setHeader('Content-Type', 'application/json');
+          res.send(JSON.stringify({result: true}));
+        });
+      });
+    }
+  }
+}
+
 function init() {
 }
 
@@ -344,4 +374,5 @@ exports.getLayout = getLayout;
 exports.updateMiner = updateMiner;
 exports.updateAgent = updateAgent;
 exports.verifyTransport = verifyTransport;
-exports.rebootSystem=rebootSystem;
+exports.rebootSystem = rebootSystem;
+exports.restartStorjshareShares = restartStorjshareShares;

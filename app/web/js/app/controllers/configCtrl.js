@@ -93,6 +93,7 @@
     vm.rebootSystem=rebootSystem;
     vm.addDashboard=addDashboard;
     vm.delDashboard=delDashboard;
+    vm.restartStorjshareShares = restartStorjshareShares;
 
 
 
@@ -156,6 +157,25 @@
         setTimeout(function(){vm.updatingMiner[id] = false;},500);
       }, function errorCallback(response) {
         console.log(response);
+      });
+    }
+
+    /**
+     * @name restartStorjshareShares
+     * @desc restarts all Storjshare shares
+     * @memberOf configCtrl
+     */
+    function restartStorjshareShares(id) {
+      return $http({
+        method: 'POST',
+        url: 'api/config/restartStorjshareShares',
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8'
+        },
+        data:{id:id}
+      }).then((response) => {
+      }, (err) => {
+        console.log(err);
       });
     }
 
