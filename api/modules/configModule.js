@@ -31,6 +31,7 @@ var config = module.exports = {
       "miningpoolhub",
       "genericMPOS",
       "cryptoidBalance",
+      "counterpartyBalance",
     ]
   },
   getConfig: function () {
@@ -73,7 +74,7 @@ var config = module.exports = {
         //default conf
         config.config.interval=30;
         config.config.layout="large";
-        config.config.dashboardData={};
+        config.config.dashboardData=[];
         config.saveConfig();
         setTimeout(function(){
           config.loadConfig();

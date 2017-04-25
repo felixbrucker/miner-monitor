@@ -361,6 +361,25 @@
         </tbody>
       </table>
     </div>
+    <div class="col-md-4">
+      <div class="centerAlign">Counterparty balances:</div>
+      <table class="table table-bordered table-condensed leftAlign">
+        <thead>
+        <tr>
+          <th>Wallet</th>
+          <th>Amount</th>
+          <th>Token</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="(id, dashboard) in statsVm.current.dashboardData track by $index">
+          <td ng-if="dashboard.type==='counterpartyBalance'&&dashboard.enabled">{{dashboard.name}}</td>
+          <td ng-if="dashboard.type==='counterpartyBalance'&&dashboard.enabled"><span ng-repeat="entry in dashboard.data">{{entry.amount | number:6}}<br /></span></td>
+          <td ng-if="dashboard.type==='counterpartyBalance'&&dashboard.enabled" class='ellipsis'><span ng-repeat="entry in dashboard.data">{{entry.asset}}<br /></span></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <div ng-repeat="(id,group) in statsVm.current.entries | orderBy:'name'">

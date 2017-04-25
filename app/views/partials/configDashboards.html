@@ -23,8 +23,8 @@
           <td><input type="checkbox" ng-model="entry.enabled" ng-click="configVm.setConfig()"></td>
           <td><input type="text" name="{{entry.name}}" ng-model="entry.name" placeholder="name" size="26" required></td>
           <td><select name="typeSelect-{{entry.name}}" ng-options="type for type in configVm.config.dashboardTypes" ng-model="entry.type" required></select></td>
-          <td ng-if="entry.type==='nicehash'||entry.type==='bitcoinBalance' || entry.type==='cryptoidBalance'"><input type="text" name="address-{{entry.name}}" ng-model="entry.address" placeholder="1FeLiXbjMPY8LghCDe1jTQ3AS7iCZGuaJU" size="26" required></td>
-          <td ng-if="entry.type!=='nicehash'&&entry.type!=='bitcoinBalance'&&entry.type!=='cryptoidBalance'"><input type="text" name="address-{{entry.name}}" ng-model="entry.address" placeholder="" size="26" disabled></td>
+          <td ng-if="entry.type==='nicehash'||entry.type==='bitcoinBalance' || entry.type==='cryptoidBalance' || entry.type==='counterpartyBalance'"><input type="text" name="address-{{entry.name}}" ng-model="entry.address" placeholder="1FeLiXbjMPY8LghCDe1jTQ3AS7iCZGuaJU" size="26" required></td>
+          <td ng-if="entry.type!=='nicehash'&&entry.type!=='bitcoinBalance'&&entry.type!=='cryptoidBalance' && entry.type!=='counterpartyBalance'"><input type="text" name="address-{{entry.name}}" ng-model="entry.address" placeholder="" size="26" disabled></td>
           <td ng-if="entry.type==='cryptoidBalance'"><input type="text" name="ticker-{{entry.name}}" ng-model="entry.ticker" placeholder="hxx" size="26" required></td>
           <td ng-if="entry.type!=='cryptoidBalance'"><input type="text" name="ticker-{{entry.name}}" ng-model="entry.ticker" placeholder="" size="26" disabled></td>
           <td ng-if="entry.type==='genericMPOS'"><input type="text" name="baseUrl-{{entry.name}}" ng-model="entry.baseUrl" placeholder="https://zec.suprnova.cc" size="26" required></td>
@@ -41,8 +41,8 @@
           <td><input type="checkbox" ng-model="configVm.newDashboard.enabled"></td>
           <td><input type="text" name="newDeviceName" ng-model="configVm.newDashboard.name" placeholder="name" size="26"></td>
           <td><select name="typeSelect-{{entry.name}}" ng-options="type for type in configVm.config.dashboardTypes" ng-model="configVm.newDashboard.type"></select></td>
-          <td ng-if="configVm.newDashboard.type==='nicehash'||configVm.newDashboard.type==='bitcoinBalance' || configVm.newDashboard.type==='cryptoidBalance'"><input type="text" name="address-{{configVm.newDashboard.name}}" ng-model="configVm.newDashboard.address" placeholder="1FeLiXbjMPY8LghCDe1jTQ3AS7iCZGuaJU" size="26"></td>
-          <td ng-if="configVm.newDashboard.type!=='nicehash'&&configVm.newDashboard.type!=='bitcoinBalance'&&configVm.newDashboard.type!=='cryptoidBalance'"><input type="text" name="address-{{configVm.newDashboard.name}}" ng-model="configVm.newDashboard.address" placeholder="" size="26" disabled></td>
+          <td ng-if="configVm.newDashboard.type==='nicehash'||configVm.newDashboard.type==='bitcoinBalance' || configVm.newDashboard.type==='cryptoidBalance' || configVm.newDashboard.type==='counterpartyBalance'"><input type="text" name="address-{{configVm.newDashboard.name}}" ng-model="configVm.newDashboard.address" placeholder="1FeLiXbjMPY8LghCDe1jTQ3AS7iCZGuaJU" size="26"></td>
+          <td ng-if="configVm.newDashboard.type!=='nicehash'&&configVm.newDashboard.type!=='bitcoinBalance'&&configVm.newDashboard.type!=='cryptoidBalance'&&configVm.newDashboard.type!=='counterpartyBalance'"><input type="text" name="address-{{configVm.newDashboard.name}}" ng-model="configVm.newDashboard.address" placeholder="" size="26" disabled></td>
           <td ng-if="configVm.newDashboard.type==='cryptoidBalance'"><input type="text" name="ticker-new" ng-model="configVm.newDashboard.ticker" placeholder="hxx" size="26" required></td>
           <td ng-if="configVm.newDashboard.type!=='cryptoidBalance'"><input type="text" name="ticker-new" ng-model="configVm.newDashboard.ticker" placeholder="" size="26" disabled></td>
           <td ng-if="configVm.newDashboard.type==='genericMPOS'"><input type="text" name="baseUrl-{{configVm.newDashboard.name}}" ng-model="configVm.newDashboard.baseUrl" placeholder="https://zec.suprnova.cc" size="26"></td>

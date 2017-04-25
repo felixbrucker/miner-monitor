@@ -1024,7 +1024,52 @@ function getAllMPOSStats(){
   }
 }
 
+function getAllCounterpartyBalances(){
+    for(var i=0;i<configModule.config.dashboardData.length;i++){
+        if(configModule.config.dashboardData[i].type==='counterpartyBalance'&&configModule.config.dashboardData[i].enabled){
+            getCounterpartyBalance(configModule.config.dashboardData[i]);
+        }
+    }
+}
 
+function getCounterpartyBalance(obj){
+    var req= https.request({
+        host: 'counterpartychain.io',
+        path: `/api/balances/${obj.address}`,
+        method: 'GET',
+        port: 443,
+        rejectUnauthorized: false,
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8'
+        }
+    }, function (response) {
+        response.setEncoding('utf8');
+        var body = '';
+        response.on('data', function (d) {
+            body += d;
+        });
+        response.on('end', function () {
+            let parsed = null;
+            try{
+                parsed=JSON.parse(body);
+            }catch(error){
+                console.log(colors.red("Error: Unable to get counterparty balance data"));
+            }
+            if (parsed){
+                stats.dashboardData[obj.name]={type:obj.type,data: parsed.data,enabled:obj.enabled};
+            }
+        });
+    }).on("error", function(error) {
+        console.log(colors.red(`Error: Unable to get counterparty balance data (${error.code})`));
+    });
+    req.on('socket', function (socket) {
+        socket.setTimeout(10000);
+        socket.on('timeout', function() {
+            req.abort();
+        });
+    });
+    req.end();
+}
 
 function getMPOSMethodData(obj,method,callback){
   var arr = obj.baseUrl.split("://");
@@ -1271,12 +1316,14 @@ function init() {
   getAllMPOSStats();
   updateExchangeRates();
   getAllCryptoidBalances();
+  getAllCounterpartyBalances();
   mphInterval=setInterval(getAllMPHStats,30000);
   nhinterval=setInterval(getAllNicehashStats,20000);
   btcBalanceInterval=setInterval(getAllBitcoinbalances, 3 * 60 * 1000);
   mposInterval=setInterval(getAllMPOSStats,30000);
   setInterval(updateExchangeRates, 3 * 60 * 1000);
   setInterval(getAllCryptoidBalances, 3 * 60 * 1000);
+  setInterval(getAllCounterpartyBalances, 3 * 60 * 1000);
 }
 
 setTimeout(init, 2000);

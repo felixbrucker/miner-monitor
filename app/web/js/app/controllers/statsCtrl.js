@@ -68,7 +68,10 @@
     function atLeastOneBalanceDashboard(){
       if (vm.current.dashboardData) {
         for(var i=0;i<vm.current.dashboardData.length;i++){
-          if(vm.current.dashboardData[i].enabled&&vm.current.dashboardData[i].type==='bitcoinBalance')
+          if(vm.current.dashboardData[i].enabled &&(
+              vm.current.dashboardData[i].type==='bitcoinBalance' ||
+              vm.current.dashboardData[i].type==='cryptoidBalance' ||
+              vm.current.dashboardData[i].type==='counterpartyBalance'))
             return true;
         }
       }
