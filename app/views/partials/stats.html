@@ -521,8 +521,8 @@
             <tbody>
             <tr ng-repeat="(id, data) in entry.devices track by $index">
               <td class='ellipsis'>{{data.dev}}</td>
-              <td class='ellipsis' ng-class="{danger:data.temp>'80'}">{{data.temp}}</td>
-              <td class='ellipsis' ng-class="{danger:data.fan>'80'}">{{data.fan}}</td>
+              <td class='ellipsis' ng-class="{danger:data.temp>'90'}">{{data.temp}}</td>
+              <td class='ellipsis'>{{data.fan}}</td>
             </tr>
             </tbody>
           </table>

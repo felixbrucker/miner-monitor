@@ -138,7 +138,7 @@ function checkResult(result,device,ohm){
           for(var i=0;i<result.length;i++){
             var ohmDevice=result[i];
             //temp
-            if(ohmDevice.temp!==undefined&&ohmDevice.temp>"80"){
+            if(ohmDevice.temp!==undefined&&ohmDevice.temp>"90"){
               var obj={type:'item',status:'Problem',descriptor:'Temperature',item:{name:i+': '+ohmDevice.dev,value:ohmDevice.temp,highLow:'high'},device:{name:device.name,value:'Up'}};
               counterAndSend(obj);
             }else{
