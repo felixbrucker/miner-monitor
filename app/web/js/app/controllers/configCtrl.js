@@ -83,6 +83,7 @@
     vm.update = update;
     vm.addDevice = addDevice;
     vm.delDevice = delDevice;
+    vm.copyDevice = copyDevice;
     vm.addGroup=addGroup;
     vm.delGroup=delGroup;
     vm.getLocalStorage=getLocalStorage;
