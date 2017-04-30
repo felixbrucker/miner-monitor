@@ -1452,10 +1452,10 @@ function getStorjshareDaemonStats(device, display) {
         });
         if (display) {
             if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null) {
-                stats.entries[device.group][device.id] = null;
+                stats.entries[device.group][device.id] = {type: device.type, name:device.name};
             } else {
                 stats.entries[device.group] = {};
-                stats.entries[device.group][device.id] = null;
+                stats.entries[device.group][device.id] = {type: device.type, name:device.name};
             }
         }
     });
