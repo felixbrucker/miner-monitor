@@ -1205,10 +1205,12 @@ function getStorjshareDaemonStats(device) {
 
   sock.on('error', () => {
     console.log(colors.red(`Error: daemon for device ${device.name} not running`));
+    counterAndSend({type:'device',status:'Problem',descriptor:'',item:{},device:{name:device.name,value:'Down'}});
   });
 
   sock.on('remote', (remote) => {
     remote.status((err, shares) => {
+      counterAndSend({type:'device',status:'OK',descriptor:'',item:{},device:{name:device.name,value:'Up'}});
       shares.forEach((share) => {
         share.meta.farmerState.lastActivity = (Date.now() - share.meta.farmerState.lastActivity) / 1000;
       });
