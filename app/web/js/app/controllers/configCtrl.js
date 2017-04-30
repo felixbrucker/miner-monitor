@@ -262,6 +262,24 @@
       vm.setConfig();
     }
 
+      /**
+       * @name copyDevice
+       * @desc copy device data
+       * @memberOf configCtrl
+       */
+      function copyDevice(id) {
+          vm.config.devices.forEach(function (entry, index, array) {
+              if (entry.id === id) {
+                  vm.newDevice.enabled = entry.enabled;
+                  vm.newDevice.name = entry.name;
+                  vm.newDevice.type = entry.type;
+                  vm.newDevice.hostname = entry.hostname;
+                  vm.newDevice.group = entry.group;
+                  vm.newDevice.ohm = entry.ohm;
+              }
+          });
+      }
+
     /**
      * @name addDashboard
      * @desc add new dashboard to array
