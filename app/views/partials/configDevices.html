@@ -69,18 +69,21 @@
           <th class="centerAlign">enabled</th>
           <th class="centerAlign">name</th>
           <th class="centerAlign">interval</th>
+          <th class="centerAlign">display</th>
           <th class="centerAlign">action</th>
         </tr>
         <tr ng-repeat="entry in configVm.config.groups track by $index">
           <td><input type="checkbox" ng-model="entry.enabled" ng-click="configVm.setConfig()"></td>
           <td><input type="text" name="{{entry.name}}-name" ng-model="entry.name" placeholder="name" size="26" required></td>
           <td><input type="number" name="{{entry.name}}-interval" ng-model="entry.interval" placeholder="custom interval"> [s]</td>
+          <td><input type="checkbox" ng-model="entry.display" ng-click="configVm.setConfig()"></td>
           <td><button type="button" class="btn btn-warning" ng-click="configVm.delGroup(entry.id)">remove Group</button></td>
         </tr>
         <tr style="border-top: 1px solid lightgrey;">
           <td><input type="checkbox" ng-model="configVm.newGroup.enabled"></td>
           <td><input type="text" name="newGroup-name" ng-model="configVm.newGroup.name" placeholder="name" size="26"></td>
           <td><input type="number" name="newGroup-interval" ng-model="configVm.newGroup.interval" placeholder="custom interval"> [s]</td>
+          <td><input type="checkbox" ng-model="configVm.newGroup.display"></td>
           <td><button type="button" class="btn btn-success" ng-click="configVm.addGroup()">add Group</button></td>
         </tr>
       </table>

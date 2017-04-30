@@ -58,6 +58,7 @@
       id: null,
       enabled: true,
       name: "",
+      display:true,
       interval:null,
     };
 
@@ -343,6 +344,7 @@
           id:null,
           enabled:true,
           name:"",
+          display:true,
           interval:null,
         };
         vm.setConfig();
