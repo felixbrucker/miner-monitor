@@ -33,6 +33,7 @@
     vm.getLayout = getLayout;
     vm.parseName = parseName;
     vm.atLeastOneBalanceDashboard=atLeastOneBalanceDashboard;
+    vm.secondsSince = secondsSince;
 
 
     /**
@@ -76,6 +77,10 @@
         }
       }
       return false;
+    }
+
+    function secondsSince(date) {
+        return (Date.now() - date) / 1000;
     }
 
     /**
