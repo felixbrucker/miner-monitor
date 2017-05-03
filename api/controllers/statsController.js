@@ -1489,11 +1489,11 @@ function getStorjshareDaemonStats(device, display) {
                             } else {
                                 share.meta.farmerState.dailyChange = `+ ${bytes(share.meta.farmerState.dailyChange)}`;
                             }
-                            share.meta.farmerState.dailyChange = 'N/A';
                             share.meta.farmerState.lastDailyChangeTime = Date.now();
                             share.meta.farmerState.lastDailyChangeValue = share.meta.farmerState.spaceUsedBytes;
                         }
                     } else {
+                        share.meta.farmerState.dailyChange = 'N/A';
                         share.meta.farmerState.lastDailyChangeTime = Date.now();
                         share.meta.farmerState.lastDailyChangeValue = share.meta.farmerState.spaceUsedBytes;
                     }
