@@ -1495,38 +1495,36 @@ function getStorjshareDaemonStats(device, display) {
                 if (a.config.storagePath > b.config.storagePath) return 1;
                 return 0;
             });
+            let lastSpaceUpdate = null;
             shares.forEach((share, index) => {
                 if (stats.entries[device.group] &&
                     stats.entries[device.group][device.id] &&
                     stats.entries[device.group][device.id].shares &&
                     stats.entries[device.group][device.id].shares[index]) {
-                    if (stats.entries[device.group][device.id].shares[index].meta.farmerState.lastDailyChangeTime) {
-                        if ((Date.now() - stats.entries[device.group][device.id].shares[index].meta.lastDailyChangeTime)/1000 > 60 * 60 * 24 ) {
-                            // we need to compute a new one
-                            share.meta.farmerState.dailyChange = share.meta.farmerState.spaceUsedBytes - share.meta.farmerState.lastDailyChangeValue;
-                            if (share.meta.farmerState.dailyChange < 0) {
-                                share.meta.farmerState.dailyChange = `- ${bytes(share.meta.farmerState.dailyChange)}`;
-                            } else {
-                                share.meta.farmerState.dailyChange = `+ ${bytes(share.meta.farmerState.dailyChange)}`;
-                            }
-                            share.meta.farmerState.lastDailyChangeTime = Date.now();
-                            share.meta.farmerState.lastDailyChangeValue = share.meta.farmerState.spaceUsedBytes;
-                        } else {
-                            // keep previously stored values
-                            share.meta.farmerState.dailyChange = stats.entries[device.group][device.id].shares[index].meta.farmerState.dailyChange;
-                            share.meta.farmerState.lastDailyChangeTime = stats.entries[device.group][device.id].shares[index].meta.farmerState.lastDailyChangeTime;
-                            share.meta.farmerState.lastDailyChangeValue = stats.entries[device.group][device.id].shares[index].meta.farmerState.lastDailyChangeValue;
-                        }
+                    lastSpaceUpdate = stats.entries[device.group][device.id].lastSpaceUpdate;
+                    share.meta.farmerState.lastSpaceUsed = stats.entries[device.group][device.id].shares[index].meta.farmerState.lastSpaceUsed;
+                    // init
+                    if (!lastSpaceUpdate) {
+                        lastSpaceUpdate = Date.now();
+                        share.meta.farmerState.lastSpaceUsed = share.meta.farmerState.spaceUsedBytes;
+                    }
+                    if ((Date.now() - lastSpaceUpdate)/1000 > 60 * 60 * 12 ) {
+                        // we need to save the current space used
+                        lastSpaceUpdate = Date.now();
+                        share.meta.farmerState.lastSpaceUsed = share.meta.farmerState.spaceUsedBytes;
+                    }
+                    // calculate diff
+                    const change = share.meta.farmerState.spaceUsedBytes - share.meta.farmerState.lastSpaceUsed;
+                    if (change < 0) {
+                        share.meta.farmerState.change = `- ${bytes(change)}`;
                     } else {
-                        share.meta.farmerState.dailyChange = 'N/A';
-                        share.meta.farmerState.lastDailyChangeTime = Date.now();
-                        share.meta.farmerState.lastDailyChangeValue = share.meta.farmerState.spaceUsedBytes;
+                        share.meta.farmerState.change = `+ ${bytes(change)}`;
                     }
                 }
                 share.meta.farmerState.lastActivity = (Date.now() - share.meta.farmerState.lastActivity) / 1000;
             });
 
-            const obj = {shares, type: device.type, name: device.name};
+            const obj = {shares, type: device.type, name: device.name, lastSpaceUpdate};
             if (display) {
                 if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null) {
                     stats.entries[device.group][device.id] = obj;

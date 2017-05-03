@@ -806,7 +806,7 @@
                                 <th><span data-toggle="tooltip" title="Peers" data-placement="bottom">P</span></th>
                                 <th><span data-toggle="tooltip" title="Shared space (% used)" data-placement="bottom">Shared</span>
                                 </th>
-                                <th><span data-toggle="tooltip" title="24hr change" data-placement="bottom">24hr</span></th>
+                                <th><span data-toggle="tooltip" title="since {{entry.lastSpaceUpdate | secondsToHrMin}} ago" data-placement="bottom">change</span></th>
                                 <th>Last Activity</th>
                                 <th><span data-toggle="tooltip" title="Share Uptime"
                                           data-placement="bottom">Uptime</span></th>
@@ -835,7 +835,7 @@
 
                                 <td>{{share.meta.farmerState.spaceUsed}} ({{share.meta.farmerState.percentUsed}}%)</td>
 
-                                <td>{{share.meta.farmerState.dailyChange}}</td>
+                                <td>{{share.meta.farmerState.change}}</td>
 
                                 <td>{{share.meta.farmerState.lastActivity | number:0 }}s ago</td>
 

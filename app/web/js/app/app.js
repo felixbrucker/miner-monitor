@@ -116,6 +116,16 @@
       return timeString;
     }
   });
+  app.filter('secondsToHrMin', function () {
+      return function (seconds) {
+          var hours = Math.floor((seconds % 86400) / 3600);
+          var minutes = Math.floor(((seconds % 86400) % 3600) / 60);
+          var timeString = '';
+          if (hours > 0) timeString += hours + "h ";
+          if (minutes >= 0) timeString += minutes + "m";
+          return timeString;
+      }
+  });
   app.filter('toArray', function () {
     return function (obj, addKey) {
       if (!angular.isObject(obj)) return obj;
