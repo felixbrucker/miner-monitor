@@ -230,12 +230,12 @@ function checkResult(result, device, ohm) {
                     }
                 } else {
                     let obj = null;
-                    if (result.entries && result.entries.length === 0) {
+                    if (result.entries && !Object.keys(result.entries).length) {
                         obj = {
                             type: 'item',
                             status: 'Problem',
                             descriptor: 'Number',
-                            item: {name: 'miners', value: result.entries.length, highLow: 'low'},
+                            item: {name: 'miners', value: Object.keys(result.entries).length, highLow: 'low'},
                             device: {name: device.name, value: 'Up'}
                         };
                     } else {
@@ -243,7 +243,7 @@ function checkResult(result, device, ohm) {
                             type: 'item',
                             status: 'OK',
                             descriptor: 'Number',
-                            item: {name: 'miners', value: result.entries.length, highLow: 'low'},
+                            item: {name: 'miners', value: Object.keys(result.entries).length, highLow: 'low'},
                             device: {name: device.name, value: 'Up'}
                         };
                     }
