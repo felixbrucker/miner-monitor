@@ -6,6 +6,7 @@ var path = require('path');
 var colors = require('colors/safe');
 const Rx = require('rx');
 const dnode = require('dnode');
+const bytes = require('bytes');
 
 
 const timeEvents = Rx.Observable.interval(500);
@@ -1469,14 +1470,37 @@ function getStorjshareDaemonStats(device, display) {
                 item: {},
                 device: {name: device.name, value: 'Up'}
             });
-            shares.forEach((share) => {
-                share.meta.farmerState.lastActivity = (Date.now() - share.meta.farmerState.lastActivity) / 1000;
-            });
-            shares.sort(function (a, b) {
+            shares.sort((a, b) => {
                 if (a.config.storagePath < b.config.storagePath) return -1;
                 if (a.config.storagePath > b.config.storagePath) return 1;
                 return 0;
             });
+            shares.forEach((share, index) => {
+                if (stats.entries[device.group] &&
+                    stats.entries[device.group][device.id] &&
+                    stats.entries[device.group][device.id].shares &&
+                    stats.entries[device.group][device.id].shares[index]) {
+                    if (stats.entries[device.group][device.id].shares[index].meta.farmerState.lastDailyChangeTime) {
+                        if ((Date.now() - stats.entries[device.group][device.id].shares[index].meta.lastDailyChangeTime)/1000 > 60 * 60 * 24 ) {
+                            // we need to compute a new one
+                            share.meta.farmerState.dailyChange = share.meta.farmerState.spaceUsedBytes - share.meta.farmerState.lastDailyChangeValue;
+                            if (share.meta.farmerState.dailyChange < 0) {
+                                share.meta.farmerState.dailyChange = `- ${bytes(share.meta.farmerState.dailyChange)}`;
+                            } else {
+                                share.meta.farmerState.dailyChange = `+ ${bytes(share.meta.farmerState.dailyChange)}`;
+                            }
+                            share.meta.farmerState.dailyChange = 'N/A';
+                            share.meta.farmerState.lastDailyChangeTime = Date.now();
+                            share.meta.farmerState.lastDailyChangeValue = share.meta.farmerState.spaceUsedBytes;
+                        }
+                    } else {
+                        share.meta.farmerState.lastDailyChangeTime = Date.now();
+                        share.meta.farmerState.lastDailyChangeValue = share.meta.farmerState.spaceUsedBytes;
+                    }
+                }
+                share.meta.farmerState.lastActivity = (Date.now() - share.meta.farmerState.lastActivity) / 1000;
+            });
+
             const obj = {shares, type: device.type, name: device.name};
             if (display) {
                 if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null) {

@@ -12,7 +12,8 @@
     "nodemailer":"^2.7.0",
     "get-exchange-rates":"^1.0.0",
     "rx": "^4.1.0",
-    "dnode": "^1.2.2"
+    "dnode": "^1.2.2",
+    "bytes": "^2.5.0"
   },
   "scripts": {
     "start": "node main.js"
