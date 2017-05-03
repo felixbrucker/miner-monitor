@@ -1491,11 +1491,16 @@ function getStorjshareDaemonStats(device, display) {
                             }
                             share.meta.farmerState.lastDailyChangeTime = Date.now();
                             share.meta.farmerState.lastDailyChangeValue = share.meta.farmerState.spaceUsedBytes;
+                        } else {
+                            share.meta.farmerState.dailyChange = 'N/A';
+                            share.meta.farmerState.lastDailyChangeTime = Date.now();
+                            share.meta.farmerState.lastDailyChangeValue = share.meta.farmerState.spaceUsedBytes;
                         }
                     } else {
-                        share.meta.farmerState.dailyChange = 'N/A';
-                        share.meta.farmerState.lastDailyChangeTime = Date.now();
-                        share.meta.farmerState.lastDailyChangeValue = share.meta.farmerState.spaceUsedBytes;
+                        // keep previously stored values
+                        share.meta.farmerState.dailyChange = stats.entries[device.group][device.id].shares[index].meta.farmerState.dailyChange;
+                        share.meta.farmerState.lastDailyChangeTime = stats.entries[device.group][device.id].shares[index].meta.farmerState.lastDailyChangeTime;
+                        share.meta.farmerState.lastDailyChangeValue = stats.entries[device.group][device.id].shares[index].meta.farmerState.lastDailyChangeValue;
                     }
                 }
                 share.meta.farmerState.lastActivity = (Date.now() - share.meta.farmerState.lastActivity) / 1000;
