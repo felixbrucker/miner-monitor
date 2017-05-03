@@ -229,7 +229,25 @@ function checkResult(result, device, ohm) {
                          */
                     }
                 } else {
-                    //nothing for now
+                    let obj = null;
+                    if (result.entries && result.entries.length === 0) {
+                        obj = {
+                            type: 'item',
+                            status: 'Problem',
+                            descriptor: 'Number',
+                            item: {name: 'miners', value: result.entries.length, highLow: 'low'},
+                            device: {name: device.name, value: 'Up'}
+                        };
+                    } else {
+                        obj = {
+                            type: 'item',
+                            status: 'OK',
+                            descriptor: 'Number',
+                            item: {name: 'miners', value: result.entries.length, highLow: 'low'},
+                            device: {name: device.name, value: 'Up'}
+                        };
+                    }
+                    counterAndSend(obj);
                 }
                 break;
         }
@@ -306,6 +324,7 @@ function getMinerStats(device, display) {
                                 }
                                 break;
                             case "miner-agent":
+                                checkResult(parsed, device, false);
                                 if (display) {
                                     if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null)
                                         if (stats.entries[device.group][device.id] !== undefined && stats.entries[device.group][device.id] !== null) {
@@ -507,6 +526,7 @@ function getMinerStats(device, display) {
                                 }
                                 break;
                             case "miner-agent":
+                                checkResult(parsed, device, false);
                                 if (display) {
                                     if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null)
                                         if (stats.entries[device.group][device.id] !== undefined && stats.entries[device.group][device.id] !== null) {
