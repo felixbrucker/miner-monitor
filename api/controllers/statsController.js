@@ -1516,7 +1516,7 @@ function getStorjshareDaemonStats(device, display) {
                     // calculate diff
                     const change = share.meta.farmerState.spaceUsedBytes - share.meta.farmerState.lastSpaceUsed;
                     if (change < 0) {
-                        share.meta.farmerState.change = `- ${bytes(change)}`;
+                        share.meta.farmerState.change = `- ${bytes(-1 * change)}`;
                     } else {
                         share.meta.farmerState.change = `+ ${bytes(change)}`;
                     }
