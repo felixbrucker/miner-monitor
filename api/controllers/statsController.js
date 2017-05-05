@@ -1634,7 +1634,8 @@ function processStorjshareShares(device, display, shares) {
 function getStorjshareBridgeApiStats() {
   Object.keys(stats.entries).forEach((groupName) => {
     const group = stats.entries[groupName];
-    Object.keys(group).forEach((entry) => {
+    Object.keys(group).forEach((entryId) => {
+      const entry = group[entryId];
       if ((entry.type ==='storjshare-daemon' || entry.type ==='storjshare-daemon-proxy') && entry.shares) {
         entry.shares.forEach((share) => {
           if (share.id) {
@@ -1661,11 +1662,11 @@ function getStorjshareBridgeApiStats() {
                   console.log(colors.red("Error: Unable to get storjshareBridgeApi stats data: "+ error.message));
                 }
                 if (parsed) {
-                  if (parsed.responseTime) {
-                    entry.rt = parsed.responseTime > 1000 ? `${(parsed.responseTime/1000).toFixed(2)} s` : `${parsed.responseTime.toFixed(0)} ms`;
+                  if (parsed.responseTime !== undefined) {
+                    share.rt = parsed.responseTime > 1000 ? `${(parsed.responseTime/1000).toFixed(2)} s` : `${parsed.responseTime.toFixed(0)} ms`;
                   }
-                  if (parsed.timeoutRate) {
-                    entry.tr = `${(parsed.timeoutRate/100).toFixed(2)} %`;
+                  if (parsed.timeoutRate !== undefined) {
+                    share.tr = `${(parsed.timeoutRate*100).toFixed(2)} %`;
                   }
                 }
               });
@@ -1783,7 +1784,7 @@ function init() {
     setInterval(updateExchangeRates, 3 * 60 * 1000);
     setInterval(getAllCryptoidBalances, 3 * 60 * 1000);
     setInterval(getAllCounterpartyBalances, 3 * 60 * 1000);
-    setInterval(getStorjshareBridgeApiStats, 10 * 60 * 1000);
+    setInterval(getStorjshareBridgeApiStats, 20 * 1000);
 }
 
 setTimeout(init, 2000);
