@@ -336,28 +336,89 @@ function restartStorjshareShares(req, res, next) {
   for(var j=0;j<configModule.config.devices.length;j++) {
     var device = configModule.config.devices[j];
     if (device.id===id){
+
       let arr = device.hostname.split("://");
-      arr = arr[arr.length === 1 ? 0 : 1 ];
+      arr = arr[arr.length === 1 ? 0 : 1];
+      arr = arr.split("@");
+      let user = null;
+      let pass = null;
+      if (arr.length > 1) {
+        const auth = arr[0].split(":");
+        user = auth[0];
+        pass = auth[1];
+        arr = arr[1];
+      } else {
+        arr = arr[0];
+      }
       arr = arr.split(":");
       const hostname = arr[0];
-      const port = arr[1];
+      const port = arr[1] ? arr[1] : 443;
 
-      const sock = dnode.connect(hostname, port);
+      switch(device.type) {
+        case 'storjshare-daemon':
+          const sock = dnode.connect(hostname, port);
 
-      sock.on('error', () => {
-        console.log(colors.red(`Error: daemon for device ${device.name} not running`));
-      });
+          sock.on('error', () => {
+            console.log(colors.red(`Error: daemon for device ${device.name} not running`));
+          });
 
-      sock.on('remote', (remote) => {
-        remote.restart('*', (err) => {
-          if (err) {
-            console.error(`cannot restart node, reason: ${err.message}`);
-          }
-          sock.end();
-          res.setHeader('Content-Type', 'application/json');
-          res.send(JSON.stringify({result: true}));
-        });
-      });
+          sock.on('remote', (remote) => {
+            remote.restart('*', (err) => {
+              if (err) {
+                console.error(`cannot restart node, reason: ${err.message}`);
+              }
+              sock.end();
+              res.setHeader('Content-Type', 'application/json');
+              res.send(JSON.stringify({result: true}));
+            });
+          });
+          break;
+        case 'storjshare-daemon-proxy':
+          const req = https.request({
+            host: hostname,
+            path: '/restart',
+            method: 'POST',
+            port,
+            auth: user ? `${user}:${pass}` : undefined,
+            rejectUnauthorized: false,
+            headers: {
+              'Content-Type': 'application/json;charset=UTF-8'
+            }
+          }, (response) => {
+            response.setEncoding('utf8');
+            let body = '';
+            response.on('data', (d) => {
+              body += d;
+            });
+            response.on('end', () => {
+              let parsed = null;
+              try {
+                parsed = JSON.parse(body);
+              } catch (error) {
+                res.setHeader('Content-Type', 'application/json');
+                res.send(JSON.stringify({result: false}));
+              }
+              if (parsed != null) {
+                res.setHeader('Content-Type', 'application/json');
+                res.send(JSON.stringify({result: true}));
+              }
+            });
+          })
+          .on("error", (error) => {
+            console.log(colors.red(`Error: daemon-proxy for device ${device.name} not running`));
+            res.setHeader('Content-Type', 'application/json');
+            res.send(JSON.stringify({result: false}));
+          });
+          req.on('socket', (socket) => {
+            socket.setTimeout(20000);
+            socket.on('timeout', () => {
+              req.abort();
+            });
+          });
+          req.write(JSON.stringify({param: '*'}));
+          req.end();
+          break;
+      }
     }
   }
 }

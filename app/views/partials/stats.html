@@ -616,7 +616,7 @@
                 </div>
             </div>
             <div style="float: left;display:inline-block;" class="col-md-4 table-responsive"
-                 ng-if="entry.type !=='storjshare-daemon' && (entry.type!=='miner-agent'||entry.devices===undefined)">
+                 ng-if="entry.type !=='storjshare-daemon' && entry.type !=='storjshare-daemon-proxy' && (entry.type!=='miner-agent'||entry.devices===undefined)">
                 <div class="row">
                     <div class="col-md-12">
                         <div style="float: left;font-size:120%;"><a href="{{entry.hostname}}" target="_blank">{{entry.name}}</a>
@@ -789,7 +789,7 @@
                 </div>
             </div>
             <div style="float: left;display:inline-block;" class="col-md-6 table-responsive"
-                 ng-if="entry.type==='storjshare-daemon'">
+                 ng-if="entry.type==='storjshare-daemon' || entry.type==='storjshare-daemon-proxy'">
                 <div class="row">
                     <div class="col-md-12">
                         <div style="float: left;font-size:120%;">{{entry.name}}</div>

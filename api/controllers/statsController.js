@@ -1456,86 +1456,177 @@ function getMPOSStats(obj) {
 function getStorjshareDaemonStats(device, display) {
     let arr = device.hostname.split("://");
     arr = arr[arr.length === 1 ? 0 : 1];
+    arr = arr.split("@");
+    let user = null;
+    let pass = null;
+    if (arr.length > 1) {
+      const auth = arr[0].split(":");
+      user = auth[0];
+      pass = auth[1];
+      arr = arr[1];
+    } else {
+      arr = arr[0];
+    }
     arr = arr.split(":");
     const hostname = arr[0];
-    const port = arr[1];
+    const port = arr[1] ? arr[1] : 443;
 
-    const sock = dnode.connect(hostname, port);
+    switch(device.type) {
+      case 'storjshare-daemon':
+        const sock = dnode.connect(hostname, port);
 
-    sock.on('error', () => {
-        console.log(colors.red(`Error: daemon for device ${device.name} not running`));
-        counterAndSend({
+        sock.on('error', () => {
+          console.log(colors.red(`Error: daemon for device ${device.name} not running`));
+          counterAndSend({
             type: 'device',
             status: 'Problem',
             descriptor: '',
             item: {},
             device: {name: device.name, value: 'Down'}
-        });
-        if (display) {
+          });
+          if (display) {
             if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null) {
-                stats.entries[device.group][device.id] = {type: device.type, name:device.name};
+              stats.entries[device.group][device.id] = {type: device.type, name:device.name};
             } else {
-                stats.entries[device.group] = {};
-                stats.entries[device.group][device.id] = {type: device.type, name:device.name};
+              stats.entries[device.group] = {};
+              stats.entries[device.group][device.id] = {type: device.type, name:device.name};
             }
-        }
-    });
+          }
+        });
 
-    sock.on('remote', (remote) => {
-        remote.status((err, shares) => {
-            counterAndSend({
+        sock.on('remote', (remote) => {
+          remote.status((err, shares) => {
+            sock.end();
+            processStorjshareShares(device, display, shares);
+          });
+        });
+        break;
+      case 'storjshare-daemon-proxy':
+        const req = https.request({
+          host: hostname,
+          path: '/status',
+          method: 'POST',
+          port,
+          auth: user ? `${user}:${pass}` : undefined,
+          rejectUnauthorized: false,
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8'
+          }
+        }, (response) => {
+          response.setEncoding('utf8');
+          let body = '';
+          response.on('data', (d) => {
+            body += d;
+          });
+          response.on('end', () => {
+            let parsed = null;
+            try {
+              parsed = JSON.parse(body);
+            } catch (error) {
+              console.log(colors.red("Error: Unable to get storjshareDaemonProxy stats data: "+ error.message));
+              counterAndSend({
                 type: 'device',
-                status: 'OK',
+                status: 'Problem',
                 descriptor: '',
                 item: {},
-                device: {name: device.name, value: 'Up'}
-            });
-            shares.sort((a, b) => {
-                if (a.config.storagePath < b.config.storagePath) return -1;
-                if (a.config.storagePath > b.config.storagePath) return 1;
-                return 0;
-            });
-            let lastSpaceUpdate = null;
-            shares.forEach((share, index) => {
-                if (stats.entries[device.group] &&
-                    stats.entries[device.group][device.id] &&
-                    stats.entries[device.group][device.id].shares &&
-                    stats.entries[device.group][device.id].shares[index]) {
-                    lastSpaceUpdate = stats.entries[device.group][device.id].lastSpaceUpdate;
-                    share.meta.farmerState.lastSpaceUsed = stats.entries[device.group][device.id].shares[index].meta.farmerState.lastSpaceUsed;
-                    // init
-                    if (!lastSpaceUpdate) {
-                        lastSpaceUpdate = Date.now();
-                        share.meta.farmerState.lastSpaceUsed = share.meta.farmerState.spaceUsedBytes;
-                    }
-                    if ((Date.now() - lastSpaceUpdate)/1000 > 60 * 60 * 12 ) {
-                        // we need to save the current space used
-                        lastSpaceUpdate = Date.now();
-                        share.meta.farmerState.lastSpaceUsed = share.meta.farmerState.spaceUsedBytes;
-                    }
-                    // calculate diff
-                    const change = share.meta.farmerState.spaceUsedBytes - share.meta.farmerState.lastSpaceUsed;
-                    if (change < 0) {
-                        share.meta.farmerState.change = `- ${bytes(-1 * change)}`;
-                    } else {
-                        share.meta.farmerState.change = `+ ${bytes(change)}`;
-                    }
-                }
-                share.meta.farmerState.lastActivity = (Date.now() - share.meta.farmerState.lastActivity) / 1000;
-            });
-
-            const obj = {shares, type: device.type, name: device.name, lastSpaceUpdate};
-            if (display) {
+                device: {name: device.name, value: 'Down'}
+              });
+              if (display) {
                 if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null) {
-                    stats.entries[device.group][device.id] = obj;
+                  stats.entries[device.group][device.id] = {type: device.type, name:device.name};
                 } else {
-                    stats.entries[device.group] = {};
-                    stats.entries[device.group][device.id] = obj;
+                  stats.entries[device.group] = {};
+                  stats.entries[device.group][device.id] = {type: device.type, name:device.name};
                 }
+              }
             }
-            sock.end();
+            if (parsed && parsed.data) {
+              processStorjshareShares(device, display, parsed.data);
+            }
+          });
+        })
+        .on("error", (error) => {
+          console.log(colors.red("Error: Unable to get storjshareDaemonProxy stats data (" + error.code + ")"));
+          counterAndSend({
+            type: 'device',
+            status: 'Problem',
+            descriptor: '',
+            item: {},
+            device: {name: device.name, value: 'Down'}
+          });
+          if (display) {
+            if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null) {
+              stats.entries[device.group][device.id] = {type: device.type, name:device.name};
+            } else {
+              stats.entries[device.group] = {};
+              stats.entries[device.group][device.id] = {type: device.type, name:device.name};
+            }
+          }
         });
-    });
+        req.on('socket', (socket) => {
+          socket.setTimeout(20000);
+          socket.on('timeout', () => {
+            req.abort();
+          });
+        });
+        req.end();
+        break;
+    }
+}
+
+function processStorjshareShares(device, display, shares) {
+  counterAndSend({
+    type: 'device',
+    status: 'OK',
+    descriptor: '',
+    item: {},
+    device: {name: device.name, value: 'Up'}
+  });
+  shares.sort((a, b) => {
+    if (a.config.storagePath < b.config.storagePath) return -1;
+    if (a.config.storagePath > b.config.storagePath) return 1;
+    return 0;
+  });
+  let lastSpaceUpdate = null;
+  shares.forEach((share, index) => {
+    if (stats.entries[device.group] &&
+      stats.entries[device.group][device.id] &&
+      stats.entries[device.group][device.id].shares &&
+      stats.entries[device.group][device.id].shares[index]) {
+      lastSpaceUpdate = stats.entries[device.group][device.id].lastSpaceUpdate;
+      share.meta.farmerState.lastSpaceUsed = stats.entries[device.group][device.id].shares[index].meta.farmerState.lastSpaceUsed;
+      if (share.meta.farmerState.spaceUsedBytes) {
+        // init
+        if (!lastSpaceUpdate) {
+          lastSpaceUpdate = Date.now();
+          share.meta.farmerState.lastSpaceUsed = share.meta.farmerState.spaceUsedBytes;
+        }
+        if ((Date.now() - lastSpaceUpdate)/1000 > 60 * 60 * 12 ) {
+          // we need to save the current space used
+          lastSpaceUpdate = Date.now();
+          share.meta.farmerState.lastSpaceUsed = share.meta.farmerState.spaceUsedBytes;
+        }
+        // calculate diff
+        const change = share.meta.farmerState.spaceUsedBytes - share.meta.farmerState.lastSpaceUsed;
+        if (change < 0) {
+          share.meta.farmerState.change = `- ${bytes(-1 * change)}`;
+        } else {
+          share.meta.farmerState.change = `+ ${bytes(change)}`;
+        }
+      }
+    }
+    share.meta.farmerState.lastActivity = (Date.now() - share.meta.farmerState.lastActivity) / 1000;
+  });
+
+  const obj = {shares, type: device.type, name: device.name, lastSpaceUpdate};
+  if (display) {
+    if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null) {
+      stats.entries[device.group][device.id] = obj;
+    } else {
+      stats.entries[device.group] = {};
+      stats.entries[device.group][device.id] = obj;
+    }
+  }
 }
 
 function initAllMinerStats() {
@@ -1555,7 +1646,7 @@ function initAllMinerStats() {
 
                 Rx.Observable.zip(timeEvents, deviceEvents, (i, device) => device)
                     .subscribe(device => {
-                        if (device.type === 'storjshare-daemon') {
+                        if (device.type === 'storjshare-daemon' || device.type === 'storjshare-daemon-proxy') {
                             getStorjshareDaemonStats(device, group.display);
                         } else {
                             getMinerStats(JSON.parse(JSON.stringify(device)), group.display);
@@ -1578,7 +1669,7 @@ function initAllMinerStats() {
 
                     Rx.Observable.zip(timeEvents, deviceEvents, (i, device) => device)
                         .subscribe(device => {
-                            if (device.type === 'storjshare-daemon') {
+                            if (device.type === 'storjshare-daemon' || device.type === 'storjshare-daemon-proxy') {
                                 getStorjshareDaemonStats(device, group.display);
                             } else {
                                 getMinerStats(JSON.parse(JSON.stringify(device)), group.display);
