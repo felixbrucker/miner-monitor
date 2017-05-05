@@ -807,6 +807,8 @@
                                 <th><span data-toggle="tooltip" title="Shared space (% used)" data-placement="bottom">Shared</span>
                                 </th>
                                 <th><span data-toggle="tooltip" title="since {{statsVm.secondsSince(entry.lastSpaceUpdate) | secondsToHrMin}} ago" data-placement="bottom">change</span></th>
+                                <th><span data-toggle="tooltip" title="Response time" data-placement="bottom">Rt</span></th>
+                                <th><span data-toggle="tooltip" title="Timeout rate" data-placement="bottom">Tr</span></th>
                                 <th>Last Activity</th>
                                 <th><span data-toggle="tooltip" title="Share Uptime"
                                           data-placement="bottom">Uptime</span></th>
@@ -836,6 +838,10 @@
                                 <td>{{share.meta.farmerState.spaceUsed}} ({{share.meta.farmerState.percentUsed}}%)</td>
 
                                 <td>{{share.meta.farmerState.change}}</td>
+
+                                <td>{{share.rt}}</td>
+
+                                <td>{{share.tr}}</td>
 
                                 <td>{{share.meta.farmerState.lastActivity | number:0 }}s ago</td>
 

@@ -1595,6 +1595,8 @@ function processStorjshareShares(device, display, shares) {
       stats.entries[device.group][device.id].shares[index]) {
       lastSpaceUpdate = stats.entries[device.group][device.id].lastSpaceUpdate;
       share.meta.farmerState.lastSpaceUsed = stats.entries[device.group][device.id].shares[index].meta.farmerState.lastSpaceUsed;
+      share.tr = stats.entries[device.group][device.id].shares[index].tr;
+      share.rt = stats.entries[device.group][device.id].shares[index].rt;
       if (share.meta.farmerState.spaceUsedBytes) {
         // init
         if (!lastSpaceUpdate) {
@@ -1627,6 +1629,62 @@ function processStorjshareShares(device, display, shares) {
       stats.entries[device.group][device.id] = obj;
     }
   }
+}
+
+function getStorjshareBridgeApiStats() {
+  Object.keys(stats.entries).forEach((groupName) => {
+    const group = stats.entries[groupName];
+    Object.keys(group).forEach((entry) => {
+      if ((entry.type ==='storjshare-daemon' || entry.type ==='storjshare-daemon-proxy') && entry.shares) {
+        entry.shares.forEach((share) => {
+          if (share.id) {
+            const req = https.request({
+              host: 'api.storj.io',
+              path: `/contacts/${share.id}`,
+              method: 'GET',
+              port: 443,
+              rejectUnauthorized: false,
+              headers: {
+                'Content-Type': 'application/json;charset=UTF-8'
+              }
+            }, (response) => {
+              response.setEncoding('utf8');
+              let body = '';
+              response.on('data', (d) => {
+                body += d;
+              });
+              response.on('end', () => {
+                let parsed = null;
+                try {
+                  parsed = JSON.parse(body);
+                } catch (error) {
+                  console.log(colors.red("Error: Unable to get storjshareBridgeApi stats data: "+ error.message));
+                }
+                if (parsed) {
+                  if (parsed.responseTime) {
+                    entry.rt = parsed.responseTime > 1000 ? `${(parsed.responseTime/1000).toFixed(2)} s` : `${parsed.responseTime.toFixed(0)} ms`;
+                  }
+                  if (parsed.timeoutRate) {
+                    entry.tr = `${(parsed.timeoutRate/100).toFixed(2)} %`;
+                  }
+                }
+              });
+            })
+            .on("error", (error) => {
+              console.log(colors.red("Error: Unable to get storjshareBridgeApi stats data (" + error.code + ")"));
+            });
+            req.on('socket', (socket) => {
+              socket.setTimeout(20000);
+              socket.on('timeout', () => {
+                req.abort();
+              });
+            });
+            req.end();
+          }
+        });
+      }
+    });
+  });
 }
 
 function initAllMinerStats() {
@@ -1717,6 +1775,7 @@ function init() {
     updateExchangeRates();
     getAllCryptoidBalances();
     getAllCounterpartyBalances();
+    getStorjshareBridgeApiStats();
     mphInterval = setInterval(getAllMPHStats, 30000);
     nhinterval = setInterval(getAllNicehashStats, 20000);
     btcBalanceInterval = setInterval(getAllBitcoinbalances, 3 * 60 * 1000);
@@ -1724,6 +1783,7 @@ function init() {
     setInterval(updateExchangeRates, 3 * 60 * 1000);
     setInterval(getAllCryptoidBalances, 3 * 60 * 1000);
     setInterval(getAllCounterpartyBalances, 3 * 60 * 1000);
+    setInterval(getStorjshareBridgeApiStats, 10 * 60 * 1000);
 }
 
 setTimeout(init, 2000);
