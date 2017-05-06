@@ -23,6 +23,20 @@ body {
     background-color: #fff!important;
 }
 
+.ellipsisbig{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 190px;
+}
+.ellipsisbig:hover{
+    overflow: visible;
+    max-width:none;
+    width:auto;
+    background-color: #fff!important;
+}
+
 .mycontainer {
     width: 96%;
     margin: 0 auto;

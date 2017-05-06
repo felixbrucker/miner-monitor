@@ -219,7 +219,7 @@
                     <tbody>
                     <tr ng-repeat="(id, data) in dashboard.data.current track by $index">
                         <td ng-if="data.data['1']!=='0'">{{data.name}}</td>
-                        <td ng-if="data.data['1']!=='0' && data.data['0'].a!==undefined" class='ellipsis'><span
+                        <td ng-if="data.data['1']!=='0' && data.data['0'].a!==undefined" class='ellipsisbig'><span
                                 data-highlighter="data.data['0'].a">{{data.data['0'].a}}</span> {{data.suffix}}/s
                             <span ng-if="data.worker!==undefined" style="font-size:small;">
               <span ng-repeat="(key, value) in data.worker track by $index">
@@ -266,7 +266,7 @@
                         <td>{{data.time * 1000 | date: "yyyy-MM-dd HH:mm"}}</td>
                         <td>{{data.amount}} BTC</td>
                         <td>{{data.fee}} BTC</td>
-                        <td class='ellipsis'><a href="https://blockchain.info/tx/{{data.TXID}}" target="_blank">{{data.TXID}}</a>
+                        <td class='ellipsisbig'><a href="https://blockchain.info/tx/{{data.TXID}}" target="_blank">{{data.TXID}}</a>
                         </td>
                     </tr>
                     </tbody>
