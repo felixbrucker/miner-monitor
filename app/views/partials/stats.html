@@ -350,7 +350,7 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td>{{dashboard.data.hashrate|hashrate}}
+                        <td class='ellipsis'>{{dashboard.data.hashrate|hashrate}}
                             <span ng-if="dashboard.data.workers!==[]" style="font-size:small;">
             <span ng-repeat="(key, value) in dashboard.data.workers track by $index">
                 <br/>
@@ -359,9 +359,9 @@
             </span>
         </span>
                         </td>
-                        <td>{{dashboard.data.confirmed}} {{dashboard.data.symbol}}</td>
-                        <td>{{dashboard.data.unconfirmed}} {{dashboard.data.symbol}}</td>
-                        <td>{{dashboard.data.estimated}} {{dashboard.data.symbol}}</td>
+                        <td class='ellipsis'>{{dashboard.data.confirmed}} {{dashboard.data.symbol}}</td>
+                        <td class='ellipsis'>{{dashboard.data.unconfirmed}} {{dashboard.data.symbol}}</td>
+                        <td class='ellipsis'>{{dashboard.data.estimated}} {{dashboard.data.symbol}}</td>
                     </tr>
                     </tbody>
                 </table>
