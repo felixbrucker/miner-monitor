@@ -1542,6 +1542,14 @@ function getStorjshareDaemonStats(device, display) {
             }
             if (parsed && parsed.data) {
               processStorjshareShares(device, display, parsed.data);
+            } else {
+              counterAndSend({
+                type: 'device',
+                status: 'Problem',
+                descriptor: '',
+                item: {},
+                device: {name: device.name, value: 'Down'}
+              });
             }
           });
         })
