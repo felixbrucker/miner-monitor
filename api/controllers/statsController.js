@@ -235,7 +235,7 @@ function checkResult(result, device, ohm) {
                             type: 'item',
                             status: 'Problem',
                             descriptor: 'Number',
-                            item: {name: 'miners', value: Object.keys(result.entries).length, highLow: 'low'},
+                            item: {name: 'running miners', value: Object.keys(result.entries).length, highLow: 'low'},
                             device: {name: device.name, value: 'Up'}
                         };
                     } else {
@@ -243,7 +243,7 @@ function checkResult(result, device, ohm) {
                             type: 'item',
                             status: 'OK',
                             descriptor: 'Number',
-                            item: {name: 'miners', value: Object.keys(result.entries).length, highLow: 'low'},
+                            item: {name: 'running miners', value: Object.keys(result.entries).length, highLow: 'low'},
                             device: {name: device.name, value: 'Up'}
                         };
                     }
