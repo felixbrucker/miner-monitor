@@ -818,7 +818,7 @@
                             <tr ng-repeat="share in entry.shares track by $index">
 
                                 <td class='ellipsis'><i class="fa fa-hdd-o" aria-hidden="true"></i>
-                                    {{share.config.storagePath}}
+                                    <a href="https://api.storj.io/contacts/{{share.id}}" target="_blank">{{share.config.storagePath}}</a>
                                 </td>
 
                                 <td ng-if="share.state===0"><span data-toggle="tooltip" title="stopped"><i
