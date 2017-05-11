@@ -1713,12 +1713,14 @@ function getStorjshareBridgeApiStats() {
             req.end();
           }
         });
-        setTimeout(() => {
-          avgRt = avgRt / entry.shares.length;
-          avgTr = avgTr / entry.shares.length;
-          entry.avgRt = avgRt > 1000 ? `${(avgRt/1000).toFixed(2)} s` : `${avgRt.toFixed(0)} ms`;
-          entry.avgTr = `${(avgTr*100).toFixed(2)} %`;;
-        }, 30 * 1000);
+        ((groupName, entryId) => {
+          setTimeout(() => {
+            avgRt = avgRt / stats.entries[groupName][entryId].shares.length;
+            avgTr = avgTr / stats.entries[groupName][entryId].shares.length;
+            stats.entries[groupName][entryId].avgRt = avgRt > 1000 ? `${(avgRt/1000).toFixed(2)} s` : `${avgRt.toFixed(0)} ms`;
+            stats.entries[groupName][entryId].avgTr = `${(avgTr*100).toFixed(2)} %`;
+          }, 30 * 1000);
+        })(groupName, entryId);
       }
     });
   });
