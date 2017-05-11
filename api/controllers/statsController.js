@@ -1599,6 +1599,7 @@ function processStorjshareShares(device, display, shares) {
   let totalSpaceUsed = 0;
   let totalChange = 0;
   let totalPeers = 0;
+  let totalRestarts = 0;
   let avgRt = null;
   let avgTr = null;
   if (stats.entries && stats.entries[device.group] && stats.entries[device.group][device.id]) {
@@ -1635,6 +1636,7 @@ function processStorjshareShares(device, display, shares) {
         totalChange += change;
         totalSpaceUsed += share.meta.farmerState.spaceUsedBytes;
         totalPeers += share.meta.farmerState.totalPeers;
+        totalRestarts += share.meta.numRestarts;
       }
     }
     share.meta.farmerState.lastActivity = (Date.now() - share.meta.farmerState.lastActivity) / 1000;
@@ -1646,7 +1648,7 @@ function processStorjshareShares(device, display, shares) {
     totalChange = `+ ${bytes(totalChange)}`;
   }
   totalSpaceUsed = bytes(totalSpaceUsed);
-  const obj = {shares, type: device.type, name: device.name, lastSpaceUpdate, avgPeers, totalChange, totalSpaceUsed, avgRt, avgTr};
+  const obj = {shares, type: device.type, name: device.name, lastSpaceUpdate, avgPeers, totalChange, totalSpaceUsed, avgRt, avgTr, totalRestarts};
   if (display) {
     if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null) {
       stats.entries[device.group][device.id] = obj;
