@@ -1601,7 +1601,7 @@ function processStorjshareShares(device, display, shares) {
   let totalPeers = 0;
   let avgRt = null;
   let avgTr = null;
-  if (stats.entries[device.group][device.id]) {
+  if (stats.entries && stats.entries[device.group] && stats.entries[device.group][device.id]) {
       avgRt = stats.entries[device.group][device.id].avgRt ? stats.entries[device.group][device.id].avgRt : 'N/A';
       avgTr = stats.entries[device.group][device.id].avgTr ? stats.entries[device.group][device.id].avgTr : 'N/A';
   }
