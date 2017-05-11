@@ -1596,6 +1596,9 @@ function processStorjshareShares(device, display, shares) {
     return 0;
   });
   let lastSpaceUpdate = null;
+  let totalSpaceUsed = 0;
+  let totalChange = 0;
+  let totalPeers = 0;
   shares.forEach((share, index) => {
     if (stats.entries[device.group] &&
       stats.entries[device.group][device.id] &&
@@ -1623,12 +1626,21 @@ function processStorjshareShares(device, display, shares) {
         } else {
           share.meta.farmerState.change = `+ ${bytes(change)}`;
         }
+        totalChange += change;
+        totalSpaceUsed += share.meta.farmerState.spaceUsedBytes;
+        totalPeers += share.meta.farmerState.totalPeers;
       }
     }
     share.meta.farmerState.lastActivity = (Date.now() - share.meta.farmerState.lastActivity) / 1000;
   });
-
-  const obj = {shares, type: device.type, name: device.name, lastSpaceUpdate};
+  const avgPeers = totalPeers / shares.length;
+  if (totalChange < 0) {
+    totalChange = `- ${bytes(-1 * totalChange)}`;
+  } else {
+    totalChange = `+ ${bytes(totalChange)}`;
+  }
+  totalSpaceUsed = bytes(totalSpaceUsed);
+  const obj = {shares, type: device.type, name: device.name, lastSpaceUpdate, avgPeers, totalChange, totalSpaceUsed};
   if (display) {
     if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null) {
       stats.entries[device.group][device.id] = obj;
@@ -1645,6 +1657,8 @@ function getStorjshareBridgeApiStats() {
     Object.keys(group).forEach((entryId) => {
       const entry = group[entryId];
       if ((entry.type ==='storjshare-daemon' || entry.type ==='storjshare-daemon-proxy') && entry.shares) {
+        let avgRt = 0;
+        let avgTr = 0;
         entry.shares.forEach((share) => {
           if (share.id) {
             const req = https.request({
@@ -1672,9 +1686,11 @@ function getStorjshareBridgeApiStats() {
                 if (parsed) {
                   if (parsed.responseTime !== undefined) {
                     share.rt = parsed.responseTime > 1000 ? `${(parsed.responseTime/1000).toFixed(2)} s` : `${parsed.responseTime.toFixed(0)} ms`;
+                    avgRt += parsed.responseTime;
                   }
                   if (parsed.timeoutRate !== undefined) {
                     share.tr = `${(parsed.timeoutRate*100).toFixed(2)} %`;
+                    avgTr += parsed.timeoutRate;
                   }
                 }
               });
@@ -1691,6 +1707,12 @@ function getStorjshareBridgeApiStats() {
             req.end();
           }
         });
+        setTimeout(() => {
+          avgRt = avgRt / entry.shares.length;
+          avgTr = avgTr / entry.shares.length;
+          entry.avgRt = avgRt > 1000 ? `${(avgRt/1000).toFixed(2)} s` : `${avgRt.toFixed(0)} ms`;
+          entry.avgTr = `${(avgTr*100).toFixed(2)} %`;;
+        }, 30 * 1000);
       }
     });
   });
