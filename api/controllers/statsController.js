@@ -1599,6 +1599,12 @@ function processStorjshareShares(device, display, shares) {
   let totalSpaceUsed = 0;
   let totalChange = 0;
   let totalPeers = 0;
+  let avgRt = null;
+  let avgTr = null;
+  if (stats.entries[device.group][device.id]) {
+      avgRt = stats.entries[device.group][device.id].avgRt ? stats.entries[device.group][device.id].avgRt : 'N/A';
+      avgTr = stats.entries[device.group][device.id].avgTr ? stats.entries[device.group][device.id].avgTr : 'N/A';
+  }
   shares.forEach((share, index) => {
     if (stats.entries[device.group] &&
       stats.entries[device.group][device.id] &&
@@ -1640,7 +1646,7 @@ function processStorjshareShares(device, display, shares) {
     totalChange = `+ ${bytes(totalChange)}`;
   }
   totalSpaceUsed = bytes(totalSpaceUsed);
-  const obj = {shares, type: device.type, name: device.name, lastSpaceUpdate, avgPeers, totalChange, totalSpaceUsed};
+  const obj = {shares, type: device.type, name: device.name, lastSpaceUpdate, avgPeers, totalChange, totalSpaceUsed, avgRt, avgTr};
   if (display) {
     if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null) {
       stats.entries[device.group][device.id] = obj;
