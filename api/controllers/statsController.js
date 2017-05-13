@@ -1695,10 +1695,14 @@ function getStorjshareBridgeApiStats() {
                   if (parsed.responseTime !== undefined) {
                     share.rt = parsed.responseTime > 1000 ? `${(parsed.responseTime/1000).toFixed(2)} s` : `${parsed.responseTime.toFixed(0)} ms`;
                     avgRt += parsed.responseTime;
+                  } else {
+                    share.rt = 'N/A';
                   }
                   if (parsed.timeoutRate !== undefined) {
                     share.tr = `${(parsed.timeoutRate*100).toFixed(2)} %`;
                     avgTr += parsed.timeoutRate;
+                  } else {
+                    share.tr = '0.00 %';
                   }
                 }
               });
