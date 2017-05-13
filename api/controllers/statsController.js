@@ -880,7 +880,7 @@ function getAllNicehashStats() {
 function getNicehashStats(obj) {
 
     var req = https.request({
-        host: 'www.nicehash.com',
+        host: 'api.nicehash.com',
         path: '/api?method=stats.provider.ex&addr=' + obj.address,
         method: 'GET',
         port: 443,
@@ -954,7 +954,7 @@ function getNicehashStats(obj) {
 
 function getNicehashWorkerStats(addr, algo) {
     var req = https.request({
-        host: 'www.nicehash.com',
+        host: 'api.nicehash.com',
         path: '/api?method=stats.provider.workers&addr=' + addr + '&algo=' + algo.algo,
         method: 'GET',
         port: 443,
