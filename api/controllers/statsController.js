@@ -1669,54 +1669,56 @@ function getStorjshareBridgeApiStats() {
         let avgTr = 0;
         entry.shares.forEach((share) => {
           if (share.id) {
-            const req = https.request({
-              host: 'api.storj.io',
-              path: `/contacts/${share.id}`,
-              method: 'GET',
-              port: 443,
-              rejectUnauthorized: false,
-              headers: {
-                'Content-Type': 'application/json;charset=UTF-8'
-              }
-            }, (response) => {
-              response.setEncoding('utf8');
-              let body = '';
-              response.on('data', (d) => {
-                body += d;
-              });
-              response.on('end', () => {
-                let parsed = null;
-                try {
-                  parsed = JSON.parse(body);
-                } catch (error) {
-                  console.log(colors.red("Error: Unable to get storjshareBridgeApi stats data: "+ error.message));
-                }
-                if (parsed) {
-                  if (parsed.responseTime !== undefined) {
-                    share.rt = parsed.responseTime > 1000 ? `${(parsed.responseTime/1000).toFixed(2)} s` : `${parsed.responseTime.toFixed(0)} ms`;
-                    avgRt += parsed.responseTime;
-                  } else {
-                    share.rt = 'N/A';
+            ((share) => {
+                const req = https.request({
+                  host: 'api.storj.io',
+                  path: `/contacts/${share.id}`,
+                  method: 'GET',
+                  port: 443,
+                  rejectUnauthorized: false,
+                  headers: {
+                    'Content-Type': 'application/json;charset=UTF-8'
                   }
-                  if (parsed.timeoutRate !== undefined) {
-                    share.tr = `${(parsed.timeoutRate*100).toFixed(2)} %`;
-                    avgTr += parsed.timeoutRate;
-                  } else {
-                    share.tr = '0.00 %';
-                  }
-                }
-              });
-            })
-            .on("error", (error) => {
-              console.log(colors.red("Error: Unable to get storjshareBridgeApi stats data (" + error.code + ")"));
-            });
-            req.on('socket', (socket) => {
-              socket.setTimeout(20000);
-              socket.on('timeout', () => {
-                req.abort();
-              });
-            });
-            req.end();
+                }, (response) => {
+                  response.setEncoding('utf8');
+                  let body = '';
+                  response.on('data', (d) => {
+                    body += d;
+                  });
+                  response.on('end', () => {
+                    let parsed = null;
+                    try {
+                      parsed = JSON.parse(body);
+                    } catch (error) {
+                      console.log(colors.red("Error: Unable to get storjshareBridgeApi stats data: "+ error.message));
+                    }
+                    if (parsed) {
+                      if (parsed.responseTime !== undefined) {
+                        share.rt = parsed.responseTime > 1000 ? `${(parsed.responseTime/1000).toFixed(2)} s` : `${parsed.responseTime.toFixed(0)} ms`;
+                        avgRt += parsed.responseTime;
+                      } else {
+                        share.rt = 'N/A';
+                      }
+                      if (parsed.timeoutRate !== undefined) {
+                        share.tr = `${(parsed.timeoutRate*100).toFixed(2)} %`;
+                        avgTr += parsed.timeoutRate;
+                      } else {
+                        share.tr = '0.00 %';
+                      }
+                    }
+                  });
+                })
+                .on("error", (error) => {
+                  console.log(colors.red("Error: Unable to get storjshareBridgeApi stats data (" + error.code + ")"));
+                });
+                req.on('socket', (socket) => {
+                  socket.setTimeout(20000);
+                  socket.on('timeout', () => {
+                    req.abort();
+                  });
+                });
+                req.end();
+            })(share);
           }
         });
         ((groupName, entryId) => {
