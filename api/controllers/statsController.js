@@ -1727,8 +1727,8 @@ function getStorjshareBridgeApiStats() {
         });
         ((groupName, entryId) => {
           setTimeout(() => {
-            avgRt = avgRt / counter1 ? counter1 : 1;
-            avgTr = avgTr / counter2 ? counter2 : 1;
+            avgRt = avgRt / (counter1 ? counter1 : 1);
+            avgTr = avgTr / (counter2 ? counter2 : 1);
             stats.entries[groupName][entryId].avgRt = avgRt > 1000 ? `${(avgRt/1000).toFixed(2)} s` : `${avgRt.toFixed(0)} ms`;
             stats.entries[groupName][entryId].avgTr = `${(avgTr*100).toFixed(2)} %`;
           }, 30 * 1000);
