@@ -1667,6 +1667,8 @@ function getStorjshareBridgeApiStats() {
       if ((entry.type ==='storjshare-daemon' || entry.type ==='storjshare-daemon-proxy') && entry.shares) {
         let avgRt = 0;
         let avgTr = 0;
+        let counter1 = 0;
+        let counter2 = 0;
         entry.shares.forEach((share) => {
           if (share.id) {
             ((share) => {
@@ -1696,12 +1698,14 @@ function getStorjshareBridgeApiStats() {
                       if (parsed.responseTime !== undefined) {
                         share.rt = parsed.responseTime > 1000 ? `${(parsed.responseTime/1000).toFixed(2)} s` : `${parsed.responseTime.toFixed(0)} ms`;
                         avgRt += parsed.responseTime;
+                        counter1 += 1;
                       } else {
                         share.rt = 'N/A';
                       }
                       if (parsed.timeoutRate !== undefined) {
                         share.tr = `${(parsed.timeoutRate*100).toFixed(2)} %`;
-                        avgTr += parsed.timeoutRate;
+                        avgTr += parsed.timeoutRate ? parsed.timeoutRate : 0;
+                        counter2 += 1;
                       } else {
                         share.tr = '0.00 %';
                       }
@@ -1723,8 +1727,8 @@ function getStorjshareBridgeApiStats() {
         });
         ((groupName, entryId) => {
           setTimeout(() => {
-            avgRt = avgRt / stats.entries[groupName][entryId].shares.length;
-            avgTr = avgTr / stats.entries[groupName][entryId].shares.length;
+            avgRt = avgRt / counter1 ? counter1 : 1;
+            avgTr = avgTr / counter2 ? counter2 : 1;
             stats.entries[groupName][entryId].avgRt = avgRt > 1000 ? `${(avgRt/1000).toFixed(2)} s` : `${avgRt.toFixed(0)} ms`;
             stats.entries[groupName][entryId].avgTr = `${(avgTr*100).toFixed(2)} %`;
           }, 30 * 1000);
