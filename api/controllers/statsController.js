@@ -1704,11 +1704,11 @@ function getStorjshareBridgeApiStats() {
                       }
                       if (parsed.timeoutRate !== undefined) {
                         share.tr = `${(parsed.timeoutRate*100).toFixed(2)} %`;
-                        avgTr += parsed.timeoutRate ? parsed.timeoutRate : 0;
-                        counter2 += 1;
                       } else {
                         share.tr = '0.00 %';
                       }
+                      avgTr += parsed.timeoutRate ? parsed.timeoutRate : 0;
+                      counter2 += 1;
                     }
                   });
                 })
