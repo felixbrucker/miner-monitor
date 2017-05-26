@@ -388,7 +388,7 @@
                 <tbody>
                 <tr ng-repeat="(id, dashboard) in statsVm.current.dashboardData track by $index">
                     <td ng-if="dashboard.type==='bitcoinBalance'&&dashboard.enabled">{{dashboard.name}}</td>
-                    <td ng-if="dashboard.type==='bitcoinBalance'&&dashboard.enabled"><span
+                    <td ng-if="dashboard.type==='bitcoinBalance'&&dashboard.enabled" class='ellipsis'><span
                             data-highlighter="dashboard.data">{{(dashboard.data / 100000000) | number:8}}</span> BTC
                     </td>
                 </tr>
@@ -407,7 +407,7 @@
                 <tbody>
                 <tr ng-repeat="(id, dashboard) in statsVm.current.dashboardData track by $index">
                     <td ng-if="dashboard.type==='cryptoidBalance'&&dashboard.enabled">{{dashboard.name}}</td>
-                    <td ng-if="dashboard.type==='cryptoidBalance'&&dashboard.enabled"><span
+                    <td ng-if="dashboard.type==='cryptoidBalance'&&dashboard.enabled" class='ellipsis'><span
                             data-highlighter="dashboard.data">{{dashboard.data | number:8}}</span> {{dashboard.ticker}}
                     </td>
                 </tr>
@@ -427,7 +427,7 @@
                 <tbody>
                 <tr ng-repeat="(id, dashboard) in statsVm.current.dashboardData track by $index">
                     <td ng-if="dashboard.type==='counterpartyBalance'&&dashboard.enabled">{{dashboard.name}}</td>
-                    <td ng-if="dashboard.type==='counterpartyBalance'&&dashboard.enabled"><span
+                    <td ng-if="dashboard.type==='counterpartyBalance'&&dashboard.enabled" class='ellipsis'><span
                             ng-repeat="entry in dashboard.data">{{entry.amount | number:6}}<br/></span></td>
                     <td ng-if="dashboard.type==='counterpartyBalance'&&dashboard.enabled" class='ellipsis'><span
                             ng-repeat="entry in dashboard.data">{{entry.asset}}<br/></span></td>
@@ -835,17 +835,17 @@
 
                                 <td>{{share.meta.farmerState.totalPeers || 0}}</td>
 
-                                <td>{{share.meta.farmerState.spaceUsed}} ({{share.meta.farmerState.percentUsed}}%)</td>
+                                <td class='ellipsis'>{{share.meta.farmerState.spaceUsed}} ({{share.meta.farmerState.percentUsed}}%)</td>
 
-                                <td>{{share.meta.farmerState.change}}</td>
+                                <td class='ellipsis'>{{share.meta.farmerState.change}}</td>
 
-                                <td>{{share.rt}}</td>
+                                <td class='ellipsis'>{{share.rt}}</td>
 
-                                <td>{{share.tr}}</td>
+                                <td class='ellipsis'>{{share.tr}}</td>
 
-                                <td>{{share.meta.farmerState.lastActivity | number:0 }}s ago</td>
+                                <td class='ellipsis'>{{share.meta.farmerState.lastActivity | number:0 }}s ago</td>
 
-                                <td>{{share.meta.uptimeMs/1000 | secondsToTimeString}}</td>
+                                <td class='ellipsis'>{{share.meta.uptimeMs/1000 | secondsToTimeString}}</td>
 
                             </tr>
                             </tbody>
@@ -855,8 +855,9 @@
                                 <td style="font-weight: bold;">{{entry.avgPeers | number:0}}</td>
                                 <td style="font-weight: bold;">{{entry.totalSpaceUsed}}</td>
                                 <td style="font-weight: bold;">{{entry.totalChange}}</td>
-                                <td style="font-weight: bold;">{{entry.avgRt}}</td>
-                                <td style="font-weight: bold;">{{entry.avgTr}}</td>
+                                <td class='ellipsis' style="font-weight: bold;">{{entry.avgRt}}</td>
+                                <td class='ellipsis' style="font-weight: bold;">{{entry.avgTr}}</td>
+                                <td colspan="2"></td>
                             </tr>
                         </table>
                     </div>
