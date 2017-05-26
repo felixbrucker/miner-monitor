@@ -388,7 +388,7 @@
                 <tbody>
                 <tr ng-repeat="(id, dashboard) in statsVm.current.dashboardData track by $index">
                     <td ng-if="dashboard.type==='bitcoinBalance'&&dashboard.enabled">{{dashboard.name}}</td>
-                    <td ng-if="dashboard.type==='bitcoinBalance'&&dashboard.enabled" class='ellipsis'><span
+                    <td ng-if="dashboard.type==='bitcoinBalance'&&dashboard.enabled" class='ellipsissmall'><span
                             data-highlighter="dashboard.data">{{(dashboard.data / 100000000) | number:8}}</span> BTC
                     </td>
                 </tr>
@@ -407,7 +407,7 @@
                 <tbody>
                 <tr ng-repeat="(id, dashboard) in statsVm.current.dashboardData track by $index">
                     <td ng-if="dashboard.type==='cryptoidBalance'&&dashboard.enabled">{{dashboard.name}}</td>
-                    <td ng-if="dashboard.type==='cryptoidBalance'&&dashboard.enabled" class='ellipsis'><span
+                    <td ng-if="dashboard.type==='cryptoidBalance'&&dashboard.enabled" class='ellipsissmall'><span
                             data-highlighter="dashboard.data">{{dashboard.data | number:8}}</span> {{dashboard.ticker}}
                     </td>
                 </tr>
@@ -427,9 +427,9 @@
                 <tbody>
                 <tr ng-repeat="(id, dashboard) in statsVm.current.dashboardData track by $index">
                     <td ng-if="dashboard.type==='counterpartyBalance'&&dashboard.enabled">{{dashboard.name}}</td>
-                    <td ng-if="dashboard.type==='counterpartyBalance'&&dashboard.enabled" class='ellipsis'><span
+                    <td ng-if="dashboard.type==='counterpartyBalance'&&dashboard.enabled" class='ellipsissmall'><span
                             ng-repeat="entry in dashboard.data">{{entry.amount | number:6}}<br/></span></td>
-                    <td ng-if="dashboard.type==='counterpartyBalance'&&dashboard.enabled" class='ellipsis'><span
+                    <td ng-if="dashboard.type==='counterpartyBalance'&&dashboard.enabled" class='ellipsissmall'><span
                             ng-repeat="entry in dashboard.data">{{entry.asset}}<br/></span></td>
                 </tr>
                 </tbody>
