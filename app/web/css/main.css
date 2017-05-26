@@ -9,6 +9,19 @@ body {
 }
 
 /* Index / Shorten wide values in tables and show them on hover */
+.ellipsissmall{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 80px;
+}
+.ellipsissmall:hover{
+    overflow: visible;
+    max-width:none;
+    width:auto;
+    background-color: #fff!important;
+}
 .ellipsis{
     overflow: hidden;
     text-overflow: ellipsis;
