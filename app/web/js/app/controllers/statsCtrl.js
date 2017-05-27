@@ -34,6 +34,7 @@
     vm.parseName = parseName;
     vm.atLeastOneBalanceDashboard=atLeastOneBalanceDashboard;
     vm.secondsSince = secondsSince;
+    vm.isDashboardTypeEnabled = isDashboardTypeEnabled;
 
 
     /**
@@ -74,6 +75,15 @@
               vm.current.dashboardData[i].type==='cryptoidBalance' ||
               vm.current.dashboardData[i].type==='counterpartyBalance'))
             return true;
+        }
+      }
+      return false;
+    }
+
+    function isDashboardTypeEnabled(type) {
+      for (let dashboard of vm.current.dashboardData) {
+        if (dashboard.enabled && dashboard.type === type) {
+          return true;
         }
       }
       return false;

@@ -33,6 +33,7 @@ var config = module.exports = {
       "genericMPOS",
       "cryptoidBalance",
       "counterpartyBalance",
+      'ethBalance',
     ]
   },
   getConfig: function () {

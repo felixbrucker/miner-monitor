@@ -21,28 +21,28 @@
     vm.config = {
       types: [],
       devices: [],
-      groups:[],
+      groups: [],
       interval: null,
-      layout:null,
-      layouts:null,
-      dashboardData:[],
-      dashboardTypes:null,
-      mailConfig:null,
-      mailTo:null
+      layout: null,
+      layouts: null,
+      dashboardData: [],
+      dashboardTypes: null,
+      mailConfig: null,
+      mailTo: null
     };
 
-    vm.localStorage={
-      layout:null,
-      enabled:null,
-      refreshInterval:null
+    vm.localStorage = {
+      layout: null,
+      enabled: null,
+      refreshInterval: null
     };
 
     vm.waiting = null;
     vm.updating = null;
     vm.waitingVerify = null;
-    vm.verifySuccess=null;
-    vm.updatingMiner={};
-    vm.updatingAgent={};
+    vm.verifySuccess = null;
+    vm.updatingMiner = {};
+    vm.updatingAgent = {};
 
     vm.newDevice = {
       id: null,
@@ -50,16 +50,16 @@
       name: "",
       type: "",
       hostname: "",
-      group:"",
-      ohm:""
+      group: "",
+      ohm: ""
     };
 
     vm.newGroup = {
       id: null,
       enabled: true,
       name: "",
-      display:true,
-      interval:null,
+      display: true,
+      interval: null,
     };
 
     vm.newDashboard = {
@@ -68,13 +68,12 @@
       name: "",
       type: "",
       baseUrl: "",
-      address:"",
+      address: "",
       ticker: "",
-      api_key:"",
-      user_id:"",
-      hrModifier:1
+      api_key: "",
+      user_id: "",
+      hrModifier: 1
     };
-
 
 
     // controller API
@@ -85,19 +84,44 @@
     vm.addDevice = addDevice;
     vm.delDevice = delDevice;
     vm.copyDevice = copyDevice;
-    vm.addGroup=addGroup;
-    vm.delGroup=delGroup;
-    vm.getLocalStorage=getLocalStorage;
-    vm.setLocalStorage=setLocalStorage;
-    vm.updateMiner=updateMiner;
-    vm.updateAgent=updateAgent;
+    vm.addGroup = addGroup;
+    vm.delGroup = delGroup;
+    vm.getLocalStorage = getLocalStorage;
+    vm.setLocalStorage = setLocalStorage;
+    vm.updateMiner = updateMiner;
+    vm.updateAgent = updateAgent;
     vm.verifyTransport = verifyTransport;
-    vm.rebootSystem=rebootSystem;
-    vm.addDashboard=addDashboard;
-    vm.delDashboard=delDashboard;
+    vm.rebootSystem = rebootSystem;
+    vm.addDashboard = addDashboard;
+    vm.delDashboard = delDashboard;
     vm.restartStorjshareShares = restartStorjshareShares;
+    vm.getDashboardTypes = getDashboardTypes;
 
 
+    function getDashboardTypes(column) {
+      const types = [];
+      switch (column) {
+        case 'address':
+          types.push('nicehash', 'bitcoinBalance', 'cryptoidBalance', 'counterpartyBalance', 'ethBalance');
+          break;
+        case 'ticker':
+          types.push('cryptoidBalance');
+          break;
+        case 'baseUrl':
+          types.push('genericMPOS');
+          break;
+        case 'apiKey':
+          types.push('genericMPOS', 'miningpoolhub', 'cryptoidBalance');
+          break;
+        case 'userId':
+          types.push('genericMPOS', 'miningpoolhub');
+          break;
+        case 'hashrateModifier':
+          types.push('genericMPOS');
+          break;
+      }
+      return types;
+    }
 
     /**
      * @name verifyTransport
@@ -105,7 +129,7 @@
      * @memberOf configCtrl
      */
     function verifyTransport() {
-      vm.waitingVerify=true;
+      vm.waitingVerify = true;
       return $http({
         method: 'GET',
         url: 'api/config/verifyTransport',
@@ -113,8 +137,10 @@
           'Content-Type': 'application/json;charset=UTF-8'
         }
       }).then(function successCallback(response) {
-        setTimeout(function(){vm.waitingVerify = false;},500);
-        vm.verifySuccess=response.data.result;
+        setTimeout(function () {
+          vm.waitingVerify = false;
+        }, 500);
+        vm.verifySuccess = response.data.result;
       }, function errorCallback(response) {
         console.log(response);
       });
@@ -126,16 +152,18 @@
      * @memberOf configCtrl
      */
     function updateAgent(id) {
-      vm.updatingAgent[id]=true;
+      vm.updatingAgent[id] = true;
       return $http({
         method: 'POST',
         url: 'api/config/updateAgent',
         headers: {
           'Content-Type': 'application/json;charset=UTF-8'
         },
-        data:{id:id}
+        data: {id: id}
       }).then(function successCallback(response) {
-        setTimeout(function(){vm.updatingAgent[id] = false;},500);
+        setTimeout(function () {
+          vm.updatingAgent[id] = false;
+        }, 500);
       }, function errorCallback(response) {
         console.log(response);
       });
@@ -147,16 +175,18 @@
      * @memberOf configCtrl
      */
     function updateMiner(id) {
-      vm.updatingMiner[id]=true;
+      vm.updatingMiner[id] = true;
       return $http({
         method: 'POST',
         url: 'api/config/updateMiner',
         headers: {
           'Content-Type': 'application/json;charset=UTF-8'
         },
-        data:{id:id}
+        data: {id: id}
       }).then(function successCallback(response) {
-        setTimeout(function(){vm.updatingMiner[id] = false;},500);
+        setTimeout(function () {
+          vm.updatingMiner[id] = false;
+        }, 500);
       }, function errorCallback(response) {
         console.log(response);
       });
@@ -174,7 +204,7 @@
         headers: {
           'Content-Type': 'application/json;charset=UTF-8'
         },
-        data:{id:id}
+        data: {id: id}
       }).then((response) => {
       }, (err) => {
         console.log(err);
@@ -186,9 +216,9 @@
      * @desc get localstorage data
      * @memberOf configCtrl
      */
-    function getLocalStorage(){
-      vm.localStorage.layout=localStorage.getItem('layout');
-      vm.localStorage.refreshInterval=parseInt(localStorage.getItem('refreshInterval'));
+    function getLocalStorage() {
+      vm.localStorage.layout = localStorage.getItem('layout');
+      vm.localStorage.refreshInterval = parseInt(localStorage.getItem('refreshInterval'));
     }
 
     /**
@@ -196,13 +226,13 @@
      * @desc set localstorage data
      * @memberOf configCtrl
      */
-    function setLocalStorage(){
-      if(vm.localStorage.layout!==null)
+    function setLocalStorage() {
+      if (vm.localStorage.layout !== null)
         localStorage.setItem('layout', vm.localStorage.layout);
       else
         localStorage.removeItem('layout');
 
-      if(vm.localStorage.refreshInterval!==null)
+      if (vm.localStorage.refreshInterval !== null)
         localStorage.setItem('refreshInterval', vm.localStorage.refreshInterval.toString());
       else
         localStorage.removeItem('refreshInterval');
@@ -241,8 +271,8 @@
           name: "",
           type: "",
           hostname: "",
-          group:"",
-          ohm:""
+          group: "",
+          ohm: ""
         };
         vm.setConfig();
       } else {
@@ -264,23 +294,23 @@
       vm.setConfig();
     }
 
-      /**
-       * @name copyDevice
-       * @desc copy device data
-       * @memberOf configCtrl
-       */
-      function copyDevice(id) {
-          vm.config.devices.forEach(function (entry, index, array) {
-              if (entry.id === id) {
-                  vm.newDevice.enabled = entry.enabled;
-                  vm.newDevice.name = entry.name;
-                  vm.newDevice.type = entry.type;
-                  vm.newDevice.hostname = entry.hostname;
-                  vm.newDevice.group = entry.group;
-                  vm.newDevice.ohm = entry.ohm;
-              }
-          });
-      }
+    /**
+     * @name copyDevice
+     * @desc copy device data
+     * @memberOf configCtrl
+     */
+    function copyDevice(id) {
+      vm.config.devices.forEach(function (entry, index, array) {
+        if (entry.id === id) {
+          vm.newDevice.enabled = entry.enabled;
+          vm.newDevice.name = entry.name;
+          vm.newDevice.type = entry.type;
+          vm.newDevice.hostname = entry.hostname;
+          vm.newDevice.group = entry.group;
+          vm.newDevice.ohm = entry.ohm;
+        }
+      });
+    }
 
     /**
      * @name addDashboard
@@ -302,11 +332,11 @@
           name: "",
           type: "",
           baseUrl: "",
-          address:"",
+          address: "",
           ticker: "",
-          api_key:"",
-          user_id:"",
-          hrModifier:1
+          api_key: "",
+          user_id: "",
+          hrModifier: 1
         };
         vm.setConfig();
       } else {
@@ -334,18 +364,18 @@
      * @memberOf configCtrl
      */
     function addGroup() {
-      if (vm.newGroup.name!==""&&vm.newGroup.name!==null){
+      if (vm.newGroup.name !== "" && vm.newGroup.name !== null) {
         //gen unique id
-        vm.newGroup.id=Date.now();
+        vm.newGroup.id = Date.now();
         //add to array
         vm.config.groups.push(JSON.parse(JSON.stringify(vm.newGroup)));
         //clear variables
-        vm.newGroup={
-          id:null,
-          enabled:true,
-          name:"",
-          display:true,
-          interval:null,
+        vm.newGroup = {
+          id: null,
+          enabled: true,
+          name: "",
+          display: true,
+          interval: null,
         };
         vm.setConfig();
       }
@@ -358,9 +388,9 @@
      * @memberOf configCtrl
      */
     function delGroup(id) {
-      vm.config.groups.forEach(function (entry,index,array) {
-        if (entry.id===id){
-          vm.config.groups.splice(index,1);
+      vm.config.groups.forEach(function (entry, index, array) {
+        if (entry.id === id) {
+          vm.config.groups.splice(index, 1);
         }
       });
       vm.setConfig();
@@ -385,12 +415,12 @@
         vm.config.layouts = response.data.layouts;
         vm.config.dashboardData = response.data.dashboardData;
         vm.config.dashboardTypes = response.data.dashboardTypes;
-        if(response.data.mailConfig===null)
-          vm.config.mailConfig ={host:null,port:null,secure:null,auth:{user:null,pass:null}};
+        if (response.data.mailConfig === null)
+          vm.config.mailConfig = {host: null, port: null, secure: null, auth: {user: null, pass: null}};
         else
           vm.config.mailConfig = response.data.mailConfig;
         vm.config.mailTo = response.data.mailTo;
-        vm.config.devices = $filter('orderBy')(vm.config.devices, ['group','name']);
+        vm.config.devices = $filter('orderBy')(vm.config.devices, ['group', 'name']);
         vm.config.groups = $filter('orderBy')(vm.config.groups, 'name');
       }, function errorCallback(response) {
         console.log(response);
@@ -404,9 +434,9 @@
      * @memberOf configCtrl
      */
     function setConfig() {
-      var config=JSON.parse(JSON.stringify(vm.config));
-      if(vm.config.mailConfig === {host:null,port:null,secure:null,auth:{user:null,pass:null}}){
-        config.mailConfig=null;
+      var config = JSON.parse(JSON.stringify(vm.config));
+      if (vm.config.mailConfig === {host: null, port: null, secure: null, auth: {user: null, pass: null}}) {
+        config.mailConfig = null;
       }
       vm.waiting = true;
       return $http({
@@ -424,7 +454,6 @@
         console.log(response);
       });
     }
-
 
 
     /**
@@ -455,14 +484,14 @@
      * @memberOf configCtrl
      */
     function rebootSystem(id) {
-      if(confirm('Are you sure you want to reboot this System?')){
+      if (confirm('Are you sure you want to reboot this System?')) {
         return $http({
           method: 'POST',
           url: 'api/config/rebootSystem',
           headers: {
             'Content-Type': 'application/json;charset=UTF-8'
           },
-          data:{id:id}
+          data: {id: id}
         }).then(function successCallback(response) {
         }, function errorCallback(response) {
           console.log(response);

@@ -13,7 +13,8 @@
     "get-exchange-rates":"^1.0.0",
     "rx": "^4.1.0",
     "dnode": "^1.2.2",
-    "bytes": "^2.5.0"
+    "bytes": "^2.5.0",
+    "axios": "^0.16.1"
   },
   "scripts": {
     "start": "node main.js"

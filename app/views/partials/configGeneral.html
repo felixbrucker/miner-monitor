@@ -13,14 +13,6 @@
           </div>
         </div>
         <div class="row" style="margin-bottom: 10px;">
-          <div  class="col-md-12">
-            default stats layout:
-            <label ng-repeat="layout in configVm.config.layouts">
-              <input type="radio" ng-model="configVm.config.layout" ng-click="configVm.setConfig()" ng-value="layout" /> {{layout}}&nbsp;
-            </label>
-          </div>
-        </div>
-        <div class="row" style="margin-bottom: 10px;">
           <div  class="col-md-5">
             SMTP hostname: <input type="text" ng-model="configVm.config.mailConfig.host">
           </div>
@@ -93,14 +85,6 @@
       <div class="row" style="margin-bottom: 10px;">
         <div  class="col-md-12">
           stats refresh interval: <input type="number" ng-model="configVm.localStorage.refreshInterval"> [s]
-        </div>
-      </div>
-      <div class="row" style="margin-bottom: 10px;">
-        <div  class="col-md-12">
-          stats layout:
-          <label ng-repeat="layout in configVm.config.layouts">
-            <input type="radio" ng-model="configVm.localStorage.layout" ng-click="configVm.setLocalStorage()" ng-value="layout" /> {{layout}}&nbsp;
-          </label>
         </div>
       </div>
       <div class="row" style="margin-bottom: 10px;">
