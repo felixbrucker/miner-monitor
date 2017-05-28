@@ -8,6 +8,12 @@ const Rx = require('rx');
 const dnode = require('dnode');
 const bytes = require('bytes');
 
+// Util
+const util = require('../lib/util');
+
+// Miner
+const storjshare = require('../lib/miner/storjshare');
+
 // Pools
 const nicehash = require('../lib/pool/nicehash');
 const mph = require('../lib/pool/mph');
@@ -871,7 +877,12 @@ function getOhmStats(device, display) {
   }
 }
 
-function getStorjshareDaemonStats(device, display) {
+
+// #########################
+// #####     Storj     #####
+// #########################
+
+async function getStorjshareDaemonStats(device, display) {
   let arr = device.hostname.split("://");
   arr = arr[arr.length === 1 ? 0 : 1];
   arr = arr.split("@");
@@ -889,284 +900,103 @@ function getStorjshareDaemonStats(device, display) {
   const hostname = arr[0];
   const port = arr[1] ? arr[1] : 443;
 
+  let storjshareData = null;
   switch (device.type) {
     case 'storjshare-daemon':
-      const sock = dnode.connect(hostname, port);
-
-      sock.on('error', () => {
-        console.log(colors.red(`Error: daemon for device ${device.name} not running`));
-        counterAndSend({
-          type: 'device',
-          status: 'Problem',
-          descriptor: '',
-          item: {},
-          device: {name: device.name, value: 'Down'}
-        });
-        if (display) {
-          if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null) {
-            stats.entries[device.group][device.id] = {type: device.type, name: device.name};
-          } else {
-            stats.entries[device.group] = {};
-            stats.entries[device.group][device.id] = {type: device.type, name: device.name};
-          }
-        }
-      });
-
-      sock.on('remote', (remote) => {
-        remote.status((err, shares) => {
-          sock.end();
-          processStorjshareShares(device, display, shares);
-        });
-      });
+      try {
+        storjshareData = await storjshare.getStorjshareDaemonStats(hostname, port);
+      } catch (error) {
+        console.log(`${device.name}: ${error.message}`);
+      }
       break;
     case 'storjshare-daemon-proxy':
-      const req = https.request({
-        host: hostname,
-        path: '/status',
-        method: 'POST',
-        port,
-        auth: user ? `${user}:${pass}` : undefined,
-        rejectUnauthorized: false,
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8'
-        }
-      }, (response) => {
-        response.setEncoding('utf8');
-        let body = '';
-        response.on('data', (d) => {
-          body += d;
-        });
-        response.on('end', () => {
-          let parsed = null;
-          try {
-            parsed = JSON.parse(body);
-          } catch (error) {
-            console.log(colors.red("Error: Unable to get storjshareDaemonProxy stats data: " + error.message));
-            counterAndSend({
-              type: 'device',
-              status: 'Problem',
-              descriptor: '',
-              item: {},
-              device: {name: device.name, value: 'Down'}
-            });
-            if (display) {
-              if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null) {
-                stats.entries[device.group][device.id] = {type: device.type, name: device.name};
-              } else {
-                stats.entries[device.group] = {};
-                stats.entries[device.group][device.id] = {type: device.type, name: device.name};
-              }
-            }
-          }
-          if (parsed && parsed.data) {
-            processStorjshareShares(device, display, parsed.data);
-          } else {
-            counterAndSend({
-              type: 'device',
-              status: 'Problem',
-              descriptor: '',
-              item: {},
-              device: {name: device.name, value: 'Down'}
-            });
-          }
-        });
-      })
-        .on("error", (error) => {
-          console.log(colors.red("Error: Unable to get storjshareDaemonProxy stats data (" + error.code + ")"));
-          counterAndSend({
-            type: 'device',
-            status: 'Problem',
-            descriptor: '',
-            item: {},
-            device: {name: device.name, value: 'Down'}
-          });
-          if (display) {
-            if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null) {
-              stats.entries[device.group][device.id] = {type: device.type, name: device.name};
-            } else {
-              stats.entries[device.group] = {};
-              stats.entries[device.group][device.id] = {type: device.type, name: device.name};
-            }
-          }
-        });
-      req.on('socket', (socket) => {
-        socket.setTimeout(20000);
-        socket.on('timeout', () => {
-          req.abort();
-        });
-      });
-      req.end();
+      try {
+        storjshareData = await storjshare.getStorjshareDaemonProxyStats(device.hostname);
+      } catch (error) {
+        console.log(`${device.name}: ${error.message}`);
+      }
       break;
   }
-}
-
-function processStorjshareShares(device, display, shares) {
-  counterAndSend({
-    type: 'device',
-    status: 'OK',
-    descriptor: '',
-    item: {},
-    device: {name: device.name, value: 'Up'}
-  });
-  shares.sort((a, b) => {
-    if (a.config.storagePath < b.config.storagePath) return -1;
-    if (a.config.storagePath > b.config.storagePath) return 1;
-    return 0;
-  });
-  let lastSpaceUpdate = null;
-  let totalSpaceUsed = 0;
-  let totalChange = 0;
-  let totalPeers = 0;
-  let totalRestarts = 0;
-  let avgRt = null;
-  let avgTr = null;
-  if (stats.entries && stats.entries[device.group] && stats.entries[device.group][device.id]) {
-    avgRt = stats.entries[device.group][device.id].avgRt ? stats.entries[device.group][device.id].avgRt : 'N/A';
-    avgTr = stats.entries[device.group][device.id].avgTr ? stats.entries[device.group][device.id].avgTr : 'N/A';
+  if(!storjshareData) {
+    counterAndSend({
+      type: 'device',
+      status: 'Problem',
+      descriptor: '',
+      item: {},
+      device: {name: device.name, value: 'Down'}
+    });
+  } else {
+    counterAndSend({
+      type: 'device',
+      status: 'OK',
+      descriptor: '',
+      item: {},
+      device: {name: device.name, value: 'Up'}
+    });
   }
-  shares.forEach((share, index) => {
-    if (stats.entries[device.group] &&
-      stats.entries[device.group][device.id] &&
-      stats.entries[device.group][device.id].shares &&
-      stats.entries[device.group][device.id].shares[index]) {
-      lastSpaceUpdate = stats.entries[device.group][device.id].lastSpaceUpdate;
-      share.meta.farmerState.lastSpaceUsed = stats.entries[device.group][device.id].shares[index].meta.farmerState.lastSpaceUsed;
-      share.tr = stats.entries[device.group][device.id].shares[index].tr;
-      share.rt = stats.entries[device.group][device.id].shares[index].rt;
-      if (share.meta.farmerState.spaceUsedBytes) {
-        // init
-        if (!lastSpaceUpdate) {
-          lastSpaceUpdate = Date.now();
-          share.meta.farmerState.lastSpaceUsed = share.meta.farmerState.spaceUsedBytes;
-        }
-        if ((Date.now() - lastSpaceUpdate) / 1000 > 60 * 60 * 12) {
-          // we need to save the current space used
-          lastSpaceUpdate = Date.now();
-          share.meta.farmerState.lastSpaceUsed = share.meta.farmerState.spaceUsedBytes;
-        }
-        // calculate diff
-        const change = share.meta.farmerState.spaceUsedBytes - share.meta.farmerState.lastSpaceUsed;
-        if (change < 0) {
-          share.meta.farmerState.change = `- ${bytes(-1 * change)}`;
-        } else {
-          share.meta.farmerState.change = `+ ${bytes(change)}`;
-        }
-        totalChange += change;
-        totalSpaceUsed += share.meta.farmerState.spaceUsedBytes;
-        totalPeers += share.meta.farmerState.totalPeers;
-        totalRestarts += share.meta.numRestarts;
+  if (display) {
+    let obj = {
+      type: device.type,
+      name: device.name,
+    };
+    if (storjshareData) {
+      if (stats.entries[device.group] &&
+        stats.entries[device.group][device.id] &&
+        stats.entries[device.group][device.id].shares) {
+        const statsObj = stats.entries[device.group][device.id];
+        obj = Object.assign(obj, util.mergeStorjshareStats(statsObj, storjshareData));
+      } else {
+        obj.shares = storjshareData;
       }
     }
-    share.meta.farmerState.lastActivity = (Date.now() - share.meta.farmerState.lastActivity) / 1000;
-  });
-  const avgPeers = totalPeers / shares.length;
-  if (totalChange < 0) {
-    totalChange = `- ${bytes(-1 * totalChange)}`;
-  } else {
-    totalChange = `+ ${bytes(totalChange)}`;
-  }
-  totalSpaceUsed = bytes(totalSpaceUsed);
-  const obj = {
-    shares,
-    type: device.type,
-    name: device.name,
-    lastSpaceUpdate,
-    avgPeers,
-    totalChange,
-    totalSpaceUsed,
-    avgRt,
-    avgTr,
-    totalRestarts
-  };
-  if (display) {
-    if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null) {
-      stats.entries[device.group][device.id] = obj;
-    } else {
+    if (stats.entries[device.group] === undefined || stats.entries[device.group] === null) {
       stats.entries[device.group] = {};
-      stats.entries[device.group][device.id] = obj;
     }
+    stats.entries[device.group][device.id] = obj;
   }
 }
 
-function getStorjshareBridgeApiStats() {
-  Object.keys(stats.entries).forEach((groupName) => {
-    const group = stats.entries[groupName];
-    Object.keys(group).forEach((entryId) => {
-      const entry = group[entryId];
+async function getStorjshareBridgeApiStats() {
+  for (let groupName in stats.entries) {
+    for (let entryId in stats.entries[groupName]) {
+      const entry = stats.entries[groupName][entryId];
       if ((entry.type === 'storjshare-daemon' || entry.type === 'storjshare-daemon-proxy') && entry.shares) {
         let avgRt = 0;
         let avgTr = 0;
         let counter1 = 0;
         let counter2 = 0;
-        entry.shares.forEach((share) => {
-          if (share.id) {
-            ((share) => {
-              const req = https.request({
-                host: 'api.storj.io',
-                path: `/contacts/${share.id}`,
-                method: 'GET',
-                port: 443,
-                rejectUnauthorized: false,
-                headers: {
-                  'Content-Type': 'application/json;charset=UTF-8'
-                }
-              }, (response) => {
-                response.setEncoding('utf8');
-                let body = '';
-                response.on('data', (d) => {
-                  body += d;
-                });
-                response.on('end', () => {
-                  let parsed = null;
-                  try {
-                    parsed = JSON.parse(body);
-                  } catch (error) {
-                    console.log(colors.red("Error: Unable to get storjshareBridgeApi stats data: " + error.message));
-                  }
-                  if (parsed) {
-                    if (parsed.responseTime !== undefined) {
-                      share.rt = parsed.responseTime > 1000 ? `${(parsed.responseTime / 1000).toFixed(2)} s` : `${parsed.responseTime.toFixed(0)} ms`;
-                      avgRt += parsed.responseTime;
-                      counter1 += 1;
-                    } else {
-                      share.rt = 'N/A';
-                    }
-                    if (parsed.timeoutRate !== undefined) {
-                      share.tr = `${(parsed.timeoutRate * 100).toFixed(2)} %`;
-                    } else {
-                      share.tr = '0.00 %';
-                    }
-                    avgTr += parsed.timeoutRate ? parsed.timeoutRate : 0;
-                    counter2 += 1;
-                  }
-                });
-              })
-                .on("error", (error) => {
-                  console.log(colors.red("Error: Unable to get storjshareBridgeApi stats data (" + error.code + ")"));
-                });
-              req.on('socket', (socket) => {
-                socket.setTimeout(20000);
-                socket.on('timeout', () => {
-                  req.abort();
-                });
-              });
-              req.end();
-            })(share);
+        for (let i = 0; i < entry.shares.length; i++) {
+          const share = entry.shares[i];
+          let bridgeStats = null;
+          try {
+            bridgeStats = await storjshare.getBridgeStats(share.id);
+          } catch (error) {
+            console.log(`${device.name}: ${error.message}`);
           }
-        });
-        ((groupName, entryId) => {
-          setTimeout(() => {
-            avgRt = avgRt / (counter1 ? counter1 : 1);
-            avgTr = avgTr / (counter2 ? counter2 : 1);
-            stats.entries[groupName][entryId].avgRt = avgRt > 1000 ? `${(avgRt / 1000).toFixed(2)} s` : `${avgRt.toFixed(0)} ms`;
-            stats.entries[groupName][entryId].avgTr = `${(avgTr * 100).toFixed(2)} %`;
-          }, 30 * 1000);
-        })(groupName, entryId);
+          // use stats.entries[groupName][entryId].shares[i] to not write to old references
+          if (bridgeStats.responseTime !== undefined) {
+            stats.entries[groupName][entryId].shares[i].rt = bridgeStats.responseTime > 1000 ? `${(bridgeStats.responseTime / 1000).toFixed(2)} s` : `${bridgeStats.responseTime.toFixed(0)} ms`;
+            avgRt += bridgeStats.responseTime;
+            counter1 += 1;
+          } else {
+            stats.entries[groupName][entryId].shares[i].rt = 'N/A';
+          }
+          if (bridgeStats.timeoutRate !== undefined) {
+            stats.entries[groupName][entryId].shares[i].tr = `${(bridgeStats.timeoutRate * 100).toFixed(2)} %`;
+          } else {
+            stats.entries[groupName][entryId].shares[i].tr = '0.00 %';
+          }
+          avgTr += bridgeStats.timeoutRate ? bridgeStats.timeoutRate : 0;
+          counter2 += 1;
+        }
+        avgRt = avgRt / (counter1 ? counter1 : 1);
+        avgTr = avgTr / (counter2 ? counter2 : 1);
+        stats.entries[groupName][entryId].avgRt = avgRt > 1000 ? `${(avgRt / 1000).toFixed(2)} s` : `${avgRt.toFixed(0)} ms`;
+        stats.entries[groupName][entryId].avgTr = `${(avgTr * 100).toFixed(2)} %`;
       }
-    });
-  });
+    }
+  }
 }
-
 
 // #########################
 // #####     Pools     #####
@@ -1411,13 +1241,13 @@ function init() {
   getStorjshareBridgeApiStats();
   getAllEthStats();
   mphInterval = setInterval(getAllMPHStats, 1 * 60 * 1000);
-  nhinterval = setInterval(getAllNicehashStats, 20000);
+  nhinterval = setInterval(getAllNicehashStats, 21 * 1000); // 60 sec rate limit
   btcBalanceInterval = setInterval(getAllBitcoinbalances, 3 * 60 * 1000);
   mposInterval = setInterval(getAllMPOSStats, 30000);
   setInterval(updateExchangeRates, 3 * 60 * 1000);
   setInterval(getAllCryptoidBalances, 3 * 60 * 1000);
   setInterval(getAllCounterpartyBalances, 3 * 60 * 1000);
-  setInterval(getStorjshareBridgeApiStats, 3 * 60 * 1000);
+  setInterval(getStorjshareBridgeApiStats, 20 * 1000);
   setInterval(getAllEthStats, 3 * 60 * 1000);
 }
 

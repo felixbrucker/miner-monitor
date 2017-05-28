@@ -17,18 +17,20 @@ module.exports = async (address, apiKey, userId) => {
       symbol: dashboardData.pool.info.currency
     };
     const workerData = await axios.get(`https://${coin.coin_name}.miningpoolhub.com/index.php?page=api&action=getuserworkers&api_key=${apiKey}&id=${userId}`);
-    coinStats.workers = workerData.data.getuserworkers.data
-      .filter((worker) => {
-        if (worker.hashrate !== 0) {
-          return true;
-        }
-        return false;
-      })
-      .map((worker) => {
-        const arr = worker.username.split(".");
-        worker.username = arr[(arr.length === 1 ? 0 : 1)];
-      });
-    statsData.push(coinStats);
+    if (typeof workerData.data.getuserworkers.data === 'Array') {
+      coinStats.workers = workerData.data.getuserworkers.data
+        .filter((worker) => {
+          if (worker.hashrate !== 0) {
+            return true;
+          }
+          return false;
+        })
+        .map((worker) => {
+          const arr = worker.username.split(".");
+          worker.username = arr[(arr.length === 1 ? 0 : 1)];
+        });
+      statsData.push(coinStats);
+    }
   }
   return statsData;
 };

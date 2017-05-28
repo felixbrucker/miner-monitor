@@ -622,7 +622,7 @@
                                 <th><span data-toggle="tooltip" title="Peers" data-placement="bottom">P</span></th>
                                 <th><span data-toggle="tooltip" title="Shared space (% used)" data-placement="bottom">Shared</span>
                                 </th>
-                                <th><span data-toggle="tooltip" title="since {{statsVm.secondsSince(entry.lastSpaceUpdate) | secondsToHrMin}} ago" data-placement="bottom">Change</span></th>
+                                <th>Change</th>
                                 <th><span data-toggle="tooltip" title="Response time" data-placement="bottom">RT</span></th>
                                 <th><span data-toggle="tooltip" title="Timeout rate" data-placement="bottom">TR</span></th>
                                 <th>Last Activity</th>
@@ -653,7 +653,7 @@
 
                                 <td class='ellipsis'>{{share.meta.farmerState.spaceUsed}} ({{share.meta.farmerState.percentUsed}}%)</td>
 
-                                <td class='ellipsis'>{{share.meta.farmerState.change}}</td>
+                                <td class='ellipsis'><span data-toggle="tooltip" title="since {{statsVm.secondsSince(share.lastSpaceUpdate) | secondsToHrMin}} ago" data-placement="bottom">{{share.meta.farmerState.change}}</span></td>
 
                                 <td class='ellipsis'>{{share.rt}}</td>
 

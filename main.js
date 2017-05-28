@@ -29,3 +29,7 @@ app.route('*').get(function(req, res) {
 global.listener = app.listen(process.env.PORT || 8085, function(){
   console.log(colors.green('server running on port '+listener.address().port));
 });
+
+process.on('uncaughtException', function (err) {
+  console.log(err.stack);
+});
