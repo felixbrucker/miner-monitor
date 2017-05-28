@@ -1247,7 +1247,7 @@ function init() {
   setInterval(updateExchangeRates, 3 * 60 * 1000);
   setInterval(getAllCryptoidBalances, 3 * 60 * 1000);
   setInterval(getAllCounterpartyBalances, 3 * 60 * 1000);
-  setInterval(getStorjshareBridgeApiStats, 20 * 1000);
+  setInterval(getStorjshareBridgeApiStats, 3 * 60 * 1000);
   setInterval(getAllEthStats, 3 * 60 * 1000);
 }
 
