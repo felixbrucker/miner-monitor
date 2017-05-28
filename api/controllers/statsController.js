@@ -46,24 +46,15 @@ let groupIntervals = [];
 
 function getStats(req, res, next) {
   var entries = [];
-  Object.keys(stats.entries).forEach(function (key, index) {
+  Object.keys(stats.entries).forEach((key) => {
     var arr = Object.keys(stats.entries[key]).map(function (key2) {
       return stats.entries[key][key2];
     });
     entries.push({name: key, devices: arr});
   });
   var dashboardData = [];
-  Object.keys(stats.dashboardData).forEach(function (key, index) {
-    let dashboard = {
-      name: key,
-      enabled: stats.dashboardData[key].enabled,
-      data: stats.dashboardData[key].data,
-      type: stats.dashboardData[key].type
-    };
-    if (stats.dashboardData[key].ticker) {
-      dashboard.ticker = stats.dashboardData[key].ticker;
-    }
-    dashboardData.push(dashboard);
+  Object.keys(stats.dashboardData).forEach((key) => {
+    dashboardData.push(stats.dashboardData[key]);
   });
   dashboardData.sort(function (a, b) {
     if (a.name < b.name) return -1;
@@ -71,7 +62,7 @@ function getStats(req, res, next) {
     return 0;
   });
   res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify({entries: entries, dashboardData: dashboardData}));
+  res.send(JSON.stringify({entries: entries, dashboardData}));
 }
 
 function counterAndSend(problem) {
@@ -1191,7 +1182,8 @@ async function getAllNicehashStats() {
         console.log(`${dashboard.name}: ${error.message}`);
       }
       if (poolData) {
-        stats.dashboardData[dashboard.name] = {
+        stats.dashboardData[dashboard.id] = {
+          name: dashboard.name,
           type: dashboard.type,
           enabled: dashboard.enabled,
           data: poolData,
@@ -1211,7 +1203,8 @@ async function getAllMPHStats() {
         console.log(`${dashboard.name}: ${error.message}`);
       }
       if (poolData) {
-        stats.dashboardData[dashboard.name] = {
+        stats.dashboardData[dashboard.id] = {
+          name: dashboard.name,
           type: dashboard.type,
           enabled: dashboard.enabled,
           data: poolData,
@@ -1231,7 +1224,8 @@ async function getAllMPOSStats() {
         console.log(`${dashboard.name}: ${error.message}`);
       }
       if (poolData) {
-        stats.dashboardData[dashboard.name] = {
+        stats.dashboardData[dashboard.id] = {
+          name: dashboard.name,
           type: dashboard.type,
           enabled: dashboard.enabled,
           data: poolData,
@@ -1254,7 +1248,8 @@ async function getAllBitcoinbalances() {
       } catch (error) {
         console.log(error);
       }
-      stats.dashboardData[dashboard.name] = {
+      stats.dashboardData[dashboard.id] = {
+        name: dashboard.name,
         type: dashboard.type,
         enabled: dashboard.enabled,
         data: balanceData,
@@ -1272,7 +1267,8 @@ async function getAllCryptoidBalances() {
       } catch (error) {
         console.log(error);
       }
-      stats.dashboardData[dashboard.name] = {
+      stats.dashboardData[dashboard.id] = {
+        name: dashboard.name,
         type: dashboard.type,
         enabled: dashboard.enabled,
         data: balanceData,
@@ -1291,7 +1287,8 @@ async function getAllCounterpartyBalances() {
       } catch (error) {
         console.log(error);
       }
-      stats.dashboardData[dashboard.name] = {
+      stats.dashboardData[dashboard.id] = {
+        name: dashboard.name,
         type: dashboard.type,
         enabled: dashboard.enabled,
         data: balanceData,
@@ -1309,7 +1306,8 @@ async function getAllEthStats() {
       } catch (error) {
         console.log(error);
       }
-      stats.dashboardData[dashboard.name] = {
+      stats.dashboardData[dashboard.id] = {
+        name: dashboard.name,
         type: dashboard.type,
         enabled: dashboard.enabled,
         data: balanceData,
