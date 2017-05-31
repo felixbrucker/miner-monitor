@@ -9,7 +9,7 @@ miner monitoring software
 
 ### Prerequisites
 
-miner-monitor requires nodejs, npm and optionally pm2 to run.
+miner-monitor requires nodejs >= 7.6.0, npm and optionally pm2 to run.
 
 for now you will need to remove the auth/session authorization in /var/www/f_status.php on all baikal miners you want to add.
 
