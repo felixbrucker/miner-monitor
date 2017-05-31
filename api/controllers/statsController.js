@@ -1,15 +1,18 @@
 const https = require('https');
 const http = require('http');
 const getExchangeRates = require("get-exchange-rates");
-var fs = require('fs');
-var path = require('path');
-var colors = require('colors/safe');
+const fs = require('fs');
+const path = require('path');
+const colors = require('colors/safe');
 const Rx = require('rx');
 const dnode = require('dnode');
 const bytes = require('bytes');
 
 // Miner
 const storjshare = require('../lib/miner/storjshare');
+const minerManager = require('../lib/miner/minerManager');
+const baikalMiner = require('../lib/miner/baikalMiner');
+const openHardwareMonitor = require('../lib/miner/openHardwareMonitor');
 
 // Pools
 const nicehash = require('../lib/pool/nicehash');
@@ -25,10 +28,10 @@ const blockchain = require('../lib/balances/blockchain.info');
 
 const timeEvents = Rx.Observable.interval(500);
 
-var configModule = require(__basedir + 'api/modules/configModule');
-var mailController = require(__basedir + 'api/controllers/mailController');
+const configModule = require(__basedir + 'api/modules/configModule');
+const mailController = require(__basedir + 'api/controllers/mailController');
 
-var stats = {
+let stats = {
   entries: {},
   dashboardData: {}
 };
@@ -38,24 +41,24 @@ let exchangeRates = {
   usdPerBTC: 0,
 };
 
-var problemCounter = {};
+let problemCounter = {};
 
-var nhinterval = null;
-var btcBalanceInterval = null;
-var mphInterval = null;
-var mposInterval = null;
+let nhinterval = null;
+let btcBalanceInterval = null;
+let mphInterval = null;
+let mposInterval = null;
 
 let groupIntervals = [];
 
 function getStats(req, res, next) {
-  var entries = [];
-  Object.keys(stats.entries).forEach((key) => {
-    var arr = Object.keys(stats.entries[key]).map(function (key2) {
-      return stats.entries[key][key2];
+  const entries = [];
+  Object.keys(stats.entries).forEach((name) => {
+    const devices = Object.keys(stats.entries[name]).map(function (id) {
+      return stats.entries[name][id];
     });
-    entries.push({name: key, devices: arr});
+    entries.push({name, devices});
   });
-  var dashboardData = [];
+  const dashboardData = [];
   Object.keys(stats.dashboardData).forEach((key) => {
     dashboardData.push(stats.dashboardData[key]);
   });
@@ -65,8 +68,12 @@ function getStats(req, res, next) {
     return 0;
   });
   res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify({entries: entries, dashboardData}));
+  res.send(JSON.stringify({entries, dashboardData}));
 }
+
+// #############################
+// #####     Reporting     #####
+// #############################
 
 function counterAndSend(problem) {
   if (problemCounter[problem.device.name] === undefined)
@@ -259,618 +266,64 @@ function checkResult(result, device, ohm) {
   }
 }
 
-function getMinerStats(device, display) {
-  var arr = device.hostname.split("://");
-  var protocol = arr[0];
-  arr = arr[1].split(":");
-  var path = "";
-  switch (device.type) {
-    case "baikal-miner":
-      path = "/f_status.php?all=1";
-      break;
-    case "miner-agent":
-      path = "/api/mining/stats";
-      break;
+// #################################
+// #####     miner-manager     #####
+// #################################
+
+async function getMinerStats(device, display) {
+  let minerData = null;
+  try {
+    switch(device.type) {
+      case "baikal-miner":
+        minerData = await baikalMiner(device);
+        break;
+      case "miner-agent":
+        minerData = await minerManager(device);
+        break;
+    }
+  } catch (error) {
+    console.log(`${device.name}: ${error.message}`);
+    counterAndSend({
+      type: 'device',
+      status: 'Problem',
+      descriptor: '',
+      item: {},
+      device: {name: device.name, value: 'Down'}
+    });
   }
-  switch (protocol) {
-    case "http":
-      var req = http.request({
-        host: arr[0],
-        path: path,
-        method: 'GET',
-        port: arr[1],
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8'
-        }
-      }, function (response) {
-        response.setEncoding('utf8');
-        var body = '';
-        response.on('data', function (d) {
-          body += d;
-        });
-        response.on('end', function () {
-          //console.log(body);
-          var parsed = null;
-          try {
-            parsed = JSON.parse(body);
-          } catch (error) {
-            console.log(colors.red("[" + device.name + "] Error: Unable to get stats data"));
-            counterAndSend({
-              type: 'device',
-              status: 'Problem',
-              descriptor: '',
-              item: {},
-              device: {name: device.name, value: 'Down'}
-            });
-          }
-          if (parsed != null) {
-            counterAndSend({
-              type: 'device',
-              status: 'OK',
-              descriptor: '',
-              item: {},
-              device: {name: device.name, value: 'Up'}
-            });
-            switch (device.type) {
-              case "baikal-miner":
-                if (parsed.status !== false) {
-                  parsed.status.type = device.type;
-                  parsed.status.name = device.name;
-                  parsed.status.hostname = device.hostname;
-                  checkResult(parsed.status, device, false);
-                  if (display) {
-                    if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null)
-                      stats.entries[device.group][device.id] = parsed.status;
-                    else {
-                      stats.entries[device.group] = {};
-                      stats.entries[device.group][device.id] = parsed.status;
-                    }
-                  }
-                }
-                break;
-              case "miner-agent":
-                checkResult(parsed, device, false);
-                if (display) {
-                  if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null)
-                    if (stats.entries[device.group][device.id] !== undefined && stats.entries[device.group][device.id] !== null) {
-                      stats.entries[device.group][device.id].type = device.type;
-                      stats.entries[device.group][device.id].name = device.name;
-                      stats.entries[device.group][device.id].hostname = device.hostname;
-                      stats.entries[device.group][device.id].entries = parsed.entries;
-                    } else {
-                      stats.entries[device.group][device.id] = {
-                        type: device.type,
-                        name: device.name,
-                        entries: parsed.entries,
-                        hostname: device.hostname
-                      };
-                    }
-                  else {
-                    stats.entries[device.group] = {};
-                    stats.entries[device.group][device.id] = {
-                      type: device.type,
-                      name: device.name,
-                      entries: parsed.entries,
-                      hostname: device.hostname
-                    };
-                  }
-                }
-                break;
-            }
-          } else {
-            switch (device.type) {
-              case "baikal-miner":
-                if (display) {
-                  if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null)
-                    stats.entries[device.group][device.id] = {
-                      type: device.type,
-                      name: device.name,
-                      devs: {},
-                      hostname: device.hostname
-                    };
-                  else {
-                    stats.entries[device.group] = {};
-                    stats.entries[device.group][device.id] = {
-                      type: device.type,
-                      name: device.name,
-                      devs: {},
-                      hostname: device.hostname
-                    };
-                  }
-                }
-                break;
-              case "miner-agent":
-                if (display) {
-                  if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null)
-                    if (stats.entries[device.group][device.id] !== undefined && stats.entries[device.group][device.id] !== null) {
-                      stats.entries[device.group][device.id].type = device.type;
-                      stats.entries[device.group][device.id].name = device.name;
-                      stats.entries[device.group][device.id].hostname = device.hostname;
-                      stats.entries[device.group][device.id].entries = {};
-                    } else {
-                      stats.entries[device.group][device.id] = {
-                        type: device.type,
-                        name: device.name,
-                        entries: {},
-                        hostname: device.hostname
-                      };
-                    }
-                  else {
-                    stats.entries[device.group] = {};
-                    stats.entries[device.group][device.id] = {
-                      type: device.type,
-                      name: device.name,
-                      entries: {},
-                      hostname: device.hostname
-                    };
-                  }
-                }
-                break;
-            }
-          }
-        });
-      }).on("error", function (error) {
-        counterAndSend({
-          type: 'device',
-          status: 'Problem',
-          descriptor: '',
-          item: {},
-          device: {name: device.name, value: 'Down'}
-        });
-        if (display) {
-          switch (device.type) {
-            case "baikal-miner":
-              if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null)
-                stats.entries[device.group][device.id] = {
-                  type: device.type,
-                  name: device.name,
-                  devs: {},
-                  hostname: device.hostname
-                };
-              else {
-                stats.entries[device.group] = {};
-                stats.entries[device.group][device.id] = {
-                  type: device.type,
-                  name: device.name,
-                  devs: {},
-                  hostname: device.hostname
-                };
-              }
-              break;
-            case "miner-agent":
-              if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null)
-                if (stats.entries[device.group][device.id] !== undefined && stats.entries[device.group][device.id] !== null) {
-                  stats.entries[device.group][device.id].type = device.type;
-                  stats.entries[device.group][device.id].name = device.name;
-                  stats.entries[device.group][device.id].hostname = device.hostname;
-                  stats.entries[device.group][device.id].entries = {};
-                } else {
-                  stats.entries[device.group][device.id] = {
-                    type: device.type,
-                    name: device.name,
-                    entries: {},
-                    hostname: device.hostname
-                  };
-                }
-              else {
-                stats.entries[device.group] = {};
-                stats.entries[device.group][device.id] = {
-                  type: device.type,
-                  name: device.name,
-                  entries: {},
-                  hostname: device.hostname
-                };
-              }
-              break;
-          }
-        }
-        console.log(colors.red("[" + device.name + "] Error: Unable to get stats data (" + error.code + ")"));
-      });
-      req.on('socket', function (socket) {
-        socket.setTimeout(10000);
-        socket.on('timeout', function () {
-          req.abort();
-        });
-      });
-      req.end();
-      break;
-    case "https":
-      var req = https.request({
-        host: arr[0],
-        path: path,
-        method: 'GET',
-        port: arr[1],
-        rejectUnauthorized: false,
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8'
-        }
-      }, function (response) {
-        response.setEncoding('utf8');
-        var body = '';
-        response.on('data', function (d) {
-          body += d;
-        });
-        response.on('end', function () {
-          //console.log(body);
-          var parsed = null;
-          try {
-            parsed = JSON.parse(body);
-          } catch (error) {
-            console.log(colors.red("[" + device.name + "] Error: Unable to get stats data"));
-            counterAndSend({
-              type: 'device',
-              status: 'Problem',
-              descriptor: '',
-              item: {},
-              device: {name: device.name, value: 'Down'}
-            });
-          }
-          if (parsed != null) {
-            counterAndSend({
-              type: 'device',
-              status: 'OK',
-              descriptor: '',
-              item: {},
-              device: {name: device.name, value: 'Up'}
-            });
-            switch (device.type) {
-              case "baikal-miner":
-                if (parsed.status !== false) {
-                  parsed.status.type = device.type;
-                  parsed.status.name = device.name;
-                  parsed.status.hostname = device.hostname;
-                  checkResult(parsed.status, device, false);
-                  if (display) {
-                    if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null)
-                      stats.entries[device.group][device.id] = parsed.status;
-                    else {
-                      stats.entries[device.group] = {};
-                      stats.entries[device.group][device.id] = parsed.status;
-                    }
-                  }
-                }
-                break;
-              case "miner-agent":
-                checkResult(parsed, device, false);
-                if (display) {
-                  if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null)
-                    if (stats.entries[device.group][device.id] !== undefined && stats.entries[device.group][device.id] !== null) {
-                      stats.entries[device.group][device.id].type = device.type;
-                      stats.entries[device.group][device.id].name = device.name;
-                      stats.entries[device.group][device.id].hostname = device.hostname;
-                      stats.entries[device.group][device.id].entries = parsed.entries;
-                    } else {
-                      stats.entries[device.group][device.id] = {
-                        type: device.type,
-                        name: device.name,
-                        entries: parsed.entries,
-                        hostname: device.hostname
-                      };
-                    }
-                  else {
-                    stats.entries[device.group] = {};
-                    stats.entries[device.group][device.id] = {
-                      type: device.type,
-                      name: device.name,
-                      entries: parsed.entries,
-                      hostname: device.hostname
-                    };
-                  }
-                }
-                break;
-            }
-          } else {
-            if (display) {
-              switch (device.type) {
-                case "baikal-miner":
-                  if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null)
-                    stats.entries[device.group][device.id] = {
-                      type: device.type,
-                      name: device.name,
-                      devs: {},
-                      hostname: device.hostname
-                    };
-                  else {
-                    stats.entries[device.group] = {};
-                    stats.entries[device.group][device.id] = {
-                      type: device.type,
-                      name: device.name,
-                      devs: {},
-                      hostname: device.hostname
-                    };
-                  }
-                  break;
-                case "miner-agent":
-                  if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null)
-                    if (stats.entries[device.group][device.id] !== undefined && stats.entries[device.group][device.id] !== null) {
-                      stats.entries[device.group][device.id].type = device.type;
-                      stats.entries[device.group][device.id].name = device.name;
-                      stats.entries[device.group][device.id].hostname = device.hostname;
-                      stats.entries[device.group][device.id].entries = {};
-                    } else {
-                      stats.entries[device.group][device.id] = {
-                        type: device.type,
-                        name: device.name,
-                        entries: {},
-                        hostname: device.hostname
-                      };
-                    }
-                  else {
-                    stats.entries[device.group] = {};
-                    stats.entries[device.group][device.id] = {
-                      type: device.type,
-                      name: device.name,
-                      entries: {},
-                      hostname: device.hostname
-                    };
-                  }
-                  break;
-              }
-            }
-          }
-        });
-      }).on("error", function (error) {
-        counterAndSend({
-          type: 'device',
-          status: 'Problem',
-          descriptor: '',
-          item: {},
-          device: {name: device.name, value: 'Down'}
-        });
-        if (display) {
-          switch (device.type) {
-            case "baikal-miner":
-              if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null)
-                stats.entries[device.group][device.id] = {
-                  type: device.type,
-                  name: device.name,
-                  devs: {},
-                  hostname: device.hostname
-                };
-              else {
-                stats.entries[device.group] = {};
-                stats.entries[device.group][device.id] = {
-                  type: device.type,
-                  name: device.name,
-                  devs: {},
-                  hostname: device.hostname
-                };
-              }
-              break;
-            case "miner-agent":
-              if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null)
-                if (stats.entries[device.group][device.id] !== undefined && stats.entries[device.group][device.id] !== null) {
-                  stats.entries[device.group][device.id].type = device.type;
-                  stats.entries[device.group][device.id].name = device.name;
-                  stats.entries[device.group][device.id].hostname = device.hostname;
-                  stats.entries[device.group][device.id].entries = {};
-                } else {
-                  stats.entries[device.group][device.id] = {
-                    type: device.type,
-                    name: device.name,
-                    entries: {},
-                    hostname: device.hostname
-                  };
-                }
-              else {
-                stats.entries[device.group] = {};
-                stats.entries[device.group][device.id] = {
-                  type: device.type,
-                  name: device.name,
-                  entries: {},
-                  hostname: device.hostname
-                };
-              }
-              break;
-          }
-        }
-        console.log(colors.red("[" + device.name + "] Error: Unable to get stats data (" + error.code + ")"));
-      });
-      req.on('socket', function (socket) {
-        socket.setTimeout(10000);
-        socket.on('timeout', function () {
-          req.abort();
-        });
-      });
-      req.end();
-      break;
+  if (minerData) {
+    counterAndSend({
+      type: 'device',
+      status: 'OK',
+      descriptor: '',
+      item: {},
+      device: {name: device.name, value: 'Up'}
+    });
+    checkResult(minerData, device, false);
+    if (display) {
+      if (!stats.entries[device.group]) {
+        stats.entries[device.group] = {};
+      }
+      stats.entries[device.group][device.id] = Object.assign(stats.entries[device.group][device.id] || {}, minerData);
+    }
   }
 }
 
-function getOhmStats(device, display) {
-  if (device.type === 'baikal-miner')
-    return 0;
-  var arr = device.ohm.split("://");
-  var protocol = arr[0];
-  arr = arr[1].split(":");
-  var path = "/data.json";
-  switch (protocol) {
-    case "http":
-      var req = http.request({
-        host: arr[0],
-        path: path,
-        method: 'GET',
-        port: arr[1],
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8'
-        }
-      }, function (response) {
-        response.setEncoding('utf8');
-        var body = '';
-        response.on('data', function (d) {
-          body += d;
-        });
-        response.on('end', function () {
-          var parsed = null;
-          try {
-            parsed = JSON.parse(body);
-          } catch (error) {
-            console.log(colors.red("[" + device.name + "] Error: Unable to get ohm stats data"));
-          }
-          if (parsed != null) {
-            var devices = new Array();
-            for (var i = 0; i < parsed.Children[0].Children.length; i++) {
-              var egliable = false;
-              var ohmdevice = {};
-              var currDevice = parsed.Children[0].Children[i];
-              for (var j = 0; j < currDevice.Children.length; j++) {
-                var currHw = currDevice.Children[j];
-                if (currHw.Text === 'Temperatures' && currHw.Children[0].Value !== undefined) {
-                  egliable = true;
-                  ohmdevice.dev = currDevice.Text;
-                  ohmdevice.temp = currHw.Children[0].Value;
-                }
-                if (currHw.Text === 'Controls')
-                  ohmdevice.fan = currHw.Children[0].Value;
-              }
-              if (egliable)
-                devices.push(ohmdevice);
-            }
-            checkResult(devices, device, true);
-            if (display) {
-              if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null)
-                if (stats.entries[device.group][device.id] !== undefined && stats.entries[device.group][device.id] !== null) {
-                  stats.entries[device.group][device.id].devices = devices;
-                } else {
-                  stats.entries[device.group][device.id] = {devices: devices};
-                }
-              else {
-                stats.entries[device.group] = {};
-                stats.entries[device.group][device.id] = {devices: devices};
-              }
-            }
-          } else {
-            if (display) {
-              if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null)
-                if (stats.entries[device.group][device.id] !== undefined && stats.entries[device.group][device.id] !== null) {
-                  stats.entries[device.group][device.id].devices = [];
-                } else {
-                  stats.entries[device.group][device.id] = {devices: []};
-                }
-              else {
-                stats.entries[device.group] = {};
-                stats.entries[device.group][device.id] = {devices: []};
-              }
-            }
-          }
-        });
-      }).on("error", function (error) {
-        if (display) {
-          if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null)
-            if (stats.entries[device.group][device.id] !== undefined && stats.entries[device.group][device.id] !== null) {
-              stats.entries[device.group][device.id].devices = [];
-            } else {
-              stats.entries[device.group][device.id] = {devices: []};
-            }
-          else {
-            stats.entries[device.group] = {};
-            stats.entries[device.group][device.id] = {devices: []};
-          }
-        }
-        console.log(colors.red("[" + device.name + "] Error: Unable to get ohm stats data (" + error.code + ")"));
-      });
-      req.on('socket', function (socket) {
-        socket.setTimeout(10000);
-        socket.on('timeout', function () {
-          req.abort();
-        });
-      });
-      req.end();
-      break;
-    case "https":
-      var req = https.request({
-        host: arr[0],
-        path: path,
-        method: 'GET',
-        port: arr[1],
-        rejectUnauthorized: false,
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8'
-        }
-      }, function (response) {
-        response.setEncoding('utf8');
-        var body = '';
-        response.on('data', function (d) {
-          body += d;
-        });
-        response.on('end', function () {
-          //console.log(body);
-          var parsed = null;
-          try {
-            parsed = JSON.parse(body);
-          } catch (error) {
-            console.log(colors.red("[" + device.name + "] Error: Unable to get ohm stats data"));
-          }
-          if (parsed != null) {
-            var devices = new Array();
-            for (var i = 0; i < parsed.Children[0].Children.length; i++) {
-              var egliable = false;
-              var ohmdevice = {};
-              var currDevice = parsed.Children[0].Children[i];
-              for (var j = 0; j < currDevice.Children.length; j++) {
-                var currHw = currDevice.Children[j];
-                if (currHw.Text === 'Temperatures' && currHw.Children[0].Value !== undefined) {
-                  egliable = true;
-                  ohmdevice.dev = currDevice.Text;
-                  ohmdevice.temp = currHw.Children[0].Value;
-                }
-                if (currHw.Text === 'Controls')
-                  ohmdevice.fan = currHw.Children[0].Value;
-              }
-              if (egliable)
-                devices.push(ohmdevice);
-            }
-            checkResult(devices, device, true);
-            if (display) {
-              if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null)
-                if (stats.entries[device.group][device.id] !== undefined && stats.entries[device.group][device.id] !== null) {
-                  stats.entries[device.group][device.id].devices = devices;
-                } else {
-                  stats.entries[device.group][device.id] = {devices: devices};
-                }
-              else {
-                stats.entries[device.group] = {};
-                stats.entries[device.group][device.id] = {devices: devices};
-              }
-            }
-          } else {
-            if (display) {
-              if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null)
-                if (stats.entries[device.group][device.id] !== undefined && stats.entries[device.group][device.id] !== null) {
-                  stats.entries[device.group][device.id].devices = [];
-                } else {
-                  stats.entries[device.group][device.id] = {devices: []};
-                }
-              else {
-                stats.entries[device.group] = {};
-                stats.entries[device.group][device.id] = {devices: []};
-              }
-            }
-          }
-        });
-      }).on("error", function (error) {
-        if (display) {
-          if (stats.entries[device.group] !== undefined && stats.entries[device.group] !== null)
-            if (stats.entries[device.group][device.id] !== undefined && stats.entries[device.group][device.id] !== null) {
-              stats.entries[device.group][device.id].devices = [];
-            } else {
-              stats.entries[device.group][device.id] = {devices: []};
-            }
-          else {
-            stats.entries[device.group] = {};
-            stats.entries[device.group][device.id] = {devices: []};
-          }
-        }
-        console.log(colors.red("[" + device.name + "] Error: Unable to get ohm stats data (" + error.code + ")"));
-      });
-      req.on('socket', function (socket) {
-        socket.setTimeout(10000);
-        socket.on('timeout', function () {
-          req.abort();
-        });
-      });
-      req.end();
-      break;
+async function getOhmStats(device, display) {
+  let ohmData = null;
+  try {
+    ohmData = await openHardwareMonitor(device);
+  } catch (error) {
+    console.log(`${device.name}: ${error.message}`);
+  }
+  if (ohmData) {
+    checkResult(ohmData, device, true);
+    if (display) {
+      if (!stats.entries[device.group]) {
+        stats.entries[device.group] = {};
+      }
+      stats.entries[device.group][device.id] = Object.assign(stats.entries[device.group][device.id] || {}, ohmData);
+    }
   }
 }
 
