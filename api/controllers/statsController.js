@@ -8,9 +8,6 @@ const Rx = require('rx');
 const dnode = require('dnode');
 const bytes = require('bytes');
 
-// Util
-const util = require('../lib/util');
-
 // Miner
 const storjshare = require('../lib/miner/storjshare');
 
@@ -131,7 +128,7 @@ function checkResult(result, device, ohm) {
               status: 'Problem',
               descriptor: 'Hashrate',
               item: {name: 'dev' + i, value: dev.MHS5s + 'MH/s', highLow: 'low'},
-              device: {name: device.name, value: 'Up'}
+              device: {name: device.name, value: 'Up', url: device.hostname}
             };
             counterAndSend(obj);
           } else {
@@ -140,7 +137,7 @@ function checkResult(result, device, ohm) {
               status: 'OK',
               descriptor: 'Hashrate',
               item: {name: 'dev' + i, value: dev.MHS5s + 'MH/s', highLow: 'low'},
-              device: {name: device.name, value: 'Up'}
+              device: {name: device.name, value: 'Up', url: device.hostname}
             };
             counterAndSend(obj);
           }
@@ -154,7 +151,7 @@ function checkResult(result, device, ohm) {
                 value: ((dev.Rejected / dev.TotalShares) * 100) + '%',
                 highLow: 'high'
               },
-              device: {name: device.name, value: 'Up'}
+              device: {name: device.name, value: 'Up', url: device.hostname}
             };
             counterAndSend(obj);
           } else {
@@ -167,7 +164,7 @@ function checkResult(result, device, ohm) {
                 value: ((dev.Rejected / dev.TotalShares) * 100) + '%',
                 highLow: 'high'
               },
-              device: {name: device.name, value: 'Up'}
+              device: {name: device.name, value: 'Up', url: device.hostname}
             };
             counterAndSend(obj);
           }
@@ -177,7 +174,7 @@ function checkResult(result, device, ohm) {
               status: 'Problem',
               descriptor: 'Temperature',
               item: {name: 'dev' + i, value: dev.Temperature + ' °C', highLow: 'high'},
-              device: {name: device.name, value: 'Up'}
+              device: {name: device.name, value: 'Up', url: device.hostname}
             };
             counterAndSend(obj);
           } else {
@@ -186,7 +183,7 @@ function checkResult(result, device, ohm) {
               status: 'OK',
               descriptor: 'Temperature',
               item: {name: 'dev' + i, value: dev.Temperature + ' °C', highLow: 'high'},
-              device: {name: device.name, value: 'Up'}
+              device: {name: device.name, value: 'Up', url: device.hostname}
             };
             counterAndSend(obj);
           }
@@ -204,7 +201,7 @@ function checkResult(result, device, ohm) {
                 status: 'Problem',
                 descriptor: 'Temperature',
                 item: {name: i + ': ' + ohmDevice.dev, value: ohmDevice.temp, highLow: 'high'},
-                device: {name: device.name, value: 'Up'}
+                device: {name: device.name, value: 'Up', url: device.hostname}
               };
               counterAndSend(obj);
             } else {
@@ -213,7 +210,7 @@ function checkResult(result, device, ohm) {
                 status: 'OK',
                 descriptor: 'Temperature',
                 item: {name: i + ': ' + ohmDevice.dev, value: ohmDevice.temp, highLow: 'high'},
-                device: {name: device.name, value: 'Up'}
+                device: {name: device.name, value: 'Up', url: device.hostname}
               };
               counterAndSend(obj);
             }
@@ -244,7 +241,7 @@ function checkResult(result, device, ohm) {
               status: 'Problem',
               descriptor: 'Number',
               item: {name: 'running miners', value: Object.keys(result.entries).length, highLow: 'low'},
-              device: {name: device.name, value: 'Up'}
+              device: {name: device.name, value: 'Up', url: device.hostname}
             };
           } else {
             obj = {
@@ -252,7 +249,7 @@ function checkResult(result, device, ohm) {
               status: 'OK',
               descriptor: 'Number',
               item: {name: 'running miners', value: Object.keys(result.entries).length, highLow: 'low'},
-              device: {name: device.name, value: 'Up'}
+              device: {name: device.name, value: 'Up', url: device.hostname}
             };
           }
           counterAndSend(obj);
@@ -944,7 +941,7 @@ async function getStorjshareDaemonStats(device, display) {
         stats.entries[device.group][device.id] &&
         stats.entries[device.group][device.id].shares) {
         const statsObj = stats.entries[device.group][device.id];
-        obj = Object.assign(obj, util.mergeStorjshareStats(statsObj, storjshareData));
+        obj = Object.assign(obj, storjshare.mergeStorjshareStats(statsObj, storjshareData));
       } else {
         obj.shares = storjshareData;
       }

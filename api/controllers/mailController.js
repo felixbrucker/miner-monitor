@@ -35,7 +35,8 @@ function sendMail(problem,callback){
         plainTextBody='Trigger: '+problem.descriptor+' of '+problem.item.name+' on '+problem.device.name+' is too '+problem.item.highLow+'\n' +
           'Status: '+problem.status+'\n'+
           'Item Value: '+problem.item.value+'\n'+
-          'Event time: '+(new Date()).toFormattedString('yyyy-mm-dd HH:MM:SS');
+          'Event time: '+(new Date()).toFormattedString('yyyy-mm-dd HH:MM:SS') + '\n' +
+          'URL: ' + problem.device.url;
         break;
       case "device":
         subject=problem.status+': '+problem.device.name+' is unreachable';
