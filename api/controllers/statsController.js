@@ -690,8 +690,8 @@ function init() {
   updateExchangeRates();
   getAllCryptoidBalances();
   getAllCounterpartyBalances();
-  getStorjshareBridgeApiStats();
   getAllEthStats();
+  setTimeout(getStorjshareBridgeApiStats, 20 * 1000); // delayed init
   mphInterval = setInterval(getAllMPHStats, 1 * 60 * 1000);
   nhinterval = setInterval(getAllNicehashStats, 21 * 1000); // 60 sec rate limit
   btcBalanceInterval = setInterval(getAllBitcoinbalances, 3 * 60 * 1000);
@@ -699,8 +699,8 @@ function init() {
   setInterval(updateExchangeRates, 3 * 60 * 1000);
   setInterval(getAllCryptoidBalances, 3 * 60 * 1000);
   setInterval(getAllCounterpartyBalances, 3 * 60 * 1000);
-  setInterval(getStorjshareBridgeApiStats, 3 * 60 * 1000);
   setInterval(getAllEthStats, 3 * 60 * 1000);
+  setInterval(getStorjshareBridgeApiStats, 3 * 60 * 1000);
 }
 
 setTimeout(init, 2000);
