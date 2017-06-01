@@ -1,3 +1,4 @@
+const https = require('https');
 const axios = require('axios');
 
 module.exports = async (device) => {
