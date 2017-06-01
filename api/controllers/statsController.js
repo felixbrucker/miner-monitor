@@ -423,21 +423,23 @@ async function getStorjshareBridgeApiStats() {
           } catch (error) {
             console.log(`${entry.name}: ${error.message}`);
           }
-          // use stats.entries[groupName][entryId].shares[i] to not write to old references
-          if (bridgeStats.responseTime !== undefined) {
-            stats.entries[groupName][entryId].shares[i].rt = bridgeStats.responseTime > 1000 ? `${(bridgeStats.responseTime / 1000).toFixed(2)} s` : `${bridgeStats.responseTime.toFixed(0)} ms`;
-            avgRt += bridgeStats.responseTime;
-            counter1 += 1;
-          } else {
-            stats.entries[groupName][entryId].shares[i].rt = 'N/A';
+          if (bridgeStats) {
+            // use stats.entries[groupName][entryId].shares[i] to not write to old references
+            if (bridgeStats.responseTime !== undefined) {
+              stats.entries[groupName][entryId].shares[i].rt = bridgeStats.responseTime > 1000 ? `${(bridgeStats.responseTime / 1000).toFixed(2)} s` : `${bridgeStats.responseTime.toFixed(0)} ms`;
+              avgRt += bridgeStats.responseTime;
+              counter1 += 1;
+            } else {
+              stats.entries[groupName][entryId].shares[i].rt = 'N/A';
+            }
+            if (bridgeStats.timeoutRate !== undefined) {
+              stats.entries[groupName][entryId].shares[i].tr = `${(bridgeStats.timeoutRate * 100).toFixed(2)} %`;
+            } else {
+              stats.entries[groupName][entryId].shares[i].tr = '0.00 %';
+            }
+            avgTr += bridgeStats.timeoutRate ? bridgeStats.timeoutRate : 0;
+            counter2 += 1;
           }
-          if (bridgeStats.timeoutRate !== undefined) {
-            stats.entries[groupName][entryId].shares[i].tr = `${(bridgeStats.timeoutRate * 100).toFixed(2)} %`;
-          } else {
-            stats.entries[groupName][entryId].shares[i].tr = '0.00 %';
-          }
-          avgTr += bridgeStats.timeoutRate ? bridgeStats.timeoutRate : 0;
-          counter2 += 1;
         }
         avgRt = avgRt / (counter1 ? counter1 : 1);
         avgTr = avgTr / (counter2 ? counter2 : 1);
