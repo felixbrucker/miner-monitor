@@ -7,7 +7,7 @@ module.exports = async (device) => {
   });
   const ohmData = await axios.get(`${device.ohm}/data.json`, {httpsAgent: agent});
   const devices = [];
-  ohmData.Children[0].Children.forEach((device) => {
+  ohmData.data.Children[0].Children.forEach((device) => {
     let egliable = false;
     const ohmdevice = {};
     device.Children.forEach((currHw) => {
