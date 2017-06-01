@@ -282,7 +282,7 @@ async function getMinerStats(device, display) {
         break;
     }
   } catch (error) {
-    console.log(`${device.name}: ${error.message}`);
+    console.log(`[${device.name} :: Miner-Manager] => ${error.message}`);
     counterAndSend({
       type: 'device',
       status: 'Problem',
@@ -314,7 +314,7 @@ async function getOhmStats(device, display) {
   try {
     ohmData = await openHardwareMonitor(device);
   } catch (error) {
-    console.log(`${device.name}: ${error.message}`);
+    console.log(`[${device.name} :: OpenHardwareMonitor] => ${error.message}`);
   }
   if (ohmData) {
     checkResult(ohmData, device, true);
@@ -356,14 +356,14 @@ async function getStorjshareDaemonStats(device, display) {
       try {
         storjshareData = await storjshare.getStorjshareDaemonStats(hostname, port);
       } catch (error) {
-        console.log(`${device.name}: ${error.message}`);
+        console.log(`[${device.name} :: StorjShare-Daemon] => ${error.message}`);
       }
       break;
     case 'storjshare-daemon-proxy':
       try {
         storjshareData = await storjshare.getStorjshareDaemonProxyStats(device.hostname);
       } catch (error) {
-        console.log(`${device.name}: ${error.message}`);
+        console.log(`[${device.name} :: StorjShare-Daemon-Proxy] => ${error.message}`);
       }
       break;
   }
@@ -421,7 +421,7 @@ async function getStorjshareBridgeApiStats() {
           try {
             bridgeStats = await storjshare.getBridgeStats(share.id);
           } catch (error) {
-            console.log(`${entry.name}: ${error.message}`);
+            console.log(`[${entry.name} :: StorjShare-Bridge-API] => ${error.message}`);
           }
           if (bridgeStats) {
             // use stats.entries[groupName][entryId].shares[i] to not write to old references
@@ -461,7 +461,7 @@ async function getAllNicehashStats() {
       try {
         poolData = await nicehash(dashboard.address, exchangeRates);
       } catch (error) {
-        console.log(`${dashboard.name}: ${error.message}`);
+        console.log(`[${dashboard.name} :: Nicehash-API] => ${error.message}`);
       }
       if (poolData) {
         stats.dashboardData[dashboard.id] = {
@@ -482,7 +482,7 @@ async function getAllMPHStats() {
       try {
         poolData = await mph(dashboard.address, dashboard.api_key, dashboard.user_id);
       } catch (error) {
-        console.log(`${dashboard.name}: ${error.message}`);
+        console.log(`[${dashboard.name} :: MiningPoolHub-API] => ${error.message}`);
       }
       if (poolData) {
         stats.dashboardData[dashboard.id] = {
@@ -503,7 +503,7 @@ async function getAllMPOSStats() {
       try {
         poolData = await mpos(dashboard.address, dashboard.baseUrl, dashboard.api_key, dashboard.user_id, dashboard.hrModifier);
       } catch (error) {
-        console.log(`${dashboard.name}: ${error.message}`);
+        console.log(`[${dashboard.name} :: MPOS-API] => ${error.message}`);
       }
       if (poolData) {
         stats.dashboardData[dashboard.id] = {
@@ -528,7 +528,7 @@ async function getAllBitcoinbalances() {
       try {
         balanceData = await blockchain(dashboard.address);
       } catch (error) {
-        console.log(error);
+        console.log(`[${dashboard.name} :: Blockchain-API] => ${error.message}`);
       }
       stats.dashboardData[dashboard.id] = {
         name: dashboard.name,
@@ -547,7 +547,7 @@ async function getAllCryptoidBalances() {
       try {
         balanceData = await cryptoid(dashboard.address, dashboard.ticker, dashboard.api_key);
       } catch (error) {
-        console.log(error);
+        console.log(`[${dashboard.name} :: CryptoID-API] => ${error.message}`);
       }
       stats.dashboardData[dashboard.id] = {
         name: dashboard.name,
@@ -586,7 +586,7 @@ async function getAllEthStats() {
       try {
         balanceData = await ethplorer(dashboard.address);
       } catch (error) {
-        console.log(error);
+        console.log(`[${dashboard.name} :: Ethplorer-API] => ${error.message}`);
       }
       stats.dashboardData[dashboard.id] = {
         name: dashboard.name,
