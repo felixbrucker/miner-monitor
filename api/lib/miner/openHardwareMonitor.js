@@ -1,7 +1,10 @@
 const axios = require('axios');
 
 module.exports = async (device) => {
-  const ohmData = await axios.get(`${device.ohm}/data.json`);
+  const agent = new https.Agent({
+    rejectUnauthorized: false
+  });
+  const ohmData = await axios.get(`${device.ohm}/data.json`, null, {httpsAgent: agent});
   const devices = [];
   ohmData.Children[0].Children.forEach((device) => {
     let egliable = false;

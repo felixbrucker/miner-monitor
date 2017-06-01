@@ -1,7 +1,10 @@
 const axios = require('axios');
 
 module.exports = async (device) => {
-  let minerData = await axios.get(`${device.hostname}/f_status.php?all=1`);
+  const agent = new https.Agent({
+    rejectUnauthorized: false
+  });
+  let minerData = await axios.get(`${device.hostname}/f_status.php?all=1`, null, {httpsAgent: agent});
   minerData = minerData.data.status;
   minerData.type = device.type;
   minerData.name = device.name;
