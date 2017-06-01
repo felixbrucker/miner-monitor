@@ -13,7 +13,7 @@ module.exports = async (device) => {
     device.Children.forEach((currHw) => {
       if (currHw.Text === 'Temperatures' && currHw.Children[0].Value !== undefined) {
         egliable = true;
-        ohmdevice.dev = currDevice.Text;
+        ohmdevice.dev = device.Text;
         ohmdevice.temp = currHw.Children[0].Value;
       }
       if (currHw.Text === 'Controls')
