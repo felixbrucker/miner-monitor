@@ -421,7 +421,7 @@ async function getStorjshareBridgeApiStats() {
           try {
             bridgeStats = await storjshare.getBridgeStats(share.id);
           } catch (error) {
-            console.log(`${device.name}: ${error.message}`);
+            console.log(`${entry.name}: ${error.message}`);
           }
           // use stats.entries[groupName][entryId].shares[i] to not write to old references
           if (bridgeStats.responseTime !== undefined) {
