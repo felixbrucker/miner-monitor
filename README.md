@@ -43,14 +43,6 @@ pm2 save
 pm2 startup
 ```
 
-note: windows users need the following instead for pm2:
-
-```sh
-npm install pm2-windows-startup -g
-pm2-startup install
-pm2 save
-```
-
 or just modify startTemplate.bat file to match your preferred compile and save as start.bat to not interfere with git updates
 
 ### Update software
@@ -59,8 +51,6 @@ run ``` git pull ```
 
 ### Todos
 
- - Error handling
- - Properly use async Methods
  - Properly send responses to indicate the result to frontend
  - Write Tests
 
