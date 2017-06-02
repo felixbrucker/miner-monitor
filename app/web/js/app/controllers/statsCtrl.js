@@ -99,15 +99,17 @@
      * @memberOf statsCtrl
      */
     function getStats() {
-      $http({
-        method: 'GET',
-        url: 'api/mining/stats'
-      }).then(function successCallback(response) {
-        vm.current.entries = response.data.entries;
-        vm.current.dashboardData=response.data.dashboardData;
-      }, function errorCallback(response) {
-        console.log(response);
-      });
+      if (!window.document.hidden) {
+        $http({
+          method: 'GET',
+          url: 'api/mining/stats'
+        }).then(function successCallback(response) {
+          vm.current.entries = response.data.entries;
+          vm.current.dashboardData=response.data.dashboardData;
+        }, function errorCallback(response) {
+          console.log(response);
+        });
+      }
     }
 
     /**
