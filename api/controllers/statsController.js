@@ -80,10 +80,21 @@ function counterAndSend(problem) {
     case 'device':
       if (problem.status === 'Problem') {
         problemCounter[problem.device.name].deviceCounter += 1;
-        if (problemCounter[problem.device.name].deviceCounter === 6)
+        if (problemCounter[problem.device.name].deviceCounter === 6){
+          if (problem.device.display) {
+            if (!stats.entries[problem.device.device.group]) {
+              stats.entries[problem.device.device.group] = {};
+            }
+            stats.entries[problem.device.device.group][problem.device.device.id] = {
+              type: problem.device.device.type,
+              name: problem.device.device.name,
+              hostname: problem.device.device.hostname,
+            };
+          }
           mailController.sendMail(problem, function (result) {
             //do something
           });
+        }
       } else {
         if (problemCounter[problem.device.name].deviceCounter >= 6)
           mailController.sendMail(problem, function (result) {
@@ -286,7 +297,7 @@ async function getMinerStats(device, display) {
       status: 'Problem',
       descriptor: '',
       item: {},
-      device: {name: device.name, value: 'Down'}
+      device: {name: device.name, value: 'Down', device, display}
     });
   }
   if (minerData) {
@@ -371,7 +382,7 @@ async function getStorjshareDaemonStats(device, display) {
       status: 'Problem',
       descriptor: '',
       item: {},
-      device: {name: device.name, value: 'Down'}
+      device: {name: device.name, value: 'Down', device, display}
     });
   } else {
     counterAndSend({
