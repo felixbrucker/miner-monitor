@@ -45,12 +45,8 @@ let exchangeRates = {
 
 let problemCounter = {};
 
-let nhinterval = null;
-let btcBalanceInterval = null;
-let mphInterval = null;
-let mposInterval = null;
-
 let groupIntervals = [];
+let dashboardIntervals = [];
 
 function getStats(req, res, next) {
   const entries = [];
@@ -689,7 +685,11 @@ function restartInterval() {
     clearInterval(interval);
   });
   groupIntervals = [];
-  initAllMinerStats();
+  dashboardIntervals.forEach((interval) => {
+    clearInterval(interval);
+  });
+  dashboardIntervals = [];
+  init();
 }
 
 function init() {
@@ -703,14 +703,14 @@ function init() {
   getAllCounterpartyBalances();
   getAllEthStats();
   setTimeout(getStorjshareBridgeApiStats, 20 * 1000); // delayed init
-  mphInterval = setInterval(getAllMPHStats, 1 * 60 * 1000);
-  btcBalanceInterval = setInterval(getAllBitcoinbalances, 3 * 60 * 1000);
-  mposInterval = setInterval(getAllMPOSStats, 30000);
-  setInterval(updateExchangeRates, 3 * 60 * 1000);
-  setInterval(getAllCryptoidBalances, 3 * 60 * 1000);
-  setInterval(getAllCounterpartyBalances, 3 * 60 * 1000);
-  setInterval(getAllEthStats, 3 * 60 * 1000);
-  setInterval(getStorjshareBridgeApiStats, 3 * 60 * 1000);
+  dashboardIntervals.push(setInterval(getAllMPHStats, 1 * 60 * 1000));
+  dashboardIntervals.push(setInterval(getAllBitcoinbalances, 3 * 60 * 1000));
+  dashboardIntervals.push(setInterval(getAllMPOSStats, 30000));
+  dashboardIntervals.push(setInterval(updateExchangeRates, 3 * 60 * 1000));
+  dashboardIntervals.push(setInterval(getAllCryptoidBalances, 3 * 60 * 1000));
+  dashboardIntervals.push(setInterval(getAllCounterpartyBalances, 3 * 60 * 1000));
+  dashboardIntervals.push(setInterval(getAllEthStats, 3 * 60 * 1000));
+  dashboardIntervals.push(setInterval(getStorjshareBridgeApiStats, 3 * 60 * 1000));
 
   const nicehashDashboards = [];
   for (let dashboard of configModule.config.dashboardData) {
@@ -718,7 +718,7 @@ function init() {
       nicehashDashboards.push(dashboard);
     }
   }
-  nhinterval = setInterval(getAllNicehashStats, (nicehashDashboards.length ? nicehashDashboards.length : 1) * 11 * 1000); // stupid nicehash rate limit
+  dashboardIntervals.push(setInterval(getAllNicehashStats, (nicehashDashboards.length ? nicehashDashboards.length : 1) * 11 * 1000)); // stupid nicehash rate limit
 }
 
 setTimeout(init, 2000);
