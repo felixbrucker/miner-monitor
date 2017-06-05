@@ -90,6 +90,9 @@ function counterAndSend(problem) {
               name: problem.device.device.name,
               hostname: problem.device.device.hostname,
             };
+            if (problem.device.device.ohm) {
+              stats.entries[problem.device.device.group][problem.device.device.id].devices = [];
+            }
           }
           mailController.sendMail(problem, function (result) {
             //do something
