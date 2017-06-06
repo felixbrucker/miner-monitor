@@ -1,269 +1,273 @@
 <div class="col-md-12" ng-if="statsVm.layout==='large'" style="margin-bottom: 70px;">
     <div ng-repeat="(id, dashboard) in statsVm.current.dashboardData track by $index">
-        <div class="col-md-6" ng-if="dashboard.type==='nicehash'&&dashboard.enabled" style="margin-bottom: 10px;">
-            <div class="col-md-12 table-responsive">
-                <div class="centerAlign">Workers ({{statsVm.parseName(dashboard.name)}}):</div>
-                <table class="table table-bordered table-condensed leftAlign">
-                    <thead>
-                    <tr>
-                        <th class="leftAlign">Algorithm</th>
-                        <th class="leftAlign">Hashrate</th>
-                        <th class="leftAlign">Profitability</th>
-                        <th class="leftAlign">Unpaid balance</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr ng-repeat="(id, data) in dashboard.data.current track by $index">
-                        <td ng-if="data.data['1']!=='0'">{{data.name}}</td>
-                        <td ng-if="data.data['1']!=='0' && data.data['0'].a!==undefined" class='ellipsisbig'><span
-                                data-highlighter="data.data['0'].a">{{data.data['0'].a}}</span> {{data.suffix}}/s
-                            <span ng-if="data.worker!==undefined" style="font-size:small;">
+        <div ng-if="dashboard.enabled && (dashboard.type==='nicehash' || dashboard.type==='miningpoolhub' || dashboard.type==='genericMPOS')" class="col-md-6" style="margin-bottom: 10px;">
+            <button class="btn" data-toggle="collapse" data-target="#board{{id}}">▼</button>
+            <div id="board{{id}}" class="collapse in" ng-if="dashboard.type==='nicehash'">
+                <div class="col-md-12 table-responsive">
+                    <div class="centerAlign">Workers ({{statsVm.parseName(dashboard.name)}}):</div>
+                    <table class="table table-bordered table-condensed leftAlign">
+                        <thead>
+                        <tr>
+                            <th class="leftAlign">Algorithm</th>
+                            <th class="leftAlign">Hashrate</th>
+                            <th class="leftAlign">Profitability</th>
+                            <th class="leftAlign">Unpaid balance</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="(id, data) in dashboard.data.current track by $index">
+                            <td ng-if="data.data['1']!=='0'">{{data.name}}</td>
+                            <td ng-if="data.data['1']!=='0' && data.data['0'].a!==undefined" class='ellipsisbig'><span
+                                    data-highlighter="data.data['0'].a">{{data.data['0'].a}}</span> {{data.suffix}}/s
+                                <span ng-if="data.worker!==undefined" style="font-size:small;">
               <span ng-repeat="(key, value) in data.worker track by $index">
                   <br/>
                   {{value['0']}}: {{value['1'].a}}<span class="nomobile"> {{data.suffix}}/s (diff: {{value['4']}}, connected: {{value['2']}} min)</span>
               </span>
           </span>
-                        </td>
-                        <td ng-if="data.data['1']!=='0' && data.data['0'].a==undefined">0.00 {{data.suffix}}/s</td>
-                        <td ng-if="data.data['1']!=='0' && data.data['0'].a!==undefined" class='ellipsis'><span
-                                data-highlighter="data.profitability">{{data.profitability * data.data['0'].a | number:4}}</span>
-                            BTC/Day
-                        </td>
-                        <td ng-if="data.data['1']!=='0' && data.data['0'].a==undefined" class='ellipsis'>0.0000 BTC/Day</td>
-                        <td ng-if="data.data['1']!=='0'"><span data-highlighter="data.data['1']" class='ellipsis'>{{data.data['1']|number:8}}</span>
-                            BTC
-                        </td>
-                    </tr>
-                    </tbody>
-                    <tr ng-if="dashboard.data.sum!==undefined && dashboard.data.sum!==null">
-                        <td colspan="2" style="font-weight: bold;">Total</td>
-                        <td style="font-weight: bold;">{{dashboard.data.sum.profitability | number:4}} BTC/Day<br/>{{dashboard.data.sum.profitabilityEur
-                            | number:2}} EUR/Day
-                        </td>
-                        <td style="font-weight: bold;">{{dashboard.data.sum.unpaidBalance | number:8}} BTC<br/>{{dashboard.data.sum.unpaidBalanceEur
-                            | number:2}} EUR
-                        </td>
-                    </tr>
-                </table>
+                            </td>
+                            <td ng-if="data.data['1']!=='0' && data.data['0'].a==undefined">0.00 {{data.suffix}}/s</td>
+                            <td ng-if="data.data['1']!=='0' && data.data['0'].a!==undefined" class='ellipsis'><span
+                                    data-highlighter="data.profitability">{{data.profitability * data.data['0'].a | number:4}}</span>
+                                BTC/Day
+                            </td>
+                            <td ng-if="data.data['1']!=='0' && data.data['0'].a==undefined" class='ellipsis'>0.0000 BTC/Day</td>
+                            <td ng-if="data.data['1']!=='0'"><span data-highlighter="data.data['1']" class='ellipsis'>{{data.data['1']|number:8}}</span>
+                                BTC
+                            </td>
+                        </tr>
+                        </tbody>
+                        <tr ng-if="dashboard.data.sum!==undefined && dashboard.data.sum!==null">
+                            <td colspan="2" style="font-weight: bold;">Total</td>
+                            <td style="font-weight: bold;">{{dashboard.data.sum.profitability | number:4}} BTC/Day<br/>{{dashboard.data.sum.profitabilityEur
+                                | number:2}} EUR/Day
+                            </td>
+                            <td style="font-weight: bold;">{{dashboard.data.sum.unpaidBalance | number:8}} BTC<br/>{{dashboard.data.sum.unpaidBalanceEur
+                                | number:2}} EUR
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-12 table-responsive">
+                    <div class="centerAlign">Payments ({{statsVm.parseName(dashboard.name)}}):</div>
+                    <table class="table table-bordered table-condensed leftAlign">
+                        <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Fee</th>
+                            <th>TXID</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="(id, data) in dashboard.data.payments track by $index">
+                            <td>{{data.time * 1000 | date: "yyyy-MM-dd HH:mm"}}</td>
+                            <td>{{data.amount}} BTC</td>
+                            <td>{{data.fee}} BTC</td>
+                            <td class='ellipsisbig'><a href="https://blockchain.info/tx/{{data.TXID}}" target="_blank">{{data.TXID}}</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-12 centerAlign">
+                    <a href="https://www.nicehash.com/?p=miners&addr={{dashboard.data.address}}" target="_blank">Nicehash
+                        {{statsVm.parseName(dashboard.name)}}</a>
+                </div>
+                <div class="col-md-12 centerAlign">
+                    <a href="https://www.nicehash.com/" target="_blank">Nicehash Homepage</a>
+                </div>
             </div>
-            <div class="col-md-12 table-responsive">
-                <div class="centerAlign">Payments ({{statsVm.parseName(dashboard.name)}}):</div>
-                <table class="table table-bordered table-condensed leftAlign">
-                    <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Amount</th>
-                        <th>Fee</th>
-                        <th>TXID</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr ng-repeat="(id, data) in dashboard.data.payments track by $index">
-                        <td>{{data.time * 1000 | date: "yyyy-MM-dd HH:mm"}}</td>
-                        <td>{{data.amount}} BTC</td>
-                        <td>{{data.fee}} BTC</td>
-                        <td class='ellipsisbig'><a href="https://blockchain.info/tx/{{data.TXID}}" target="_blank">{{data.TXID}}</a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-md-12 centerAlign">
-                <a href="https://www.nicehash.com/?p=miners&addr={{dashboard.data.address}}" target="_blank">Nicehash
-                    {{statsVm.parseName(dashboard.name)}}</a>
-            </div>
-            <div class="col-md-12 centerAlign">
-                <a href="https://www.nicehash.com/" target="_blank">Nicehash Homepage</a>
-            </div>
-        </div>
 
-        <div class="col-md-6" ng-if="dashboard.type==='miningpoolhub'&&dashboard.enabled" style="margin-bottom: 10px;">
-            <div class="col-md-12  table-responsive">
-                <div class="centerAlign">Stats ({{statsVm.parseName(dashboard.name)}}):</div>
-                <table class="table table-bordered table-condensed leftAlign">
-                    <thead>
-                    <tr>
-                        <th>Coin</th>
-                        <th>Hashrate</th>
-                        <th>Profitability</th>
-                        <th>Balance</th>
-                        <th>Balance (AE)</th>
-                        <th>On Exchange</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr ng-repeat="(id, data) in dashboard.data | orderBy:'name' track by $index">
-                        <td ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">
-                            {{data.name}}
-                        </td>
-                        <td class='ellipsis'
-                            ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">
-                            {{data.hashrate|hashrate}}
-                            <span ng-if="data.workers!==[]" style="font-size:small;">
+            <div id="board{{id}}" class="collapse in" ng-if="dashboard.type==='miningpoolhub'">
+                <div class="col-md-12  table-responsive">
+                    <div class="centerAlign">Stats ({{statsVm.parseName(dashboard.name)}}):</div>
+                    <table class="table table-bordered table-condensed leftAlign">
+                        <thead>
+                        <tr>
+                            <th>Coin</th>
+                            <th>Hashrate</th>
+                            <th>Profitability</th>
+                            <th>Balance</th>
+                            <th>Balance (AE)</th>
+                            <th>On Exchange</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="(id, data) in dashboard.data | orderBy:'name' track by $index">
+                            <td ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">
+                                {{data.name}}
+                            </td>
+                            <td class='ellipsis'
+                                ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">
+                                {{data.hashrate|hashrate}}
+                                <span ng-if="data.workers!==[]" style="font-size:small;">
             <span ng-repeat="(key, value) in data.workers track by $index">
                 <br/>
                 {{value.username}}: {{value.hashrate|hashrate}}<span
                     class="nomobile"> (diff: {{value.difficulty}})</span>
             </span>
         </span>
-                        </td>
-                        <td class='ellipsis'
-                            ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">
-                            {{data.profitability*data.hashrate|number:4}} BTC/Day
-                        </td>
-                        <td class='ellipsis'
-                            ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">
-                            {{data.balance.confirmed}} ({{data.balance.unconfirmed}}) {{data.symbol}}
-                        </td>
-                        <td class='ellipsis'
-                            ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">
-                            {{data.balance_ae.confirmed}} ({{data.balance_ae.unconfirmed}}) {{data.symbol}}
-                        </td>
-                        <td class='ellipsis'
-                            ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">
-                            {{data.onExchange}} {{data.symbol}}
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+                            </td>
+                            <td class='ellipsis'
+                                ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">
+                                {{data.profitability*data.hashrate|number:4}} BTC/Day
+                            </td>
+                            <td class='ellipsis'
+                                ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">
+                                {{data.balance.confirmed}} ({{data.balance.unconfirmed}}) {{data.symbol}}
+                            </td>
+                            <td class='ellipsis'
+                                ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">
+                                {{data.balance_ae.confirmed}} ({{data.balance_ae.unconfirmed}}) {{data.symbol}}
+                            </td>
+                            <td class='ellipsis'
+                                ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">
+                                {{data.onExchange}} {{data.symbol}}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-12 centerAlign">
+                    <a href="https://miningpoolhub.com/" target="_blank">MPH Homepage</a>
+                </div>
             </div>
-            <div class="col-md-12 centerAlign">
-                <a href="https://miningpoolhub.com/" target="_blank">MPH Homepage</a>
-            </div>
-        </div>
 
-        <div class="col-md-6" ng-if="dashboard.type==='genericMPOS'&&dashboard.enabled" style="margin-bottom: 10px;">
-            <div class="col-md-12  table-responsive">
-                <div class="centerAlign">Stats ({{statsVm.parseName(dashboard.name)}}):</div>
-                <table class="table table-bordered table-condensed leftAlign">
-                    <thead>
-                    <tr>
-                        <th>Hashrate</th>
-                        <th>Confirmed</th>
-                        <th>Unconfirmed</th>
-                        <th>Estimated Round Earnings</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td class='ellipsis'>{{dashboard.data.hashrate|hashrate}}
-                            <span ng-if="dashboard.data.workers!==[]" style="font-size:small;">
+            <div id="board{{id}}" class="collapse in" ng-if="dashboard.type==='genericMPOS'">
+                <div class="col-md-12  table-responsive">
+                    <div class="centerAlign">Stats ({{statsVm.parseName(dashboard.name)}}):</div>
+                    <table class="table table-bordered table-condensed leftAlign">
+                        <thead>
+                        <tr>
+                            <th>Hashrate</th>
+                            <th>Confirmed</th>
+                            <th>Unconfirmed</th>
+                            <th>Estimated Round Earnings</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class='ellipsis'>{{dashboard.data.hashrate|hashrate}}
+                                <span ng-if="dashboard.data.workers!==[]" style="font-size:small;">
             <span ng-repeat="(key, value) in dashboard.data.workers track by $index">
                 <br/>
                 {{value.username}}: {{value.hashrate|hashrate}}<span
                     class="nomobile"> (diff: {{value.difficulty}})</span>
             </span>
         </span>
+                            </td>
+                            <td class='ellipsis'>{{dashboard.data.confirmed}} {{dashboard.data.symbol}}</td>
+                            <td class='ellipsis'>{{dashboard.data.unconfirmed}} {{dashboard.data.symbol}}</td>
+                            <td class='ellipsis'>{{dashboard.data.estimated}} {{dashboard.data.symbol}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-12 centerAlign">
+                    <a href="{{dashboard.data.baseUrl}}/index.php?page=statistics&action=pool" target="_blank">Pool
+                        Homepage</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6" ng-if="statsVm.atLeastOneBalanceDashboard()">
+        <button class="btn" data-toggle="collapse" data-target="#balances">▼</button>
+        <div id="balances" class="collapse in" style="margin-bottom: 10px;" >
+            <div class="centerAlign">Balances:</div>
+            <div class="col-md-4" ng-if="statsVm.isDashboardTypeEnabled('bitcoinBalance')">
+                <div class="centerAlign">Bitcoin balances:</div>
+                <table class="table table-bordered table-condensed leftAlign">
+                    <thead>
+                    <tr>
+                        <th>Wallet</th>
+                        <th>Amount</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="(id, dashboard) in statsVm.current.dashboardData track by $index">
+                        <td ng-if="dashboard.type==='bitcoinBalance'&&dashboard.enabled">{{dashboard.name}}</td>
+                        <td ng-if="dashboard.type==='bitcoinBalance'&&dashboard.enabled" class='ellipsissmall'><span
+                                data-highlighter="dashboard.data">{{(dashboard.data / 100000000) | number:8}}</span> BTC
                         </td>
-                        <td class='ellipsis'>{{dashboard.data.confirmed}} {{dashboard.data.symbol}}</td>
-                        <td class='ellipsis'>{{dashboard.data.unconfirmed}} {{dashboard.data.symbol}}</td>
-                        <td class='ellipsis'>{{dashboard.data.estimated}} {{dashboard.data.symbol}}</td>
                     </tr>
                     </tbody>
                 </table>
             </div>
-            <div class="col-md-12 centerAlign">
-                <a href="{{dashboard.data.baseUrl}}/index.php?page=statistics&action=pool" target="_blank">Pool
-                    Homepage</a>
+            <div class="col-md-4" ng-if="statsVm.isDashboardTypeEnabled('cryptoidBalance')">
+                <div class="centerAlign">CryptoID balances:</div>
+                <table class="table table-bordered table-condensed leftAlign">
+                    <thead>
+                    <tr>
+                        <th>Wallet</th>
+                        <th>Amount</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="(id, dashboard) in statsVm.current.dashboardData track by $index">
+                        <td ng-if="dashboard.type==='cryptoidBalance'&&dashboard.enabled" class='ellipsissmall'>{{dashboard.name}}</td>
+                        <td ng-if="dashboard.type==='cryptoidBalance'&&dashboard.enabled" class='ellipsissmall'><span
+                                data-highlighter="dashboard.data">{{dashboard.data | number:8}}</span> {{dashboard.ticker}}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-4" ng-if="statsVm.isDashboardTypeEnabled('counterpartyBalance')">
+                <div class="centerAlign">Counterparty balances:</div>
+                <table class="table table-bordered table-condensed leftAlign">
+                    <thead>
+                    <tr>
+                        <th>Wallet</th>
+                        <th>Amount</th>
+                        <th>Token</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="(id, dashboard) in statsVm.current.dashboardData track by $index">
+                        <td ng-if="dashboard.type==='counterpartyBalance'&&dashboard.enabled">{{dashboard.name}}</td>
+                        <td ng-if="dashboard.type==='counterpartyBalance'&&dashboard.enabled" class='ellipsissmall'><span
+                                ng-repeat="entry in dashboard.data">{{entry.amount | number:6}}<br/></span></td>
+                        <td ng-if="dashboard.type==='counterpartyBalance'&&dashboard.enabled" class='ellipsissmall'><span
+                                ng-repeat="entry in dashboard.data">{{entry.asset}}<br/></span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-4" ng-if="statsVm.isDashboardTypeEnabled('ethBalance')">
+                <div class="centerAlign">Ethereum balances:</div>
+                <table class="table table-bordered table-condensed leftAlign">
+                    <thead>
+                    <tr>
+                        <th>Wallet</th>
+                        <th>Amount</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="(id, dashboard) in statsVm.current.dashboardData track by $index">
+                        <td ng-if="dashboard.type==='ethBalance'&&dashboard.enabled">{{dashboard.name}}</td>
+                        <td ng-if="dashboard.type==='ethBalance'&&dashboard.enabled" class='ellipsis'>
+                            {{dashboard.data.eth.balance | number: 8}} ETH
+                            <span ng-repeat="entry in dashboard.data.tokens"><br/>{{entry.balance | number:8}} {{entry.tokenInfo.symbol}}</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-
     </div>
 
-    <div class="col-md-6" style="margin-bottom: 10px;" ng-if="statsVm.atLeastOneBalanceDashboard()">
-        <div class="centerAlign">Balances:</div>
-        <div class="col-md-4" ng-if="statsVm.isDashboardTypeEnabled('bitcoinBalance')">
-            <div class="centerAlign">Bitcoin balances:</div>
-            <table class="table table-bordered table-condensed leftAlign">
-                <thead>
-                <tr>
-                    <th>Wallet</th>
-                    <th>Amount</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="(id, dashboard) in statsVm.current.dashboardData track by $index">
-                    <td ng-if="dashboard.type==='bitcoinBalance'&&dashboard.enabled">{{dashboard.name}}</td>
-                    <td ng-if="dashboard.type==='bitcoinBalance'&&dashboard.enabled" class='ellipsissmall'><span
-                            data-highlighter="dashboard.data">{{(dashboard.data / 100000000) | number:8}}</span> BTC
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="col-md-4" ng-if="statsVm.isDashboardTypeEnabled('cryptoidBalance')">
-            <div class="centerAlign">CryptoID balances:</div>
-            <table class="table table-bordered table-condensed leftAlign">
-                <thead>
-                <tr>
-                    <th>Wallet</th>
-                    <th>Amount</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="(id, dashboard) in statsVm.current.dashboardData track by $index">
-                    <td ng-if="dashboard.type==='cryptoidBalance'&&dashboard.enabled" class='ellipsissmall'>{{dashboard.name}}</td>
-                    <td ng-if="dashboard.type==='cryptoidBalance'&&dashboard.enabled" class='ellipsissmall'><span
-                            data-highlighter="dashboard.data">{{dashboard.data | number:8}}</span> {{dashboard.ticker}}
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="col-md-4" ng-if="statsVm.isDashboardTypeEnabled('counterpartyBalance')">
-            <div class="centerAlign">Counterparty balances:</div>
-            <table class="table table-bordered table-condensed leftAlign">
-                <thead>
-                <tr>
-                    <th>Wallet</th>
-                    <th>Amount</th>
-                    <th>Token</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="(id, dashboard) in statsVm.current.dashboardData track by $index">
-                    <td ng-if="dashboard.type==='counterpartyBalance'&&dashboard.enabled">{{dashboard.name}}</td>
-                    <td ng-if="dashboard.type==='counterpartyBalance'&&dashboard.enabled" class='ellipsissmall'><span
-                            ng-repeat="entry in dashboard.data">{{entry.amount | number:6}}<br/></span></td>
-                    <td ng-if="dashboard.type==='counterpartyBalance'&&dashboard.enabled" class='ellipsissmall'><span
-                            ng-repeat="entry in dashboard.data">{{entry.asset}}<br/></span></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="col-md-4" ng-if="statsVm.isDashboardTypeEnabled('ethBalance')">
-            <div class="centerAlign">Ethereum balances:</div>
-            <table class="table table-bordered table-condensed leftAlign">
-                <thead>
-                <tr>
-                    <th>Wallet</th>
-                    <th>Amount</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="(id, dashboard) in statsVm.current.dashboardData track by $index">
-                    <td ng-if="dashboard.type==='ethBalance'&&dashboard.enabled">{{dashboard.name}}</td>
-                    <td ng-if="dashboard.type==='ethBalance'&&dashboard.enabled" class='ellipsis'>
-                        {{dashboard.data.eth.balance | number: 8}} ETH
-                        <span ng-repeat="entry in dashboard.data.tokens"><br/>{{entry.balance | number:8}} {{entry.tokenInfo.symbol}}</span>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div ng-repeat="(id,group) in statsVm.current.entries | orderBy:'name'">
-        <div ng-repeat="entry in group.devices | toArray | orderBy:'name'">
-            <div style="float: left;" class="col-md-6 table-responsive"
+    <div ng-repeat="(id,group) in statsVm.current.entries | orderBy:'name' track by $index">
+        <div ng-repeat="(id2, entry) in group.devices | toArray | orderBy:'name' track by $index">
+            <div class="col-md-6 table-responsive" style="float: left"
                  ng-if="entry.type==='miner-agent'&&entry.devices">
                 <div class="row">
                     <div class="col-md-12">
-                        <div style="float: left;font-size:120%;"><a href="{{entry.hostname}}" target="_blank">{{entry.name}}</a>
+                        <div style="float: left;font-size:120%;"><a href="{{entry.hostname}}" target="_blank">{{entry.name}}</a> <button class="btn" data-toggle="collapse" data-target="#miner{{id2}}">▼</button>
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div id="miner{{id2}}" class="row collapse in">
                     <div class="col-md-7 table-responsive" style="display:inline-block;">
                         <table class="table table-bordered table-condensed">
                             <thead>
@@ -431,15 +435,15 @@
                     </div>
                 </div>
             </div>
-            <div style="float: left;display:inline-block;" class="col-md-4 table-responsive"
+            <div class="col-md-4 table-responsive" style="float: left;"
                  ng-if="entry.type !=='storjshare-daemon' && entry.type !=='storjshare-daemon-proxy' && (entry.type!=='miner-agent'||entry.devices===undefined)">
                 <div class="row">
                     <div class="col-md-12">
-                        <div style="float: left;font-size:120%;"><a href="{{entry.hostname}}" target="_blank">{{entry.name}}</a>
+                        <div style="float: left;font-size:120%;"><a href="{{entry.hostname}}" target="_blank">{{entry.name}}</a> <button class="btn" data-toggle="collapse" data-target="#miner{{id2}}">▼</button>
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div id="miner{{id2}}" class="row collapse in">
                     <div class="col-md-12 table-responsive">
                         <table class="table table-bordered table-condensed">
                             <thead>
@@ -604,14 +608,14 @@
                     </div>
                 </div>
             </div>
-            <div style="float: left;display:inline-block;" class="col-md-6 table-responsive"
+            <div class="col-md-6 table-responsive" style="float: left;"
                  ng-if="entry.type==='storjshare-daemon' || entry.type==='storjshare-daemon-proxy'">
                 <div class="row">
                     <div class="col-md-12">
-                        <div style="float: left;font-size:120%;">{{entry.name}}</div>
+                        <div style="float: left;font-size:120%;">{{entry.name}} <button class="btn" data-toggle="collapse" data-target="#miner{{id2}}">▼</button></div>
                     </div>
                 </div>
-                <div class="row">
+                <div id="miner{{id2}}" class="row collapse in">
                     <div class="col-md-12 table-responsive">
                         <table class="table table-bordered table-condensed">
                             <thead>
