@@ -24,6 +24,7 @@ const ethplorer = require('../lib/balances/ethplorer.io');
 const counterpartychain = require('../lib/balances/counterpartychain.io');
 const cryptoid = require('../lib/balances/chainz.cryptoid.info');
 const blockchain = require('../lib/balances/blockchain.info');
+const walletBurstTeam = require('../lib/balances/walletBurstTeam');
 
 
 const timeEvents = Rx.Observable.interval(500);
@@ -619,6 +620,25 @@ async function getAllEthStats() {
   }
 }
 
+async function getAllBurstStats() {
+  for (let dashboard of configModule.config.dashboardData) {
+    if (dashboard.type === 'burstBalance' && dashboard.enabled) {
+      let balanceData = null;
+      try {
+        balanceData = await walletBurstTeam(dashboard.address);
+      } catch (error) {
+        console.log(`[${dashboard.name} :: BurstTeam-API] => ${error.message}`);
+      }
+      stats.dashboardData[dashboard.id] = {
+        name: dashboard.name,
+        type: dashboard.type,
+        enabled: dashboard.enabled,
+        data: balanceData,
+      };
+    }
+  }
+}
+
 // ####################
 // #####   Init   #####
 // ####################
@@ -716,6 +736,7 @@ function init() {
   getAllCryptoidBalances();
   getAllCounterpartyBalances();
   getAllEthStats();
+  getAllBurstStats();
   setTimeout(getStorjshareBridgeApiStats, 20 * 1000); // delayed init
   dashboardIntervals.push(setInterval(getAllMPHStats, 1 * 60 * 1000));
   dashboardIntervals.push(setInterval(getAllBitcoinbalances, 3 * 60 * 1000));
@@ -725,6 +746,7 @@ function init() {
   dashboardIntervals.push(setInterval(getAllCounterpartyBalances, 3 * 60 * 1000));
   dashboardIntervals.push(setInterval(getAllEthStats, 3 * 60 * 1000));
   dashboardIntervals.push(setInterval(getStorjshareBridgeApiStats, 3 * 60 * 1000));
+  dashboardIntervals.push(setInterval(getAllBurstStats, 3 * 60 * 1000));
 
   const nicehashDashboards = [];
   for (let dashboard of configModule.config.dashboardData) {

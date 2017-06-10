@@ -73,7 +73,9 @@
           if(vm.current.dashboardData[i].enabled &&(
               vm.current.dashboardData[i].type==='bitcoinBalance' ||
               vm.current.dashboardData[i].type==='cryptoidBalance' ||
-              vm.current.dashboardData[i].type==='counterpartyBalance'))
+              vm.current.dashboardData[i].type==='counterpartyBalance' ||
+              vm.current.dashboardData[i].type==='ethBalance' ||
+              vm.current.dashboardData[i].type==='burstBalance'))
             return true;
         }
       }

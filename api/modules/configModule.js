@@ -34,6 +34,7 @@ var config = module.exports = {
       "cryptoidBalance",
       "counterpartyBalance",
       'ethBalance',
+      'burstBalance',
     ]
   },
   getConfig: function () {

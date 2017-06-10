@@ -254,6 +254,25 @@
                     </tbody>
                 </table>
             </div>
+            <div class="col-md-4" ng-if="statsVm.isDashboardTypeEnabled('burstBalance')">
+                <div class="centerAlign">Burst balances:</div>
+                <table class="table table-bordered table-condensed leftAlign">
+                    <thead>
+                    <tr>
+                        <th>Wallet</th>
+                        <th>Amount</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="(id, dashboard) in statsVm.current.dashboardData track by $index">
+                        <td ng-if="dashboard.type==='burstBalance'&&dashboard.enabled">{{dashboard.name}}</td>
+                        <td ng-if="dashboard.type==='burstBalance'&&dashboard.enabled" class='ellipsis'>
+                            {{dashboard.data | number: 6}} BURST
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
