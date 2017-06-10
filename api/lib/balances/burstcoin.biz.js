@@ -1,6 +1,10 @@
+const https = require('https');
 const axios = require('axios');
 
 module.exports = async (address) => {
-  const balanceData = await axios.get(`https://burstcoin.biz:8125/burst?requestType=getAccount&account=${address}`);
+  const agent = new https.Agent({
+    rejectUnauthorized: false
+  });
+  const balanceData = await axios.get(`https://burstcoin.biz:8125/burst?requestType=getAccount&account=${address}`, {httpsAgent: agent});
   return balanceData.data.effectiveBalanceNXT / 100000000;
 };
