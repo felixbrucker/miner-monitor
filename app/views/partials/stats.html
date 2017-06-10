@@ -267,7 +267,7 @@
                     <tr ng-repeat="(id, dashboard) in statsVm.current.dashboardData track by $index">
                         <td ng-if="dashboard.type==='burstBalance'&&dashboard.enabled">{{dashboard.name}}</td>
                         <td ng-if="dashboard.type==='burstBalance'&&dashboard.enabled" class='ellipsis'>
-                            {{dashboard.data | number: 6}} BURST
+                            {{dashboard.data | number: 0}} BURST
                         </td>
                     </tr>
                     </tbody>
