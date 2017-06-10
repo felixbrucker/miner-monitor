@@ -10,7 +10,7 @@
       <div class="panel panel-default" ng-repeat="group in configVm.config.groups track by $index">
         <div class="panel-heading" role="tab" id="{{group.name}}-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapse{{group.name}}">
           <h4 class="panel-title">
-            <a role="button" data-toggle="collapse" data-parent="#accordion" data-target="#collapse{{group.name}}" aria-expanded="{{$first}}" aria-controls="collapse{{group.name}}">
+            <a role="button" data-toggle="collapse" data-parent="#accordion" data-target="#collapse{{group.name}}" aria-expanded="false" aria-controls="collapse{{group.name}}">
               {{group.name}}
             </a>
           </h4>
