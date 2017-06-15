@@ -8,7 +8,7 @@ async function getStorjshareDaemonStats(hostname, port) {
 
   return new Promise((resolve, reject) => {
     sock.on('error', () => {
-      reject(`Error: daemon for device ${hostname} not running`);
+      reject(`Error: daemon not running`);
     });
 
     sock.on('remote', (remote) => {
