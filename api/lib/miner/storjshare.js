@@ -51,6 +51,9 @@ async function getBridgeStats(id) {
 }
 
 function mergeStorjshareStats(stats, storjshareData) {
+  if (stats.shares.length !== storjshareData.length) {
+    stats.shares = storjshareData;
+  }
   const shares = stats.shares;
   const obj = Object.assign({}, stats);
   obj.totalSpaceUsed = 0;
