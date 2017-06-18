@@ -552,12 +552,14 @@ async function getAllBitcoinbalances() {
       } catch (error) {
         console.log(`[${dashboard.name} :: Blockchain-API] => ${error.message}`);
       }
-      stats.dashboardData[dashboard.id] = {
-        name: dashboard.name,
-        type: dashboard.type,
-        enabled: dashboard.enabled,
-        data: balanceData,
-      };
+      if (balanceData !== null) {
+        stats.dashboardData[dashboard.id] = {
+          name: dashboard.name,
+          type: dashboard.type,
+          enabled: dashboard.enabled,
+          data: balanceData,
+        };
+      }
     }
   }
 }
@@ -571,13 +573,15 @@ async function getAllCryptoidBalances() {
       } catch (error) {
         console.log(`[${dashboard.name} :: CryptoID-API] => ${error.message}`);
       }
-      stats.dashboardData[dashboard.id] = {
-        name: dashboard.name,
-        type: dashboard.type,
-        enabled: dashboard.enabled,
-        data: balanceData,
-        ticker: dashboard.ticker.toUpperCase(),
-      };
+      if (balanceData !== null) {
+        stats.dashboardData[dashboard.id] = {
+          name: dashboard.name,
+          type: dashboard.type,
+          enabled: dashboard.enabled,
+          data: balanceData,
+          ticker: dashboard.ticker.toUpperCase(),
+        };
+      }
     }
   }
 }
@@ -591,12 +595,14 @@ async function getAllCounterpartyBalances() {
       } catch (error) {
         console.log(error);
       }
-      stats.dashboardData[dashboard.id] = {
-        name: dashboard.name,
-        type: dashboard.type,
-        enabled: dashboard.enabled,
-        data: balanceData,
-      };
+      if (balanceData !== null) {
+        stats.dashboardData[dashboard.id] = {
+          name: dashboard.name,
+          type: dashboard.type,
+          enabled: dashboard.enabled,
+          data: balanceData,
+        };
+      }
     }
   }
 }
@@ -610,12 +616,14 @@ async function getAllEthStats() {
       } catch (error) {
         console.log(`[${dashboard.name} :: Ethplorer-API] => ${error.message}`);
       }
-      stats.dashboardData[dashboard.id] = {
-        name: dashboard.name,
-        type: dashboard.type,
-        enabled: dashboard.enabled,
-        data: balanceData,
-      };
+      if (balanceData !== null) {
+        stats.dashboardData[dashboard.id] = {
+          name: dashboard.name,
+          type: dashboard.type,
+          enabled: dashboard.enabled,
+          data: balanceData,
+        };
+      }
     }
   }
 }
@@ -629,12 +637,14 @@ async function getAllBurstStats() {
       } catch (error) {
         console.log(`[${dashboard.name} :: BurstTeam-API] => ${error.message}`);
       }
-      stats.dashboardData[dashboard.id] = {
-        name: dashboard.name,
-        type: dashboard.type,
-        enabled: dashboard.enabled,
-        data: balanceData,
-      };
+      if (balanceData !== null) {
+        stats.dashboardData[dashboard.id] = {
+          name: dashboard.name,
+          type: dashboard.type,
+          enabled: dashboard.enabled,
+          data: balanceData,
+        };
+      }
     }
   }
 }
