@@ -248,7 +248,7 @@
                         <td ng-if="dashboard.type==='ethBalance'&&dashboard.enabled">{{dashboard.name}}</td>
                         <td ng-if="dashboard.type==='ethBalance'&&dashboard.enabled" class='ellipsis'>
                             {{dashboard.data.eth.balance ? dashboard.data.eth.balance : 0 | number: 8}} ETH
-                            <span ng-repeat="entry in dashboard.data.tokens"><br/>{{(entry.balance / (Math.pow(10, parseInt(entry.tokenInfo.decimals)))) | number:8}} {{entry.tokenInfo.symbol}}</span>
+                            <span ng-repeat="entry in dashboard.data.tokens"><br/>{{statsVm.getTokenBalance(entry) | number:6}} {{entry.tokenInfo.symbol}}</span>
                         </td>
                     </tr>
                     </tbody>

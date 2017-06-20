@@ -35,6 +35,7 @@
     vm.atLeastOneBalanceDashboard=atLeastOneBalanceDashboard;
     vm.secondsSince = secondsSince;
     vm.isDashboardTypeEnabled = isDashboardTypeEnabled;
+    vm.getTokenBalance = getTokenBalance;
 
 
     /**
@@ -80,6 +81,10 @@
         }
       }
       return false;
+    }
+
+    function getTokenBalance(token) {
+      return (token.balance / (Math.pow(10, parseInt(token.tokenInfo.decimals))));
     }
 
     function isDashboardTypeEnabled(type) {
