@@ -8,6 +8,7 @@ async function getStorjshareDaemonStats(hostname, port) {
 
   return new Promise((resolve, reject) => {
     sock.on('error', () => {
+      sock.end();
       reject(new Error('daemon not running'));
     });
 
