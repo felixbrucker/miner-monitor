@@ -755,7 +755,7 @@ function init() {
   dashboardIntervals.push(setInterval(getAllCryptoidBalances, 3 * 60 * 1000));
   dashboardIntervals.push(setInterval(getAllCounterpartyBalances, 3 * 60 * 1000));
   dashboardIntervals.push(setInterval(getAllEthStats, 3 * 60 * 1000));
-  dashboardIntervals.push(setInterval(getStorjshareBridgeApiStats, 3 * 60 * 1000));
+  dashboardIntervals.push(setInterval(getStorjshareBridgeApiStats, 10 * 60 * 1000));
   dashboardIntervals.push(setInterval(getAllBurstStats, 3 * 60 * 1000));
 
   const nicehashDashboards = [];
