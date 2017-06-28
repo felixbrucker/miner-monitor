@@ -4,7 +4,7 @@ const https = require('https');
 const bytes = require('bytes');
 
 async function getStorjshareDaemonStats(hostname, port) {
-  const sock = dnode.connect(hostname, port);
+  let sock = dnode.connect(hostname, port);
 
   return new Promise((resolve, reject) => {
     sock.on('error', () => {
@@ -24,6 +24,7 @@ async function getStorjshareDaemonStats(hostname, port) {
           share.meta.farmerState.lastActivity = (Date.now() - share.meta.farmerState.lastActivity) / 1000;
         });
         resolve(shares);
+        sock = null;
       });
     });
   });
