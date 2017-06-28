@@ -680,18 +680,18 @@
                                     </span>
                                     /
                                     <span ng-if="share.meta.farmerState.portStatus.connectionStatus===0">
-                                        <span data-toggle="tooltip" title="{{share.meta.farmerState.portStatus.connectionType}}"><i
+                                        <span data-toggle="tooltip" title="{{share.meta.farmerState.portStatus.listenPort}} {{share.meta.farmerState.portStatus.connectionType}}"><i
                                                 class="fa fa-check-circle-o" aria-hidden="true" style="color:green"></i>
                                         </span>
                                     </span>
                                     <span ng-if="share.meta.farmerState.portStatus.connectionStatus===1">
-                                        <span data-toggle="tooltip" title="{{share.meta.farmerState.portStatus.connectionType}}"><i
+                                        <span data-toggle="tooltip" title="{{share.meta.farmerState.portStatus.listenPort}} {{share.meta.farmerState.portStatus.connectionType}}"><i
                                                 class="fa fa-exclamation-triangle" aria-hidden="true"
                                                 style="color:orange"></i>
                                         </span>
                                     </span>
                                     <span ng-if="share.meta.farmerState.portStatus.connectionStatus===2">
-                                        <span data-toggle="tooltip" title="{{share.meta.farmerState.portStatus.connectionType}}"><i
+                                        <span data-toggle="tooltip" title="{{share.meta.farmerState.portStatus.listenPort}} {{share.meta.farmerState.portStatus.connectionType}}"><i
                                                 class="fa fa-stop-circle-o" aria-hidden="true" style="color:red"></i>
                                         </span>
                                     </span>
@@ -710,6 +710,12 @@
                                     <span ng-if="share.meta.farmerState.ntpStatus.status===2">
                                         <span data-toggle="tooltip" title="delta: {{share.meta.farmerState.ntpStatus.delta}}"><i
                                                 class="fa fa-stop-circle-o" aria-hidden="true" style="color:red"></i>
+                                        </span>
+                                    </span>
+                                    <span ng-if="share.meta.farmerState.ntpStatus.status===-1">
+                                        <span data-toggle="tooltip" title="delta: {{share.meta.farmerState.ntpStatus.delta}}"><i
+                                                class="fa fa-exclamation-triangle" aria-hidden="true"
+                                                style="color:orange"></i>
                                         </span>
                                     </span>
                                 </td>
