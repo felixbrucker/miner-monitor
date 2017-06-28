@@ -646,8 +646,7 @@
                                 <th><span data-toggle="tooltip" title="Shared space (% used)" data-placement="bottom">Shared</span>
                                 </th>
                                 <th>Change ({{statsVm.secondsSince(entry.shares[0].lastSpaceUpdate || 0) | secondsToHrMin}})</th>
-                                <th><span data-toggle="tooltip" title="new contracts since launch" data-placement="bottom">C</span></th>
-                                <th><span data-toggle="tooltip" title="time sync delta" data-placement="bottom">D</span></th>
+                                <th><span data-toggle="tooltip" title="New contracts since launch" data-placement="bottom">C</span></th>
                                 <th><span data-toggle="tooltip" title="Response time" data-placement="bottom">RT</span></th>
                                 <th><span data-toggle="tooltip" title="Timeout rate" data-placement="bottom">TR</span></th>
                                 <th>Last Activity</th>
@@ -658,7 +657,7 @@
                             <tbody>
                             <tr ng-repeat="share in entry.shares track by $index">
 
-                                <td class='ellipsis'><i class="fa fa-hdd-o" aria-hidden="true"></i>
+                                <td class='ellipsissmall'><i class="fa fa-hdd-o" aria-hidden="true"></i>
                                     <a href="https://api.storj.io/contacts/{{share.id}}" target="_blank">{{share.config.storagePath}}</a>
                                 </td>
 
@@ -679,7 +678,7 @@
                                                 style="color:red"></i>
                                         </span>
                                     </span>
-
+                                    /
                                     <span ng-if="share.meta.farmerState.portStatus.connectionStatus===0">
                                         <span data-toggle="tooltip" title="{{share.meta.farmerState.portStatus.connectionType}}"><i
                                                 class="fa fa-check-circle-o" aria-hidden="true" style="color:green"></i>
@@ -696,6 +695,23 @@
                                                 class="fa fa-stop-circle-o" aria-hidden="true" style="color:red"></i>
                                         </span>
                                     </span>
+                                    /
+                                    <span ng-if="share.meta.farmerState.ntpStatus.status===0">
+                                        <span data-toggle="tooltip" title="delta: {{share.meta.farmerState.ntpStatus.delta}}"><i
+                                                class="fa fa-check-circle-o" aria-hidden="true" style="color:green"></i>
+                                        </span>
+                                    </span>
+                                    <span ng-if="share.meta.farmerState.ntpStatus.status===1">
+                                        <span data-toggle="tooltip" title="delta: {{share.meta.farmerState.ntpStatus.delta}}"><i
+                                                class="fa fa-exclamation-triangle" aria-hidden="true"
+                                                style="color:orange"></i>
+                                        </span>
+                                    </span>
+                                    <span ng-if="share.meta.farmerState.ntpStatus.status===2">
+                                        <span data-toggle="tooltip" title="delta: {{share.meta.farmerState.ntpStatus.delta}}"><i
+                                                class="fa fa-stop-circle-o" aria-hidden="true" style="color:red"></i>
+                                        </span>
+                                    </span>
                                 </td>
 
                                 <td>{{share.meta.numRestarts || 0}}</td>
@@ -707,18 +723,6 @@
                                 <td class='ellipsis'><span data-toggle="tooltip" title="since {{statsVm.secondsSince(share.lastSpaceUpdate) | secondsToHrMin}} ago" data-placement="bottom">{{share.meta.farmerState.change}}</span></td>
 
                                 <td class='ellipsis'>{{share.meta.farmerState.contractCount}}</td>
-
-                                <td class='ellipsis'>
-                                    <span ng-if="share.meta.farmerState.ntpStatus.status===0">
-                                        {{share.meta.farmerState.ntpStatus.delta}}
-                                    </span>
-                                    <span ng-if="share.meta.farmerState.ntpStatus.status===1">
-                                        <span style="color:orange">{{share.meta.farmerState.ntpStatus.delta}}</span>
-                                    </span>
-                                    <span ng-if="share.meta.farmerState.ntpStatus.status===2">
-                                        <span style="color:red">{{share.meta.farmerState.ntpStatus.delta}}</span>
-                                    </span>
-                                </td>
 
                                 <td class='ellipsis'>{{share.rt}}</td>
 
@@ -736,6 +740,7 @@
                                 <td style="font-weight: bold;">{{entry.avgPeers | number:0}}</td>
                                 <td style="font-weight: bold;">{{entry.totalSpaceUsed}}</td>
                                 <td style="font-weight: bold;">{{entry.totalChange}}</td>
+                                <td style="font-weight: bold;">{{entry.totalNewContracts}}</td>
                                 <td class='ellipsis' style="font-weight: bold;">{{entry.avgRt}}</td>
                                 <td class='ellipsis' style="font-weight: bold;">{{entry.avgTr}}</td>
                                 <td colspan="2"></td>
