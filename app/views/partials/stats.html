@@ -289,7 +289,7 @@
 
         <div ng-repeat="(id,group) in statsVm.current.entries | orderBy:'name' track by $index">
             <div ng-repeat="(id2, entry) in group.devices | toArray | orderBy:'name' track by $index">
-                <div class="col-md-6 table-responsive masonry-brick" style="float: left"
+                <div class="col-md-6 table-responsive masonry-brick"
                      ng-if="entry.type==='miner-agent'&&entry.devices">
                     <div class="row">
                         <div class="col-md-12">
@@ -465,7 +465,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 table-responsive masonry-brick" style="float: left;"
+                <div class="col-md-4 table-responsive masonry-brick"
                      ng-if="entry.type !=='storjshare-daemon' && entry.type !=='storjshare-daemon-proxy' && (entry.type!=='miner-agent'||entry.devices===undefined)">
                     <div class="row">
                         <div class="col-md-12">
@@ -638,7 +638,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 table-responsive masonry-brick" style="float: left;"
+                <div class="col-md-6 table-responsive masonry-brick"
                      ng-if="entry.type==='storjshare-daemon' || entry.type==='storjshare-daemon-proxy'">
                     <div class="row">
                         <div class="col-md-12">
