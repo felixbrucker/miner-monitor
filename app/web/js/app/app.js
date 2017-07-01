@@ -11,7 +11,7 @@
 (function () {
   'use strict';
 
-  var app = angular.module('app', ['ui.router', 'angular-loading-bar', 'angular.filter'])
+  var app = angular.module('app', ['ui.router', 'angular-loading-bar', 'angular.filter', 'wu.masonry'])
     .config(['$stateProvider', '$urlRouterProvider', '$locationProvider', config])
     .config(['cfpLoadingBarProvider', function (cfpLoadingBarProvider) {
       cfpLoadingBarProvider.includeSpinner = false;

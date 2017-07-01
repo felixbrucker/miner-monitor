@@ -88,11 +88,14 @@
     }
 
     function isDashboardTypeEnabled(type) {
-      for (let dashboard of vm.current.dashboardData) {
-        if (dashboard.enabled && dashboard.type === type) {
-          return true;
+      if (vm.current.dashboardData) {
+        for (let dashboard of vm.current.dashboardData) {
+          if (dashboard.enabled && dashboard.type === type) {
+            return true;
+          }
         }
       }
+
       return false;
     }
 
