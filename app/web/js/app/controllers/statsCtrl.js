@@ -15,7 +15,7 @@
     .module('app')
     .controller('statsCtrl', statsController);
 
-  function statsController($scope, $interval, $http, $rootScope) {
+  function statsController($scope, $interval, $http) {
 
     var vm = this;
     vm.statsInterval = null;
@@ -61,15 +61,6 @@
           vm.statsInterval = $interval(vm.getStats, 5000);
 
         vm.getStats();
-        $rootScope.$watch(function () {
-            return element.height();
-          },
-          function (newValue, oldValue) {
-            if (newValue != oldValue) {
-              ctrl.scheduleMasonryOnce('reloadItems');
-              ctrl.scheduleMasonryOnce('layout');
-            }
-          });
       });
     }
 
