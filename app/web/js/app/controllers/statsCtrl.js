@@ -116,7 +116,7 @@
         }).then(function successCallback(response) {
           vm.current.entries = response.data.entries;
           vm.current.dashboardData=response.data.dashboardData;
-          $rootScope.$broadcast('masonry.reload');
+          setTimeout(function() {$rootScope.$broadcast('masonry.reload');}, 1000);
         }, function errorCallback(response) {
           console.log(response);
         });
