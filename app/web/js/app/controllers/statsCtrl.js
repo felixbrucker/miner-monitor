@@ -61,6 +61,15 @@
           vm.statsInterval = $interval(vm.getStats, 5000);
 
         vm.getStats();
+        $rootScope.$watch(function () {
+            return element.height();
+          },
+          function (newValue, oldValue) {
+            if (newValue != oldValue) {
+              ctrl.scheduleMasonryOnce('reloadItems');
+              ctrl.scheduleMasonryOnce('layout');
+            }
+          });
       });
     }
 
