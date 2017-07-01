@@ -15,7 +15,7 @@
     .module('app')
     .controller('statsCtrl', statsController);
 
-  function statsController($scope, $interval, $http) {
+  function statsController($scope, $interval, $http, $rootScope) {
 
     var vm = this;
     vm.statsInterval = null;
@@ -116,6 +116,7 @@
         }).then(function successCallback(response) {
           vm.current.entries = response.data.entries;
           vm.current.dashboardData=response.data.dashboardData;
+          $rootScope.$broadcast('masonry.reload');
         }, function errorCallback(response) {
           console.log(response);
         });
