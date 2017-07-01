@@ -295,7 +295,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="miner{{id2}}" class="row">
+                    <div class="row">
                         <div class="col-md-7 table-responsive" style="display:inline-block;">
                             <table class="table table-bordered table-condensed">
                                 <thead>
@@ -471,7 +471,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="miner{{id2}}" class="row">
+                    <div class="row">
                         <div class="col-md-12 table-responsive">
                             <table class="table table-bordered table-condensed">
                                 <thead>
@@ -644,12 +644,12 @@
                             </div>
                         </div>
                     </div>
-                    <div id="miner{{id2}}" class="row">
+                    <div class="row">
                         <div class="col-md-12 table-responsive">
                             <table class="table table-bordered table-condensed">
                                 <thead>
                                 <tr>
-                                    <th>Location</th>
+                                    <th><span data-toggle="collapse" data-target="#storj-shares-{{id2}}" aria-expanded="true">Location</span></th>
                                     <th><span data-toggle="tooltip" title="App / Port / Delta" data-placement="bottom">Status</span>
                                     </th>
                                     <th><span data-toggle="tooltip" title="Restarts" data-placement="bottom">R</span></th>
@@ -669,7 +669,7 @@
                                               data-placement="bottom">Uptime</span></th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="storj-shares-{{id2}}" class="collapse in">
                                 <tr ng-repeat="share in entry.shares track by $index">
 
                                     <td class='ellipsis'><i class="fa fa-hdd-o" aria-hidden="true"></i>
