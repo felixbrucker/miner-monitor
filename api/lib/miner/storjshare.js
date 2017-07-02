@@ -25,6 +25,7 @@ async function getStorjshareDaemonStats(hostname, port) {
           share.meta.farmerState.lastActivity = (Date.now() - share.meta.farmerState.lastActivity) / 1000;
         });
         resolve(shares);
+        sock.removeAllListeners();
         sock = null;
       });
     });
