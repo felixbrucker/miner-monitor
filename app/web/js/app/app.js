@@ -37,6 +37,33 @@
       };
     }
   ]);
+  app.directive('masonryBrick', function masonryBrickDirective() {
+    return {
+      restrict: 'AC',
+      require: '^masonry',
+      scope: true,
+      link: {
+        pre: function preLink(scope, element, attrs, ctrl) {
+          var id = scope.$id, index;
+
+          ctrl.appendBrick(element, id);
+          element.on('$destroy', function () {
+            ctrl.removeBrick(id, element);
+          });
+
+          scope.$watch(function () {
+              return element.height();
+            },
+            function (newValue, oldValue) {
+              if (newValue != oldValue) {
+                ctrl.scheduleMasonryOnce('layout');
+              }
+            }
+          );
+        }
+      }
+    }
+  });
   app.directive('highlighter', ['$timeout', function ($timeout) {
     return {
       restrict: 'A',
