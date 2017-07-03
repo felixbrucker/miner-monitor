@@ -17,7 +17,7 @@ module.exports = async (address, apiKey, userId) => {
       symbol: dashboardData.pool.info.currency
     };
     const workerData = await axios.get(`https://${coin.coin_name}.miningpoolhub.com/index.php?page=api&action=getuserworkers&api_key=${apiKey}&id=${userId}`);
-    if (typeof workerData.data.getuserworkers.data === 'Array') {
+    if (Array.isArray(workerData.data.getuserworkers.data)) {
       coinStats.workers = workerData.data.getuserworkers.data
         .filter((worker) => {
           if (worker.hashrate !== 0) {
