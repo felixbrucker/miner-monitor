@@ -9,8 +9,8 @@ async function getStorjshareDaemonStats(hostname, port) {
   return new Promise((resolve, reject) => {
     sock.on('error', () => {
       sock.end();
-      reject(new Error('daemon not running'));
       sock = null;
+      reject(new Error('daemon not running'));
     });
 
     sock.on('remote', (remote) => {
@@ -24,8 +24,8 @@ async function getStorjshareDaemonStats(hostname, port) {
         shares.forEach((share) => {
           share.meta.farmerState.lastActivity = (Date.now() - share.meta.farmerState.lastActivity) / 1000;
         });
-        resolve(shares);
         sock = null;
+        resolve(shares);
       });
     });
   });
