@@ -1,16 +1,15 @@
 const https = require('https');
-const http = require('http');
+const axios = require('axios');
 const dnode = require('dnode');
+const url = require('url');
 const colors = require('colors/safe');
 
 
-var configModule = require(__basedir + 'api/modules/configModule');
-var statsController = require(__basedir + 'api/controllers/statsController');
-var mailController = require(__basedir + 'api/controllers/mailController');
+const configModule = require(__basedir + 'api/modules/configModule');
+const statsController = require(__basedir + 'api/controllers/statsController');
+const mailController = require(__basedir + 'api/controllers/mailController');
 
-Array.prototype.contains = function (element) {
-  return this.indexOf(element) > -1;
-};
+Array.prototype.contains = (element) => this.indexOf(element) > -1;
 
 function getLayout(req, res, next){
   res.setHeader('Content-Type', 'application/json');
@@ -21,7 +20,7 @@ function getConfig(req, res, next) {
   res.setHeader('Content-Type', 'application/json');
   res.send(JSON.stringify(configModule.getConfig()));
 }
-function setConfig(req, res, next) {
+function setConfig(req, res) {
   configModule.setConfig(req.body); 
   configModule.saveConfig();
   statsController.cleanup();
@@ -52,374 +51,149 @@ function update(req, res, next) {
   res.send(JSON.stringify({result: true}));
 }
 
-function updateMiner(req, res, next) {
-  var id=req.body.id;
-  for(var j=0;j<configModule.config.devices.length;j++) {
-    var device = configModule.config.devices[j];
-    if (device.id===id){
-      if(device.type!=='baikal-miner'){
-        var arr = device.hostname.split("://");
-        var protocol=arr[0];
-        arr = arr[1].split(":");
-        var path="/api/config/updateMiner";
-        switch(protocol) {
-          case "http":
-            var req = http.request({
-              host: arr[0],
-              path: path,
-              method: 'POST',
-              port: arr[1],
-              headers: {
-                'Content-Type': 'application/json;charset=UTF-8'
-              }
-            }, function (response) {
-              response.setEncoding('utf8');
-              var body = '';
-              response.on('data', function (d) {
-                body += d;
-              });
-              response.on('end', function () {
-                var parsed = null;
-                try {
-                  parsed = JSON.parse(body);
-                } catch (error) {
-                  console.log(colors.red("[" + device.name + "] Error: Unable to update miner"));
-                }
-                if (parsed != null&&parsed.result) {
-                  res.setHeader('Content-Type', 'application/json');
-                  res.send(JSON.stringify({result: true}));
-                }else{
-                  res.setHeader('Content-Type', 'application/json');
-                  res.send(JSON.stringify({result: false}));
-                }
-              });
-            }).on("error", function (error) {
-              console.log(colors.red("[" + device.name + "] Error: Unable to update miner"));
-              console.log(error);
-              res.setHeader('Content-Type', 'application/json');
-              res.send(JSON.stringify({result: false}));
-            });
-            req.end();
-            break;
-          case "https":
-            var req = https.request({
-              host: arr[0],
-              path: path,
-              method: 'POST',
-              port: arr[1],
-              rejectUnauthorized: false,
-              headers: {
-                'Content-Type': 'application/json;charset=UTF-8'
-              }
-            }, function (response) {
-              response.setEncoding('utf8');
-              var body = '';
-              response.on('data', function (d) {
-                body += d;
-              });
-              response.on('end', function () {
-                var parsed = null;
-                try {
-                  parsed = JSON.parse(body);
-                } catch (error) {
-                  console.log(colors.red("[" + device.name + "] Error: Unable to update miner"));
-                }
-                if (parsed != null&&parsed.result) {
-                  res.setHeader('Content-Type', 'application/json');
-                  res.send(JSON.stringify({result: true}));
-                }else{
-                  res.setHeader('Content-Type', 'application/json');
-                  res.send(JSON.stringify({result: false}));
-                }
-              });
-            }).on("error", function (error) {
-              console.log(colors.red("[" + device.name + "] Error: Unable to update miner"));
-              console.log(error);
-              res.setHeader('Content-Type', 'application/json');
-              res.send(JSON.stringify({result: false}));
-            });
-            req.end();
-            break;
-        }
-      }else{
-        res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify({result: false}));
-      }
-      break;
+async function updateMiner(req, res, next) {
+  const id = req.body.id;
+  const devices = configModule.config.devices.filter((device) => (device.id === id && device.type !== 'baikal-miner'));
+  if (devices.length === 1) {
+    const device = devices[0];
+    const agent = new https.Agent({
+      rejectUnauthorized: false
+    });
+    let response = null;
+    try {
+      response = await axios.post(url.resolve(device.hostname, '/api/config/updateMiner'), null, {httpsAgent: agent});
+    } catch (error) {
+      console.log(colors.red("[" + device.name + "] Error: Unable to update miner"));
+      console.log(error);
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify({result: false}));
     }
+    if (response !== null) {
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify({result: true}));
+    }
+  }else{
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({result: false}));
   }
 }
 
-function updateAgent(req, res, next) {
-  var id=req.body.id;
-  for(var j=0;j<configModule.config.devices.length;j++) {
-    var device = configModule.config.devices[j];
-    if (device.id===id){
-      if(device.type!=='baikal-miner'){
-        var arr = device.hostname.split("://");
-        var protocol=arr[0];
-        arr = arr[1].split(":");
-        var path="/api/config/update";
-        switch(protocol) {
-          case "http":
-            var req = http.request({
-              host: arr[0],
-              path: path,
-              method: 'POST',
-              port: arr[1],
-              headers: {
-                'Content-Type': 'application/json;charset=UTF-8'
-              }
-            }, function (response) {
-              response.setEncoding('utf8');
-              var body = '';
-              response.on('data', function (d) {
-                body += d;
-              });
-              response.on('end', function () {
-                var parsed = null;
-                try {
-                  parsed = JSON.parse(body);
-                } catch (error) {
-                  console.log(colors.red("[" + device.name + "] Error: Unable to update agent"));
-                }
-                if (parsed != null&&parsed.result) {
-                  res.setHeader('Content-Type', 'application/json');
-                  res.send(JSON.stringify({result: true}));
-                }else{
-                  res.setHeader('Content-Type', 'application/json');
-                  res.send(JSON.stringify({result: false}));
-                }
-              });
-            }).on("error", function (error) {
-              console.log(colors.red("[" + device.name + "] Error: Unable to update agent"));
-              console.log(error);
-              res.setHeader('Content-Type', 'application/json');
-              res.send(JSON.stringify({result: false}));
-            });
-            req.end();
-            break;
-          case "https":
-            var req = https.request({
-              host: arr[0],
-              path: path,
-              method: 'POST',
-              port: arr[1],
-              rejectUnauthorized: false,
-              headers: {
-                'Content-Type': 'application/json;charset=UTF-8'
-              }
-            }, function (response) {
-              response.setEncoding('utf8');
-              var body = '';
-              response.on('data', function (d) {
-                body += d;
-              });
-              response.on('end', function () {
-                var parsed = null;
-                try {
-                  parsed = JSON.parse(body);
-                } catch (error) {
-                  console.log(colors.red("[" + device.name + "] Error: Unable to update agent"));
-                }
-                if (parsed != null&&parsed.result) {
-                  res.setHeader('Content-Type', 'application/json');
-                  res.send(JSON.stringify({result: true}));
-                }else{
-                  res.setHeader('Content-Type', 'application/json');
-                  res.send(JSON.stringify({result: false}));
-                }
-              });
-            }).on("error", function (error) {
-              console.log(colors.red("[" + device.name + "] Error: Unable to update agent"));
-              console.log(error);
-              res.setHeader('Content-Type', 'application/json');
-              res.send(JSON.stringify({result: false}));
-            });
-            req.end();
-            break;
-        }
-      }else{
-        res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify({result: false}));
-      }
-      break;
+async function updateAgent(req, res) {
+  const id = req.body.id;
+  const devices = configModule.config.devices.filter((device) => (device.id === id && device.type !== 'baikal-miner'));
+  if (devices.length === 1) {
+    const device = devices[0];
+    const agent = new https.Agent({
+      rejectUnauthorized: false
+    });
+    let response = null;
+    try {
+      response = await axios.post(url.resolve(device.hostname, '/api/config/update'), null, {httpsAgent: agent});
+    } catch (error) {
+      console.log(colors.red("[" + device.name + "] Error: Unable to update agent"));
+      console.log(error);
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify({result: false}));
     }
+    if (response !== null) {
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify({result: true}));
+    }
+  }else{
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({result: false}));
   }
 }
 
-function rebootSystem(req, res, next) {
-  var id=req.body.id;
-  for(var j=0;j<configModule.config.devices.length;j++) {
-    var device = configModule.config.devices[j];
-    if (device.id===id){
-      if(device.type!=='baikal-miner'){
-        var arr = device.hostname.split("://");
-        var protocol=arr[0];
-        arr = arr[1].split(":");
-        var path="/api/config/reboot";
-        switch(protocol) {
-          case "http":
-            var req = http.request({
-              host: arr[0],
-              path: path,
-              method: 'POST',
-              port: arr[1],
-              headers: {
-                'Content-Type': 'application/json;charset=UTF-8'
-              }
-            }, function (response) {
-              response.setEncoding('utf8');
-              var body = '';
-              response.on('data', function (d) {
-                body += d;
-              });
-              response.on('end', function () {
-                res.setHeader('Content-Type', 'application/json');
-                res.send(JSON.stringify({result: false}));
-              });
-            }).on("error", function (error) {
-              console.log(colors.red("[" + device.name + "] Error: Unable to reboot system"));
-              console.log(error);
-              res.setHeader('Content-Type', 'application/json');
-              res.send(JSON.stringify({result: false}));
-            });
-            req.end();
-            break;
-          case "https":
-            var req = https.request({
-              host: arr[0],
-              path: path,
-              method: 'POST',
-              port: arr[1],
-              rejectUnauthorized: false,
-              headers: {
-                'Content-Type': 'application/json;charset=UTF-8'
-              }
-            }, function (response) {
-              response.setEncoding('utf8');
-              var body = '';
-              response.on('data', function (d) {
-                body += d;
-              });
-              response.on('end', function () {
-                res.setHeader('Content-Type', 'application/json');
-                res.send(JSON.stringify({result: true}));
-              });
-            }).on("error", function (error) {
-              console.log(colors.red("[" + device.name + "] Error: Unable to reboot system"));
-              console.log(error);
-              res.setHeader('Content-Type', 'application/json');
-              res.send(JSON.stringify({result: false}));
-            });
-            req.end();
-            break;
-        }
-      }else{
-        res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify({result: false}));
-      }
-      break;
+async function rebootSystem(req, res) {
+  const id = req.body.id;
+  const devices = configModule.config.devices.filter((device) => (device.id === id && device.type !== 'baikal-miner'));
+  if (devices.length === 1) {
+    const device = devices[0];
+    const agent = new https.Agent({
+      rejectUnauthorized: false
+    });
+    let response = null;
+    try {
+      response = await axios.post(url.resolve(device.hostname, '/api/config/reboot'), null, {httpsAgent: agent});
+    } catch (error) {
+      console.log(colors.red("[" + device.name + "] Error: Unable to reboot system"));
+      console.log(error);
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify({result: false}));
     }
+    if (response !== null) {
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify({result: true}));
+    }
+  }else{
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({result: false}));
   }
 }
 
 function verifyTransport(req,res,next){
-  mailController.verifyTransport(function(result){
+  mailController.verifyTransport((result) => {
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify({result: result}));
   });
 }
 
-function restartStorjshareShares(req, res, next) {
-  var id=req.body.id;
-  for(var j=0;j<configModule.config.devices.length;j++) {
-    var device = configModule.config.devices[j];
-    if (device.id===id){
+async function restartStorjshareShares(req, res) {
+  const id = req.body.id;
+  const devices = configModule.config.devices.filter((device) => device.id === id);
+  if (devices.length === 1) {
+    const device = devices[0];
+    let arr = device.hostname.split("://");
+    arr = arr[arr.length === 1 ? 0 : 1];
+    arr = arr.split("@");
+    arr = arr[arr.length > 1 ? 1 : 0];
+    arr = arr.split(":");
+    const hostname = arr[0];
+    const port = arr[1] ? arr[1] : 443;
+    switch (device.type) {
+      case 'storjshare-daemon':
+        let sock = dnode.connect(hostname, port);
 
-      let arr = device.hostname.split("://");
-      arr = arr[arr.length === 1 ? 0 : 1];
-      arr = arr.split("@");
-      let user = null;
-      let pass = null;
-      if (arr.length > 1) {
-        const auth = arr[0].split(":");
-        user = auth[0];
-        pass = auth[1];
-        arr = arr[1];
-      } else {
-        arr = arr[0];
-      }
-      arr = arr.split(":");
-      const hostname = arr[0];
-      const port = arr[1] ? arr[1] : 443;
+        sock.on('error', () => {
+          sock = null;
+          console.log(colors.red(`Error: daemon for device ${device.name} not running`));
+        });
 
-      switch(device.type) {
-        case 'storjshare-daemon':
-          const sock = dnode.connect(hostname, port);
-
-          sock.on('error', () => {
-            console.log(colors.red(`Error: daemon for device ${device.name} not running`));
-          });
-
-          sock.on('remote', (remote) => {
-            remote.restart('*', (err) => {
-              if (err) {
-                console.error(`cannot restart node, reason: ${err.message}`);
-              }
-              sock.end();
-              res.setHeader('Content-Type', 'application/json');
-              res.send(JSON.stringify({result: true}));
-            });
-          });
-          break;
-        case 'storjshare-daemon-proxy':
-          const req = https.request({
-            host: hostname,
-            path: '/restart',
-            method: 'POST',
-            port,
-            auth: user ? `${user}:${pass}` : undefined,
-            rejectUnauthorized: false,
-            headers: {
-              'Content-Type': 'application/json;charset=UTF-8'
+        sock.on('remote', (remote) => {
+          remote.restart('*', (err) => {
+            sock.end();
+            sock = null;
+            if (err) {
+              console.error(`cannot restart node, reason: ${err.message}`);
             }
-          }, (response) => {
-            response.setEncoding('utf8');
-            let body = '';
-            response.on('data', (d) => {
-              body += d;
-            });
-            response.on('end', () => {
-              let parsed = null;
-              try {
-                parsed = JSON.parse(body);
-              } catch (error) {
-                res.setHeader('Content-Type', 'application/json');
-                res.send(JSON.stringify({result: false}));
-              }
-              if (parsed != null) {
-                res.setHeader('Content-Type', 'application/json');
-                res.send(JSON.stringify({result: true}));
-              }
-            });
-          })
-          .on("error", (error) => {
-            console.log(colors.red(`Error: daemon-proxy for device ${device.name} not running`));
             res.setHeader('Content-Type', 'application/json');
-            res.send(JSON.stringify({result: false}));
+            res.send(JSON.stringify({result: true}));
           });
-          req.on('socket', (socket) => {
-            socket.setTimeout(20000);
-            socket.on('timeout', () => {
-              req.abort();
-            });
-          });
-          req.write(JSON.stringify({param: '*'}));
-          req.end();
-          break;
-      }
+        });
+        break;
+      case 'storjshare-daemon-proxy':
+        const agent = new https.Agent({
+          rejectUnauthorized: false
+        });
+        let response = null;
+        try {
+          response = await axios.post(url.resolve(device.hostname, '/restart'), {param: '*'}, {httpsAgent: agent});
+        } catch (error) {
+          console.log(colors.red(`Error: daemon-proxy for device ${device.name} not running`));
+          console.log(error);
+          res.setHeader('Content-Type', 'application/json');
+          res.send(JSON.stringify({result: false}));
+        }
+        if (response !== null) {
+          res.setHeader('Content-Type', 'application/json');
+          res.send(JSON.stringify({result: true}));
+        }
+        break;
     }
+  }else{
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({result: false}));
   }
 }
 
