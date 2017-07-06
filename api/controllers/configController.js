@@ -178,7 +178,7 @@ async function restartStorjshareShares(req, res) {
         });
         let response = null;
         try {
-          response = await axios.post(url.resolve(device.hostname, '/restart'), {param: '*'}, {httpsAgent: agent, timeout: 3 * 60 * 1000});
+          response = await axios.post(url.resolve(device.hostname, '/restart'), {param: '*'}, {httpsAgent: agent, timeout: 10 * 60 * 1000});
         } catch (error) {
           console.log(colors.red(`Error: daemon-proxy for device ${device.name} not running`));
           console.log(error.message);
