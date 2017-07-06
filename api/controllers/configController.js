@@ -64,7 +64,7 @@ async function updateMiner(req, res, next) {
       response = await axios.post(url.resolve(device.hostname, '/api/config/updateMiner'), null, {httpsAgent: agent});
     } catch (error) {
       console.log(colors.red("[" + device.name + "] Error: Unable to update miner"));
-      console.log(error);
+      console.log(error.message);
       res.setHeader('Content-Type', 'application/json');
       res.send(JSON.stringify({result: false}));
     }
@@ -91,7 +91,7 @@ async function updateAgent(req, res) {
       response = await axios.post(url.resolve(device.hostname, '/api/config/update'), null, {httpsAgent: agent});
     } catch (error) {
       console.log(colors.red("[" + device.name + "] Error: Unable to update agent"));
-      console.log(error);
+      console.log(error.message);
       res.setHeader('Content-Type', 'application/json');
       res.send(JSON.stringify({result: false}));
     }
@@ -118,7 +118,7 @@ async function rebootSystem(req, res) {
       response = await axios.post(url.resolve(device.hostname, '/api/config/reboot'), null, {httpsAgent: agent});
     } catch (error) {
       console.log(colors.red("[" + device.name + "] Error: Unable to reboot system"));
-      console.log(error);
+      console.log(error.message);
       res.setHeader('Content-Type', 'application/json');
       res.send(JSON.stringify({result: false}));
     }
@@ -181,7 +181,7 @@ async function restartStorjshareShares(req, res) {
           response = await axios.post(url.resolve(device.hostname, '/restart'), {param: '*'}, {httpsAgent: agent});
         } catch (error) {
           console.log(colors.red(`Error: daemon-proxy for device ${device.name} not running`));
-          console.log(error);
+          console.log(error.message);
           res.setHeader('Content-Type', 'application/json');
           res.send(JSON.stringify({result: false}));
         }
