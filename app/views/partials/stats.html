@@ -259,7 +259,7 @@
                     <td ng-if="dashboard.type==='ethBalance'&&dashboard.enabled">{{dashboard.name}}</td>
                     <td ng-if="dashboard.type==='ethBalance'&&dashboard.enabled" class='ellipsis'>
                         <span ng-if="dashboard.data.eth.balance !== 0 || !entry in dashboard.data.tokens">{{dashboard.data.eth.balance ? dashboard.data.eth.balance : 0 | number: 8}} ETH</span>
-                        <span ng-repeat="entry in dashboard.data.tokens"><br/>{{statsVm.getTokenBalance(entry) | number:6}} {{entry.tokenInfo.symbol}}</span>
+                        <span ng-repeat="entry in dashboard.data.tokens"><span ng-if="dashboard.data.eth.balance !== 0"><br/></span>{{statsVm.getTokenBalance(entry) | number:6}} {{entry.tokenInfo.symbol}}</span>
                     </td>
                 </tr>
                 </tbody>
