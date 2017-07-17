@@ -558,6 +558,7 @@ async function getAllBitcoinbalances() {
           type: dashboard.type,
           enabled: dashboard.enabled,
           data: balanceData,
+          addr: dashboard.address,
         };
       }
     }
@@ -580,6 +581,7 @@ async function getAllCryptoidBalances() {
           enabled: dashboard.enabled,
           data: balanceData,
           ticker: dashboard.ticker.toUpperCase(),
+          addr: dashboard.address,
         };
       }
     }
@@ -601,6 +603,7 @@ async function getAllCounterpartyBalances() {
           type: dashboard.type,
           enabled: dashboard.enabled,
           data: balanceData,
+          addr: dashboard.address,
         };
       }
     }
@@ -622,6 +625,7 @@ async function getAllEthStats() {
           type: dashboard.type,
           enabled: dashboard.enabled,
           data: balanceData,
+          addr: dashboard.address,
         };
       }
     }
@@ -643,6 +647,7 @@ async function getAllBurstStats() {
           type: dashboard.type,
           enabled: dashboard.enabled,
           data: balanceData,
+          addr: dashboard.address,
         };
       }
     }
