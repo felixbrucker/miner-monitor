@@ -24,7 +24,7 @@ const ethplorer = require('../lib/balances/ethplorer.io');
 const counterpartychain = require('../lib/balances/counterpartychain.io');
 const cryptoid = require('../lib/balances/chainz.cryptoid.info');
 const blockchain = require('../lib/balances/blockchain.info');
-const burstcoinBiz = require('../lib/balances/burstcoin.biz');
+const burstcoin = require('../lib/balances/burstcoin');
 
 
 const timeEvents = Rx.Observable.interval(500);
@@ -637,7 +637,7 @@ async function getAllBurstStats() {
     if (dashboard.type === 'burstBalance' && dashboard.enabled) {
       let balanceData = null;
       try {
-        balanceData = await burstcoinBiz(dashboard.address);
+        balanceData = await burstcoin(dashboard.address);
       } catch (error) {
         console.log(`[${dashboard.name} :: BurstTeam-API] => ${error.message}`);
       }
