@@ -35,6 +35,7 @@ var config = module.exports = {
       "counterpartyBalance",
       'ethBalance',
       'burstBalance',
+      'nicehashBalance',
     ]
   },
   getConfig: function () {

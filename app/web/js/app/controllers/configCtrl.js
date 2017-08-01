@@ -111,10 +111,10 @@
           types.push('genericMPOS');
           break;
         case 'apiKey':
-          types.push('genericMPOS', 'miningpoolhub', 'cryptoidBalance');
+          types.push('genericMPOS', 'miningpoolhub', 'cryptoidBalance', 'nicehashBalance');
           break;
         case 'userId':
-          types.push('genericMPOS', 'miningpoolhub');
+          types.push('genericMPOS', 'miningpoolhub', 'nicehashBalance');
           break;
         case 'hashrateModifier':
           types.push('genericMPOS');

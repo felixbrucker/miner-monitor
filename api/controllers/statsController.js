@@ -482,7 +482,7 @@ async function getAllNicehashStats() {
     .subscribe(async (dashboard) => {
       let poolData = null;
       try {
-        poolData = await nicehash(dashboard.address, exchangeRates);
+        poolData = await nicehash.poolStats(dashboard.address, exchangeRates);
       } catch (error) {
         console.log(`[${dashboard.name} :: Nicehash-API] => ${error.message}`);
       }
@@ -639,7 +639,7 @@ async function getAllBurstStats() {
       try {
         balanceData = await burstcoin(dashboard.address);
       } catch (error) {
-        console.log(`[${dashboard.name} :: BurstTeam-API] => ${error.message}`);
+        console.log(`[${dashboard.name} :: BurstBtfgSpace-API] => ${error.message}`);
       }
       if (balanceData !== null) {
         stats.dashboardData[dashboard.id] = {
@@ -653,6 +653,30 @@ async function getAllBurstStats() {
     }
   }
 }
+
+async function getAllNicehashBalanceStats() {
+  for (let dashboard of configModule.config.dashboardData) {
+    if (dashboard.type === 'nicehashBalance' && dashboard.enabled) {
+      let balanceData = null;
+      try {
+        balanceData = await nicehash.balance(dashboard.user_id, dashboard.api_key);
+      } catch (error) {
+        console.log(`[${dashboard.name} :: Nicehash-API] => ${error.message}`);
+      }
+      if (balanceData !== null) {
+        stats.dashboardData[dashboard.id] = {
+          name: dashboard.name,
+          type: dashboard.type,
+          enabled: dashboard.enabled,
+          data: balanceData,
+        };
+      }
+    }
+  }
+}
+
+
+
 
 // ####################
 // #####   Init   #####
@@ -752,6 +776,7 @@ function init() {
   getAllCounterpartyBalances();
   getAllEthStats();
   getAllBurstStats();
+  getAllNicehashBalanceStats();
   setTimeout(getStorjshareBridgeApiStats, 20 * 1000); // delayed init
   dashboardIntervals.push(setInterval(getAllMPHStats, 1 * 60 * 1000));
   dashboardIntervals.push(setInterval(getAllBitcoinbalances, 3 * 60 * 1000));
@@ -762,6 +787,7 @@ function init() {
   dashboardIntervals.push(setInterval(getAllEthStats, 3 * 60 * 1000));
   dashboardIntervals.push(setInterval(getStorjshareBridgeApiStats, 10 * 60 * 1000));
   dashboardIntervals.push(setInterval(getAllBurstStats, 3 * 60 * 1000));
+  dashboardIntervals.push(setInterval(getAllNicehashBalanceStats, 3 * 60 * 1000));
 
   const nicehashDashboards = [];
   for (let dashboard of configModule.config.dashboardData) {
