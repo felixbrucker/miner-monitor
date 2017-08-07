@@ -63,7 +63,7 @@ function mergeStorjshareStats(stats, storjshareData) {
   obj.totalChange = 0;
   obj.totalPeers = 0;
   obj.totalRestarts = 0;
-  obj.totalNewContracts = 0;
+  obj.totalShardsReceived = 0;
   shares.forEach((share, index) => {
     storjshareData[index].meta.farmerState = Object.assign(share.meta.farmerState, storjshareData[index].meta.farmerState);
     share = Object.assign(share, storjshareData[index]);
@@ -91,7 +91,7 @@ function mergeStorjshareStats(stats, storjshareData) {
     obj.totalSpaceUsed += share.meta.farmerState.spaceUsedBytes;
     obj.totalPeers += share.meta.farmerState.totalPeers;
     obj.totalRestarts += share.meta.numRestarts;
-    obj.totalNewContracts += share.meta.farmerState.contractCount;
+    obj.totalShardsReceived += share.meta.farmerState.dataReceivedCount;
   });
   obj.avgPeers = obj.totalPeers / shares.length;
   if (obj.totalChange < 0) {
