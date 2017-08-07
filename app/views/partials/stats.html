@@ -675,7 +675,7 @@
                                 <thead>
                                 <tr>
                                     <th><span data-toggle="collapse" data-target="#storj-shares-{{id2}}" aria-expanded="true">Location</span></th>
-                                    <th><span data-toggle="tooltip" title="App / Port / Delta" data-placement="bottom">Status</span>
+                                    <th><span data-toggle="tooltip" title="Share / Port / Connectivity" data-placement="bottom">Status</span>
                                     </th>
                                     <th><span data-toggle="tooltip" title="Restarts" data-placement="bottom">R</span></th>
                                     <th><span data-toggle="tooltip" title="Peers" data-placement="bottom">P</span></th>
@@ -683,8 +683,8 @@
                                     </th>
                                     <th><span data-toggle="tooltip" title="Change (since)" data-placement="bottom">CH ({{statsVm.secondsSince(entry.shares[0].lastSpaceUpdate || 0) | secondsToHrMin}})</span>
                                     </th>
-                                    <th><span data-toggle="tooltip" title="New contracts since launch"
-                                              data-placement="bottom">NC</span></th>
+                                    <th><span data-toggle="tooltip" title="Shards received since launch"
+                                              data-placement="bottom">SR</span></th>
                                     <th><span data-toggle="tooltip" title="Response time" data-placement="bottom">RT</span>
                                     </th>
                                     <th><span data-toggle="tooltip" title="Timeout rate" data-placement="bottom">TR</span>
@@ -739,28 +739,15 @@
                                         </span>
                                     </span>
                                         /
-                                        <span ng-if="share.meta.farmerState.ntpStatus.status===0">
+                                        <span ng-if="share.meta.farmerState.contractCount>0">
                                         <span data-toggle="tooltip"
-                                              title="delta: {{share.meta.farmerState.ntpStatus.delta}}"><i
+                                              title="sent offers: {{share.meta.farmerState.contractCount}}"><i
                                                 class="fa fa-check-circle-o" aria-hidden="true" style="color:green"></i>
                                         </span>
                                     </span>
-                                        <span ng-if="share.meta.farmerState.ntpStatus.status===1">
+                                        <span ng-if="share.meta.farmerState.contractCount===0">
                                         <span data-toggle="tooltip"
-                                              title="delta: {{share.meta.farmerState.ntpStatus.delta}}"><i
-                                                class="fa fa-exclamation-triangle" aria-hidden="true"
-                                                style="color:orange"></i>
-                                        </span>
-                                    </span>
-                                        <span ng-if="share.meta.farmerState.ntpStatus.status===2">
-                                        <span data-toggle="tooltip"
-                                              title="delta: {{share.meta.farmerState.ntpStatus.delta}}"><i
-                                                class="fa fa-stop-circle-o" aria-hidden="true" style="color:red"></i>
-                                        </span>
-                                    </span>
-                                        <span ng-if="share.meta.farmerState.ntpStatus.status===-1">
-                                        <span data-toggle="tooltip"
-                                              title="delta: {{share.meta.farmerState.ntpStatus.delta}}"><i
+                                              title="sent offers: {{share.meta.farmerState.contractCount}}"><i
                                                 class="fa fa-exclamation-triangle" aria-hidden="true"
                                                 style="color:orange"></i>
                                         </span>
@@ -780,7 +767,7 @@
                                                                data-placement="bottom">{{share.meta.farmerState.change}}</span>
                                     </td>
 
-                                    <td class='ellipsis'>{{share.meta.farmerState.contractCount}}</td>
+                                    <td class='ellipsis'>{{share.meta.farmerState.dataReceivedCount}}</td>
 
                                     <td class='ellipsis'>{{share.rt}}</td>
 
