@@ -17,13 +17,13 @@
                             </thead>
                             <tbody>
                             <tr ng-repeat="(id2, data) in dashboard.data.current track by $index">
-                                <td ng-if="data.data['1']!=='0'" data-toggle="collapse" data-target="#dashboard-{{id}}}-{{id2}}">{{data.name}}</td>
+                                <td ng-if="data.data['1']!=='0'"><span data-toggle="collapse" data-target="#dashboard-{{id}}-{{id2}}">{{data.name}}</span></td>
                                 <td ng-if="data.data['1']!=='0' && data.data['0'].a!==undefined"
                                     class='ellipsisbig'><span
                                         data-highlighter="data.data['0'].a">{{data.data['0'].a}}</span>
                                     {{data.suffix}}/s
                                     <span ng-if="data.worker!==undefined" style="font-size:small;">
-              <span ng-repeat="(key, value) in data.worker track by $index" class="collapse in" id="dashboard-{{id}}}-{{id2}}">
+              <span ng-repeat="(key, value) in data.worker track by $index" class="collapse in" id="dashboard-{{id}}-{{id2}}">
                   <br/>
                   {{value['0']}}: {{value['1'].a}}<span class="nomobile"> {{data.suffix}}/s (diff: {{value['4']}}, connected: {{value['2']}} min)</span>
               </span>
