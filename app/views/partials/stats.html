@@ -17,7 +17,7 @@
                             </thead>
                             <tbody>
                             <tr ng-repeat="(id2, data) in dashboard.data.current track by $index">
-                                <td ng-if="data.data['1']!=='0'"><span ng-click="statsVm.toggle(dashboard-{{id}}-{{id2}})">{{data.name}}</span></td>
+                                <td ng-if="data.data['1']!=='0'"><span ng-click='statsVm.toggle("dashboard-{{id}}-{{id2}}")'>{{data.name}}</span></td>
                                 <td ng-if="data.data['1']!=='0' && data.data['0'].a!==undefined"
                                     class='ellipsisbig'><span
                                         data-highlighter="data.data['0'].a">{{data.data['0'].a}}</span>
