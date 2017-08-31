@@ -36,6 +36,7 @@
     vm.secondsSince = secondsSince;
     vm.isDashboardTypeEnabled = isDashboardTypeEnabled;
     vm.getTokenBalance = getTokenBalance;
+    vm.toggle = toggle;
 
 
     /**
@@ -62,6 +63,10 @@
 
         vm.getStats();
       });
+    }
+
+    function toggle(target) {
+      $(target).toggle();
     }
 
     function parseName(name){
