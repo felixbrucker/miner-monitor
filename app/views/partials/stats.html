@@ -23,7 +23,7 @@
                                         data-highlighter="data.data['0'].a">{{data.data['0'].a}}</span>
                                     {{data.suffix}}/s
                                     <span ng-if="data.worker!==undefined" style="font-size:small;">
-              <span ng-repeat="(key, value) in data.worker track by $index" id="dashboard-{{id}}-{{id2}}">
+              <span ng-repeat="(key, value) in data.worker track by $index" ng-hide="statsVm.isHidden('dashboard', id, id2)">
                   <br/>
                   {{value['0']}}: {{value['1'].a}}<span class="nomobile"> {{data.suffix}}/s (diff: {{value['4']}}, connected: {{value['2']}} min)</span>
               </span>

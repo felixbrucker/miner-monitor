@@ -25,6 +25,7 @@
     };
     vm.layout="";
     vm.enabled={};
+    vm.hidden={};
 
 
     // controller API
@@ -37,6 +38,7 @@
     vm.isDashboardTypeEnabled = isDashboardTypeEnabled;
     vm.getTokenBalance = getTokenBalance;
     vm.toggle = toggle;
+    vm.isHidden = isHidden;
 
 
     /**
@@ -66,7 +68,10 @@
     }
 
     function toggle(ns, id, id2) {
-      $(`${ns}-${id}-${id2}`).toggle();
+      vm.hidden[`${ns}-${id}-${id2}`] = !vm.hidden[`${ns}-${id}-${id2}`];
+    }
+    function isHidden(ns, id, id2) {
+      return vm.hidden[`${ns}-${id}-${id2}`];
     }
 
     function parseName(name){
