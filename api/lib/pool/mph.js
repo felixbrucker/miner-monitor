@@ -19,15 +19,11 @@ module.exports = async (address, apiKey, userId) => {
     const workerData = await axios.get(`https://${coin.coin_name}.miningpoolhub.com/index.php?page=api&action=getuserworkers&api_key=${apiKey}&id=${userId}`);
     if (Array.isArray(workerData.data.getuserworkers.data)) {
       coinStats.workers = workerData.data.getuserworkers.data
-        .filter((worker) => {
-          if (worker.hashrate !== 0) {
-            return true;
-          }
-          return false;
-        })
+        .filter((worker) => worker.hashrate !== 0)
         .map((worker) => {
           const arr = worker.username.split(".");
           worker.username = arr[(arr.length === 1 ? 0 : 1)];
+          return worker;
         });
       statsData.push(coinStats);
     }
