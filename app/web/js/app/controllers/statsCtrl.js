@@ -65,8 +65,8 @@
       });
     }
 
-    function toggle(target) {
-      $(target).toggle();
+    function toggle(ns, id, id2) {
+      $(`${ns}-${id}-${id2}`).toggle();
     }
 
     function parseName(name){
