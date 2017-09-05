@@ -674,7 +674,7 @@
                             <table class="table table-bordered table-condensed">
                                 <thead>
                                 <tr>
-                                    <th><span data-toggle="collapse" data-target="#storj-shares-{{id2}}" aria-expanded="true">Location</span></th>
+                                    <th><span ng-click="statsVm.toggle('storj', id, id2)">Location</span></th>
                                     <th><span data-toggle="tooltip" title="Share / Port / Connectivity" data-placement="bottom">Status</span>
                                     </th>
                                     <th><span data-toggle="tooltip" title="Restarts" data-placement="bottom">R</span></th>
@@ -694,7 +694,7 @@
                                               data-placement="bottom">Uptime</span></th>
                                 </tr>
                                 </thead>
-                                <tbody id="storj-shares-{{id2}}" class="collapse in">
+                                <tbody ng-hide="statsVm.isHidden('storj', id, id2)">
                                 <tr ng-repeat="share in entry.shares track by $index">
 
                                     <td class='ellipsis'><i class="fa fa-hdd-o" aria-hidden="true"></i>
