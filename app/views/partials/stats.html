@@ -129,8 +129,8 @@
             </table>
         </div>
 
-        <div ng-repeat="(id,group) in statsVm.current.entries | orderBy:'name' track by $index">
-            <div ng-repeat="(id2, entry) in group.devices | toArray | filter: {type: 'cloud-aggregator'} | orderBy:'name' track by $index">
+        <div ng-repeat="(id3,group) in statsVm.current.entries | orderBy:'name' track by $index">
+            <div ng-repeat="(id4, entry) in group.devices | toArray | filter: {type: 'cloud-aggregator'} | orderBy:'name' track by $index">
                 <div class="col-md-2 table-responsive masonry-brick"
                      ng-if="entry.type==='cloud-aggregator'">
                     <div class="row">
