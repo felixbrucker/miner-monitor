@@ -23,7 +23,8 @@ var config = module.exports = {
       "baikal-miner",
       "miner-agent",
       'storjshare-daemon',
-      'storjshare-daemon-proxy'
+      'storjshare-daemon-proxy',
+      'cloud-aggregator',
     ],
     layouts:["small","large"],
     dashboardTypes:[

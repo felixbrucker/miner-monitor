@@ -13,6 +13,7 @@ const storjshare = require('../lib/miner/storjshare');
 const minerManager = require('../lib/miner/minerManager');
 const baikalMiner = require('../lib/miner/baikalMiner');
 const openHardwareMonitor = require('../lib/miner/openHardwareMonitor');
+const cloudAggregator = require('../lib/miner/cloudAggregator');
 
 // Pools
 const nicehash = require('../lib/pool/nicehash');
@@ -292,6 +293,9 @@ async function getMinerStats(device, display) {
         break;
       case "miner-agent":
         minerData = await minerManager(device);
+        break;
+      case "cloud-aggregator":
+        minerData = await cloudAggregator(device);
         break;
     }
   } catch (error) {

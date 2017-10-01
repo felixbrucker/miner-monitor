@@ -489,7 +489,7 @@
                     </div>
                 </div>
                 <div class="col-md-4 table-responsive masonry-brick"
-                     ng-if="entry.type !=='storjshare-daemon' && entry.type !=='storjshare-daemon-proxy' && (entry.type!=='miner-agent'||entry.devices===undefined)">
+                     ng-if="entry.type !=='cloud-aggregator' && entry.type !=='storjshare-daemon' && entry.type !=='storjshare-daemon-proxy' && (entry.type!=='miner-agent'||entry.devices===undefined)">
                     <div class="row">
                         <div class="col-md-12">
                             <div style="float: left;font-size:120%;"><a href="{{entry.hostname}}" target="_blank">{{entry.name}}</a>
@@ -789,6 +789,38 @@
                                     <td class='ellipsis' style="font-weight: bold;">{{entry.avgRt}}</td>
                                     <td class='ellipsis' style="font-weight: bold;">{{entry.avgTr}}</td>
                                     <td colspan="2"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 table-responsive masonry-brick"
+                     ng-if="entry.type==='cloud-aggregator'">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div style="float: left;font-size:120%;"><a href="{{entry.hostname}}/api/mining/stats" target="_blank">{{entry.name}}</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 table-responsive">
+                            <table class="table table-bordered table-condensed">
+                                <thead>
+                                <tr>
+                                    <th><span data-toggle="tooltip" title="Running" data-placement="bottom">R</span></th>
+                                    <th><span data-toggle="tooltip" title="Stopped" data-placement="bottom">S</span></th>
+                                    <th><span data-toggle="tooltip" title="Offline" data-placement="bottom">O</span></th>
+                                    <th><span data-toggle="tooltip" title="Hashrate" data-placement="bottom">HR</span></th>
+                                    <th><span data-toggle="tooltip" title="Accepted / Rejected" data-placement="bottom">A / R</span></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>{{entry.stats.running}}</td>
+                                    <td>{{entry.stats.stopped}}</td>
+                                    <td>{{entry.stats.offline}}</td>
+                                    <td>{{statsVm.formatHr(entry.stats.hr)}}</td>
+                                    <td>{{entry.stats.accepted}} / {{entry.stats.rejected}}</td>
                                 </tr>
                             </table>
                         </div>
