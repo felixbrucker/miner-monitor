@@ -21,7 +21,8 @@
     vm.statsInterval = null;
     vm.current = {
       entries:null,
-      dashboardData:null
+      dashboardData:null,
+      latestCoreRelease: null,
     };
     vm.layout="";
     vm.enabled={};
@@ -127,6 +128,7 @@
         }).then(function successCallback(response) {
           vm.current.entries = response.data.entries;
           vm.current.dashboardData=response.data.dashboardData;
+          vm.current.latestCoreRelease = response.data.latestCoreRelease;
         }, function errorCallback(response) {
           console.log(response);
         });

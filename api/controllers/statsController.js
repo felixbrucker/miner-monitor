@@ -1,12 +1,7 @@
-const https = require('https');
-const http = require('http');
 const getExchangeRates = require("get-exchange-rates");
-const fs = require('fs');
-const path = require('path');
-const colors = require('colors/safe');
 const Rx = require('rx');
-const dnode = require('dnode');
-const bytes = require('bytes');
+const semver = require('semver');
+const axios = require('axios');
 
 // Miner
 const storjshare = require('../lib/miner/storjshare');
@@ -35,6 +30,8 @@ const nicehashTimeEvents = Rx.Observable.interval(11 * 1000); // stupid nicehash
 const configModule = require(__basedir + 'api/modules/configModule');
 const mailController = require(__basedir + 'api/controllers/mailController');
 
+const storjCoreTagUrl = 'https://api.github.com/repos/Storj/core/releases/latest';
+
 let stats = {
   entries: {},
   dashboardData: {}
@@ -44,6 +41,8 @@ let exchangeRates = {
   eurPerBTC: 0,
   usdPerBTC: 0,
 };
+
+let latestCoreRelease = null;
 
 let problemCounter = {};
 
@@ -68,7 +67,7 @@ function getStats(req, res, next) {
     return 0;
   });
   res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify({entries, dashboardData}));
+  res.send(JSON.stringify({entries, dashboardData, latestCoreRelease}));
 }
 
 // #############################
@@ -454,6 +453,11 @@ async function getStorjshareBridgeApiStats() {
             } else {
               stats.entries[groupName][entryId].shares[i].tr = '0.00 %';
             }
+            if (bridgeStats.userAgent !== undefined && latestCoreRelease) {
+              stats.entries[groupName][entryId].shares[i].isUp2Date = semver.gte(bridgeStats.userAgent, latestCoreRelease);
+            } else {
+              stats.entries[groupName][entryId].shares[i].isUp2Date = true;
+            }
             avgTr += bridgeStats.timeoutRate ? bridgeStats.timeoutRate : 0;
             counter2 += 1;
           }
@@ -751,6 +755,17 @@ function updateExchangeRates() {
     });
 }
 
+async function updateLatestCoreRelease() {
+  try {
+    const tag = semver.valid((await axios.get(storjCoreTagUrl)).data.tag_name);
+    if (tag) {
+      latestCoreRelease = tag;
+    }
+  } catch (err) {
+    console.log(`[UpdateLatestCoreRelease] => ${err.message}`);
+  }
+}
+
 function cleanup() {
   stats.entries = {};
   stats.dashboardData = {};
@@ -781,6 +796,7 @@ function init() {
   getAllEthStats();
   getAllBurstStats();
   getAllNicehashBalanceStats();
+  updateLatestCoreRelease();
   setTimeout(getStorjshareBridgeApiStats, 20 * 1000); // delayed init
   dashboardIntervals.push(setInterval(getAllMPHStats, 1 * 60 * 1000));
   dashboardIntervals.push(setInterval(getAllBitcoinbalances, 3 * 60 * 1000));
@@ -792,6 +808,7 @@ function init() {
   dashboardIntervals.push(setInterval(getStorjshareBridgeApiStats, 10 * 60 * 1000));
   dashboardIntervals.push(setInterval(getAllBurstStats, 3 * 60 * 1000));
   dashboardIntervals.push(setInterval(getAllNicehashBalanceStats, 3 * 60 * 1000));
+  dashboardIntervals.push(setInterval(updateLatestCoreRelease, 10 * 60 * 1000));
 
   const nicehashDashboards = [];
   for (let dashboard of configModule.config.dashboardData) {

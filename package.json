@@ -2,19 +2,20 @@
   "name": "miner-monitor",
   "version": "0.0.2",
   "dependencies": {
+    "axios": "^0.16.1",
     "body-parser": "^1.15.2",
-    "colors": "^1.1.2",
-    "cross-spawn": "^4.0.0",
-    "express": "^4.14.0",
-    "console-stamp": "^0.2.2",
-    "net": "^1.0.2",
-    "path": "^0.12.7",
-    "nodemailer": "^2.7.0",
-    "get-exchange-rates": "^1.0.0",
-    "rx": "^4.1.0",
-    "dnode": "^1.2.2",
     "bytes": "^2.5.0",
-    "axios": "^0.16.1"
+    "colors": "^1.1.2",
+    "console-stamp": "^0.2.2",
+    "cross-spawn": "^4.0.0",
+    "dnode": "^1.2.2",
+    "express": "^4.14.0",
+    "get-exchange-rates": "^1.0.0",
+    "net": "^1.0.2",
+    "nodemailer": "^2.7.0",
+    "path": "^0.12.7",
+    "rx": "^4.1.0",
+    "semver": "^5.4.1"
   },
   "scripts": {
     "start": "node main.js"

@@ -713,7 +713,7 @@
                                 <thead>
                                 <tr>
                                     <th><span ng-click="statsVm.toggle('storj', id, id2)">Location</span></th>
-                                    <th><span data-toggle="tooltip" title="Share / Port / Connectivity" data-placement="bottom">Status</span>
+                                    <th><span data-toggle="tooltip" title="Share / Port / Latest core version" data-placement="bottom">Status</span>
                                     </th>
                                     <th><span data-toggle="tooltip" title="Restarts" data-placement="bottom">R</span></th>
                                     <th><span data-toggle="tooltip" title="Peers" data-placement="bottom">P</span></th>
@@ -777,15 +777,15 @@
                                         </span>
                                     </span>
                                         /
-                                        <span ng-if="share.meta.farmerState.contractCount>0">
+                                        <span ng-if="share.isUp2Date === true">
                                         <span data-toggle="tooltip"
-                                              title="sent offers: {{share.meta.farmerState.contractCount}}"><i
+                                              title="using latest core release"><i
                                                 class="fa fa-check-circle-o" aria-hidden="true" style="color:green"></i>
                                         </span>
                                     </span>
-                                        <span ng-if="share.meta.farmerState.contractCount===0">
+                                        <span ng-if="share.isUp2Date === false">
                                         <span data-toggle="tooltip"
-                                              title="sent offers: {{share.meta.farmerState.contractCount}}"><i
+                                              title="using outdated core release"><i
                                                 class="fa fa-exclamation-triangle" aria-hidden="true"
                                                 style="color:orange"></i>
                                         </span>
