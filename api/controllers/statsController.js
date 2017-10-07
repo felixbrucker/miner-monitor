@@ -75,9 +75,6 @@ function getStats(req, res, next) {
 // #############################
 
 function counterAndSend(problem) {
-  if (problem.device && problem.device.device && problem.device.device.mailDisabled) {
-    return;
-  }
   if (problemCounter[problem.device.name] === undefined)
     problemCounter[problem.device.name] = {item: {}, deviceCounter: 0};
   switch (problem.type) {
@@ -98,15 +95,20 @@ function counterAndSend(problem) {
               stats.entries[problem.device.device.group][problem.device.device.id].devices = [];
             }
           }
-          mailController.sendMail(problem, function (result) {
-            //do something
-          });
+          if (!problem.device.device.mailDisabled) {
+            mailController.sendMail(problem, function (result) {
+              //do something
+            });
+          }
         }
       } else {
-        if (problemCounter[problem.device.name].deviceCounter >= 6)
-          mailController.sendMail(problem, function (result) {
-            //do something
-          });
+        if (problemCounter[problem.device.name].deviceCounter >= 6) {
+          if (!problem.device.device.mailDisabled) {
+            mailController.sendMail(problem, function (result) {
+              //do something
+            });
+          }
+        }
         problemCounter[problem.device.name].deviceCounter = 0;
       }
 
@@ -118,20 +120,27 @@ function counterAndSend(problem) {
         if (problemCounter[problem.device.name].item[problem.item.name][problem.descriptor] === undefined)
           problemCounter[problem.device.name].item[problem.item.name][problem.descriptor] = {low: 0, high: 0};
         problemCounter[problem.device.name].item[problem.item.name][problem.descriptor][problem.item.highLow] += 1;
-        if (problemCounter[problem.device.name].item[problem.item.name][problem.descriptor][problem.item.highLow] === 6)
-          mailController.sendMail(problem, function (result) {
-            // do something
-          });
+        if (problemCounter[problem.device.name].item[problem.item.name][problem.descriptor][problem.item.highLow] === 6) {
+          if (!problem.device.device.mailDisabled) {
+            mailController.sendMail(problem, function (result) {
+              // do something
+            });
+          }
+        }
+
       } else {
         if (problemCounter[problem.device.name].item[problem.item.name] === undefined)
           problemCounter[problem.device.name].item[problem.item.name] = {};
         if (problemCounter[problem.device.name].item[problem.item.name][problem.descriptor] === undefined)
           problemCounter[problem.device.name].item[problem.item.name][problem.descriptor] = {low: 0, high: 0};
 
-        if (problemCounter[problem.device.name].item[problem.item.name][problem.descriptor][problem.item.highLow] >= 6)
-          mailController.sendMail(problem, function (result) {
-            // do something
-          });
+        if (problemCounter[problem.device.name].item[problem.item.name][problem.descriptor][problem.item.highLow] >= 6) {
+          if (!problem.device.device.mailDisabled) {
+            mailController.sendMail(problem, function (result) {
+              // do something
+            });
+          }
+        }
         problemCounter[problem.device.name].item[problem.item.name][problem.descriptor][problem.item.highLow] = 0;
       }
       break;
@@ -139,9 +148,6 @@ function counterAndSend(problem) {
 }
 
 function checkResult(result, device, ohm) {
-  if (device.mailDisabled) {
-    return;
-  }
   switch (device.type) {
     case 'baikal-miner':
       for (var i = 0; i < result.devs.length; i++) {
@@ -152,7 +158,7 @@ function checkResult(result, device, ohm) {
             status: 'Problem',
             descriptor: 'Hashrate',
             item: {name: 'dev' + i, value: dev.MHS5s + 'MH/s', highLow: 'low'},
-            device: {name: device.name, value: 'Up', url: device.hostname}
+            device: {name: device.name, value: 'Up', url: device.hostname, device}
           };
           counterAndSend(obj);
         } else {
@@ -161,7 +167,7 @@ function checkResult(result, device, ohm) {
             status: 'OK',
             descriptor: 'Hashrate',
             item: {name: 'dev' + i, value: dev.MHS5s + 'MH/s', highLow: 'low'},
-            device: {name: device.name, value: 'Up', url: device.hostname}
+            device: {name: device.name, value: 'Up', url: device.hostname, device}
           };
           counterAndSend(obj);
         }
@@ -175,7 +181,7 @@ function checkResult(result, device, ohm) {
               value: ((dev.Rejected / dev.TotalShares) * 100) + '%',
               highLow: 'high'
             },
-            device: {name: device.name, value: 'Up', url: device.hostname}
+            device: {name: device.name, value: 'Up', url: device.hostname, device}
           };
           counterAndSend(obj);
         } else {
@@ -188,7 +194,7 @@ function checkResult(result, device, ohm) {
               value: ((dev.Rejected / dev.TotalShares) * 100) + '%',
               highLow: 'high'
             },
-            device: {name: device.name, value: 'Up', url: device.hostname}
+            device: {name: device.name, value: 'Up', url: device.hostname, device}
           };
           counterAndSend(obj);
         }
@@ -198,7 +204,7 @@ function checkResult(result, device, ohm) {
             status: 'Problem',
             descriptor: 'Temperature',
             item: {name: 'dev' + i, value: dev.Temperature + ' °C', highLow: 'high'},
-            device: {name: device.name, value: 'Up', url: device.hostname}
+            device: {name: device.name, value: 'Up', url: device.hostname, device}
           };
           counterAndSend(obj);
         } else {
@@ -207,7 +213,7 @@ function checkResult(result, device, ohm) {
             status: 'OK',
             descriptor: 'Temperature',
             item: {name: 'dev' + i, value: dev.Temperature + ' °C', highLow: 'high'},
-            device: {name: device.name, value: 'Up', url: device.hostname}
+            device: {name: device.name, value: 'Up', url: device.hostname, device}
           };
           counterAndSend(obj);
         }
@@ -225,7 +231,7 @@ function checkResult(result, device, ohm) {
               status: 'Problem',
               descriptor: 'Temperature',
               item: {name: i + ': ' + ohmDevice.dev, value: ohmDevice.temp, highLow: 'high'},
-              device: {name: device.name, value: 'Up', url: device.hostname}
+              device: {name: device.name, value: 'Up', url: device.hostname, device}
             };
             counterAndSend(obj);
           } else {
@@ -234,7 +240,7 @@ function checkResult(result, device, ohm) {
               status: 'OK',
               descriptor: 'Temperature',
               item: {name: i + ': ' + ohmDevice.dev, value: ohmDevice.temp, highLow: 'high'},
-              device: {name: device.name, value: 'Up', url: device.hostname}
+              device: {name: device.name, value: 'Up', url: device.hostname, device}
             };
             counterAndSend(obj);
           }
@@ -265,7 +271,7 @@ function checkResult(result, device, ohm) {
             status: 'Problem',
             descriptor: 'Number',
             item: {name: 'running miners', value: Object.keys(result.entries).length, highLow: 'low'},
-            device: {name: device.name, value: 'Up', url: device.hostname}
+            device: {name: device.name, value: 'Up', url: device.hostname, device}
           };
         } else {
           obj = {
@@ -273,7 +279,7 @@ function checkResult(result, device, ohm) {
             status: 'OK',
             descriptor: 'Number',
             item: {name: 'running miners', value: Object.keys(result.entries).length, highLow: 'low'},
-            device: {name: device.name, value: 'Up', url: device.hostname}
+            device: {name: device.name, value: 'Up', url: device.hostname, device}
           };
         }
         counterAndSend(obj);
@@ -316,7 +322,7 @@ async function getMinerStats(device, display) {
       status: 'OK',
       descriptor: '',
       item: {},
-      device: {name: device.name, value: 'Up'}
+      device: {name: device.name, value: 'Up', device, display}
     });
     checkResult(minerData, device, false);
     if (display) {
@@ -400,7 +406,7 @@ async function getStorjshareDaemonStats(device, display) {
       status: 'OK',
       descriptor: '',
       item: {},
-      device: {name: device.name, value: 'Up'}
+      device: {name: device.name, value: 'Up', device, display}
     });
   }
   if (display) {
