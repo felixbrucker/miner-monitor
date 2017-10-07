@@ -75,7 +75,7 @@ function getStats(req, res, next) {
 // #############################
 
 function counterAndSend(problem) {
-  if (device.mailDisabled) {
+  if (problem.device.device.mailDisabled) {
     return;
   }
   if (problemCounter[problem.device.name] === undefined)
