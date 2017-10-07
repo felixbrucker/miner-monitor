@@ -75,13 +75,16 @@ function getStats(req, res, next) {
 // #############################
 
 function counterAndSend(problem) {
+  if (device.mailDisabled) {
+    return;
+  }
   if (problemCounter[problem.device.name] === undefined)
     problemCounter[problem.device.name] = {item: {}, deviceCounter: 0};
   switch (problem.type) {
     case 'device':
       if (problem.status === 'Problem') {
         problemCounter[problem.device.name].deviceCounter += 1;
-        if (problemCounter[problem.device.name].deviceCounter === 6){
+        if (problemCounter[problem.device.name].deviceCounter === 6) {
           if (problem.device.display) {
             if (!stats.entries[problem.device.device.group]) {
               stats.entries[problem.device.device.group] = {};
@@ -133,149 +136,149 @@ function counterAndSend(problem) {
       }
       break;
   }
-
 }
 
 function checkResult(result, device, ohm) {
-  if (!device.mailDisabled) {
-    switch (device.type) {
-      case 'baikal-miner':
-        for (var i = 0; i < result.devs.length; i++) {
-          var dev = result.devs[i];
-          if (dev.MHS5s < 100) {
-            var obj = {
-              type: 'item',
-              status: 'Problem',
-              descriptor: 'Hashrate',
-              item: {name: 'dev' + i, value: dev.MHS5s + 'MH/s', highLow: 'low'},
-              device: {name: device.name, value: 'Up', url: device.hostname}
-            };
-            counterAndSend(obj);
-          } else {
-            var obj = {
-              type: 'item',
-              status: 'OK',
-              descriptor: 'Hashrate',
-              item: {name: 'dev' + i, value: dev.MHS5s + 'MH/s', highLow: 'low'},
-              device: {name: device.name, value: 'Up', url: device.hostname}
-            };
-            counterAndSend(obj);
-          }
-          if (dev.Rejected / dev.TotalShares > 0.1) {
-            var obj = {
-              type: 'item',
-              status: 'Problem',
-              descriptor: 'Rejects',
-              item: {
-                name: 'dev' + i,
-                value: ((dev.Rejected / dev.TotalShares) * 100) + '%',
-                highLow: 'high'
-              },
-              device: {name: device.name, value: 'Up', url: device.hostname}
-            };
-            counterAndSend(obj);
-          } else {
-            var obj = {
-              type: 'item',
-              status: 'OK',
-              descriptor: 'Rejects',
-              item: {
-                name: 'dev' + i,
-                value: ((dev.Rejected / dev.TotalShares) * 100) + '%',
-                highLow: 'high'
-              },
-              device: {name: device.name, value: 'Up', url: device.hostname}
-            };
-            counterAndSend(obj);
-          }
-          if (dev.Temperature >= 60) {
-            var obj = {
-              type: 'item',
-              status: 'Problem',
-              descriptor: 'Temperature',
-              item: {name: 'dev' + i, value: dev.Temperature + ' °C', highLow: 'high'},
-              device: {name: device.name, value: 'Up', url: device.hostname}
-            };
-            counterAndSend(obj);
-          } else {
-            var obj = {
-              type: 'item',
-              status: 'OK',
-              descriptor: 'Temperature',
-              item: {name: 'dev' + i, value: dev.Temperature + ' °C', highLow: 'high'},
-              device: {name: device.name, value: 'Up', url: device.hostname}
-            };
-            counterAndSend(obj);
-          }
-        }
-
-        break;
-      case 'miner-agent':
-        if (ohm) {
-          for (var i = 0; i < result.length; i++) {
-            var ohmDevice = result[i];
-            //temp
-            if (ohmDevice.temp !== undefined && ohmDevice.temp > "90") {
-              var obj = {
-                type: 'item',
-                status: 'Problem',
-                descriptor: 'Temperature',
-                item: {name: i + ': ' + ohmDevice.dev, value: ohmDevice.temp, highLow: 'high'},
-                device: {name: device.name, value: 'Up', url: device.hostname}
-              };
-              counterAndSend(obj);
-            } else {
-              var obj = {
-                type: 'item',
-                status: 'OK',
-                descriptor: 'Temperature',
-                item: {name: i + ': ' + ohmDevice.dev, value: ohmDevice.temp, highLow: 'high'},
-                device: {name: device.name, value: 'Up', url: device.hostname}
-              };
-              counterAndSend(obj);
-            }
-            //fan speed
-            /*if(ohmDevice.fan!==undefined&&ohmDevice.fan>"80"){
-             var obj={type:'item',status:'Problem',descriptor:'Fan Speed',item:{name:i+': '+ohmDevice.dev,value:ohmDevice.fan,highLow:'high'},device:{name:device.name,value:'Up'}};
-             counterAndSend(obj);
-             }else{
-             var obj={type:'item',status:'OK',descriptor:'Fan Speed',item:{name:i+': '+ohmDevice.dev,value:ohmDevice.fan,highLow:'high'},device:{name:device.name,value:'Up'}};
-             counterAndSend(obj);
-             }*/
-            /*
-             //load
-             if(ohmDevice.load!==undefined&&ohmDevice.load<"70"){
-             var obj={type:'item',status:'Problem',descriptor:'Load',item:{name:i+': '+ohmDevice.dev,value:ohmDevice.load,highLow:'low'},device:{name:device.name,value:'Up'}};
-             counterAndSend(obj);
-             }else{
-             var obj={type:'item',status:'OK',descriptor:'Load',item:{name:i+': '+ohmDevice.dev,value:ohmDevice.load,highLow:'low'},device:{name:device.name,value:'Up'}};
-             counterAndSend(obj);
-             }
-             */
-          }
+  if (device.mailDisabled) {
+    return;
+  }
+  switch (device.type) {
+    case 'baikal-miner':
+      for (var i = 0; i < result.devs.length; i++) {
+        var dev = result.devs[i];
+        if (dev.MHS5s < 100) {
+          var obj = {
+            type: 'item',
+            status: 'Problem',
+            descriptor: 'Hashrate',
+            item: {name: 'dev' + i, value: dev.MHS5s + 'MH/s', highLow: 'low'},
+            device: {name: device.name, value: 'Up', url: device.hostname}
+          };
+          counterAndSend(obj);
         } else {
-          let obj = null;
-          if (result.entries && !Object.keys(result.entries).length) {
-            obj = {
-              type: 'item',
-              status: 'Problem',
-              descriptor: 'Number',
-              item: {name: 'running miners', value: Object.keys(result.entries).length, highLow: 'low'},
-              device: {name: device.name, value: 'Up', url: device.hostname}
-            };
-          } else {
-            obj = {
-              type: 'item',
-              status: 'OK',
-              descriptor: 'Number',
-              item: {name: 'running miners', value: Object.keys(result.entries).length, highLow: 'low'},
-              device: {name: device.name, value: 'Up', url: device.hostname}
-            };
-          }
+          var obj = {
+            type: 'item',
+            status: 'OK',
+            descriptor: 'Hashrate',
+            item: {name: 'dev' + i, value: dev.MHS5s + 'MH/s', highLow: 'low'},
+            device: {name: device.name, value: 'Up', url: device.hostname}
+          };
           counterAndSend(obj);
         }
-        break;
-    }
+        if (dev.Rejected / dev.TotalShares > 0.1) {
+          var obj = {
+            type: 'item',
+            status: 'Problem',
+            descriptor: 'Rejects',
+            item: {
+              name: 'dev' + i,
+              value: ((dev.Rejected / dev.TotalShares) * 100) + '%',
+              highLow: 'high'
+            },
+            device: {name: device.name, value: 'Up', url: device.hostname}
+          };
+          counterAndSend(obj);
+        } else {
+          var obj = {
+            type: 'item',
+            status: 'OK',
+            descriptor: 'Rejects',
+            item: {
+              name: 'dev' + i,
+              value: ((dev.Rejected / dev.TotalShares) * 100) + '%',
+              highLow: 'high'
+            },
+            device: {name: device.name, value: 'Up', url: device.hostname}
+          };
+          counterAndSend(obj);
+        }
+        if (dev.Temperature >= 60) {
+          var obj = {
+            type: 'item',
+            status: 'Problem',
+            descriptor: 'Temperature',
+            item: {name: 'dev' + i, value: dev.Temperature + ' °C', highLow: 'high'},
+            device: {name: device.name, value: 'Up', url: device.hostname}
+          };
+          counterAndSend(obj);
+        } else {
+          var obj = {
+            type: 'item',
+            status: 'OK',
+            descriptor: 'Temperature',
+            item: {name: 'dev' + i, value: dev.Temperature + ' °C', highLow: 'high'},
+            device: {name: device.name, value: 'Up', url: device.hostname}
+          };
+          counterAndSend(obj);
+        }
+      }
+
+      break;
+    case 'miner-agent':
+      if (ohm) {
+        for (var i = 0; i < result.length; i++) {
+          var ohmDevice = result[i];
+          //temp
+          if (ohmDevice.temp !== undefined && ohmDevice.temp > "90") {
+            var obj = {
+              type: 'item',
+              status: 'Problem',
+              descriptor: 'Temperature',
+              item: {name: i + ': ' + ohmDevice.dev, value: ohmDevice.temp, highLow: 'high'},
+              device: {name: device.name, value: 'Up', url: device.hostname}
+            };
+            counterAndSend(obj);
+          } else {
+            var obj = {
+              type: 'item',
+              status: 'OK',
+              descriptor: 'Temperature',
+              item: {name: i + ': ' + ohmDevice.dev, value: ohmDevice.temp, highLow: 'high'},
+              device: {name: device.name, value: 'Up', url: device.hostname}
+            };
+            counterAndSend(obj);
+          }
+          //fan speed
+          /*if(ohmDevice.fan!==undefined&&ohmDevice.fan>"80"){
+           var obj={type:'item',status:'Problem',descriptor:'Fan Speed',item:{name:i+': '+ohmDevice.dev,value:ohmDevice.fan,highLow:'high'},device:{name:device.name,value:'Up'}};
+           counterAndSend(obj);
+           }else{
+           var obj={type:'item',status:'OK',descriptor:'Fan Speed',item:{name:i+': '+ohmDevice.dev,value:ohmDevice.fan,highLow:'high'},device:{name:device.name,value:'Up'}};
+           counterAndSend(obj);
+           }*/
+          /*
+           //load
+           if(ohmDevice.load!==undefined&&ohmDevice.load<"70"){
+           var obj={type:'item',status:'Problem',descriptor:'Load',item:{name:i+': '+ohmDevice.dev,value:ohmDevice.load,highLow:'low'},device:{name:device.name,value:'Up'}};
+           counterAndSend(obj);
+           }else{
+           var obj={type:'item',status:'OK',descriptor:'Load',item:{name:i+': '+ohmDevice.dev,value:ohmDevice.load,highLow:'low'},device:{name:device.name,value:'Up'}};
+           counterAndSend(obj);
+           }
+           */
+        }
+      } else {
+        let obj = null;
+        if (result.entries && !Object.keys(result.entries).length) {
+          obj = {
+            type: 'item',
+            status: 'Problem',
+            descriptor: 'Number',
+            item: {name: 'running miners', value: Object.keys(result.entries).length, highLow: 'low'},
+            device: {name: device.name, value: 'Up', url: device.hostname}
+          };
+        } else {
+          obj = {
+            type: 'item',
+            status: 'OK',
+            descriptor: 'Number',
+            item: {name: 'running miners', value: Object.keys(result.entries).length, highLow: 'low'},
+            device: {name: device.name, value: 'Up', url: device.hostname}
+          };
+        }
+        counterAndSend(obj);
+      }
+      break;
   }
 }
 
@@ -286,7 +289,7 @@ function checkResult(result, device, ohm) {
 async function getMinerStats(device, display) {
   let minerData = null;
   try {
-    switch(device.type) {
+    switch (device.type) {
       case "baikal-miner":
         minerData = await baikalMiner(device);
         break;
@@ -383,7 +386,7 @@ async function getStorjshareDaemonStats(device, display) {
       }
       break;
   }
-  if(!storjshareData) {
+  if (!storjshareData) {
     counterAndSend({
       type: 'device',
       status: 'Problem',
@@ -682,8 +685,6 @@ async function getAllNicehashBalanceStats() {
     }
   }
 }
-
-
 
 
 // ####################
