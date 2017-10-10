@@ -438,8 +438,10 @@ async function getStorjshareBridgeApiStats() {
       if ((entry.type === 'storjshare-daemon' || entry.type === 'storjshare-daemon-proxy') && entry.shares) {
         let avgRt = 0;
         let avgTr = 0;
+        let avgRp = 0;
         let counter1 = 0;
         let counter2 = 0;
+        let counter3 = 0;
         for (let i = 0; i < entry.shares.length; i++) {
           const share = entry.shares[i];
           let bridgeStats = null;
@@ -462,19 +464,25 @@ async function getStorjshareBridgeApiStats() {
             } else {
               stats.entries[groupName][entryId].shares[i].tr = '0.00 %';
             }
+            stats.entries[groupName][entryId].shares[i].hasTr = ((bridgeStats.timeoutRate || 0) !== 0);
             if (bridgeStats.userAgent !== undefined && latestCoreRelease) {
               stats.entries[groupName][entryId].shares[i].isUp2Date = semver.gte(bridgeStats.userAgent, latestCoreRelease);
             } else {
               stats.entries[groupName][entryId].shares[i].isUp2Date = true;
             }
-            avgTr += bridgeStats.timeoutRate ? bridgeStats.timeoutRate : 0;
+            stats.entries[groupName][entryId].shares[i].rp = bridgeStats.reputation || 0;
+            avgTr += bridgeStats.timeoutRate || 0;
             counter2 += 1;
+            avgRp += bridgeStats.reputation || 0;
+            counter3 += 1;
           }
         }
+        avgRp = avgRp / (counter3 ? counter3 : 1);
         avgRt = avgRt / (counter1 ? counter1 : 1);
         avgTr = avgTr / (counter2 ? counter2 : 1);
         stats.entries[groupName][entryId].avgRt = avgRt > 1000 ? `${(avgRt / 1000).toFixed(2)} s` : `${avgRt.toFixed(0)} ms`;
         stats.entries[groupName][entryId].avgTr = `${(avgTr * 100).toFixed(2)} %`;
+        stats.entries[groupName][entryId].avgRp = avgRp;
       }
     }
   }

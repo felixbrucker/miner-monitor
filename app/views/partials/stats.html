@@ -713,7 +713,7 @@
                                 <thead>
                                 <tr>
                                     <th><span ng-click="statsVm.toggle('storj', id, id2)">Location</span></th>
-                                    <th><span data-toggle="tooltip" title="Share / Port / Latest core version" data-placement="bottom">Status</span>
+                                    <th><span data-toggle="tooltip" title="Share / Port / Timeouts" data-placement="bottom">Status</span>
                                     </th>
                                     <th><span data-toggle="tooltip" title="Restarts" data-placement="bottom">R</span></th>
                                     <th><span data-toggle="tooltip" title="Peers" data-placement="bottom">P</span></th>
@@ -723,11 +723,10 @@
                                     </th>
                                     <th><span data-toggle="tooltip" title="Shards received since launch"
                                               data-placement="bottom">SR</span></th>
+                                    <th><span data-toggle="tooltip" title="Reputation Points" data-placement="bottom">RP</span>
+                                    </th>
                                     <th><span data-toggle="tooltip" title="Response time" data-placement="bottom">RT</span>
                                     </th>
-                                    <th><span data-toggle="tooltip" title="Timeout rate" data-placement="bottom">TR</span>
-                                    </th>
-                                    <th><span data-toggle="tooltip" title="Last Activity" data-placement="bottom">LA</span></th>
                                     <th><span data-toggle="tooltip" title="Share Uptime"
                                               data-placement="bottom">Uptime</span></th>
                                 </tr>
@@ -777,15 +776,15 @@
                                         </span>
                                     </span>
                                         /
-                                        <span ng-if="share.isUp2Date === true">
+                                        <span ng-if="share.hasTr === false">
                                         <span data-toggle="tooltip"
-                                              title="using latest core release"><i
+                                              title="no timeouts"><i
                                                 class="fa fa-check-circle-o" aria-hidden="true" style="color:green"></i>
                                         </span>
                                     </span>
-                                        <span ng-if="share.isUp2Date === false">
+                                        <span ng-if="share.hasTr === true">
                                         <span data-toggle="tooltip"
-                                              title="using outdated core release"><i
+                                              title="TR: {{share.tr}}"><i
                                                 class="fa fa-exclamation-triangle" aria-hidden="true"
                                                 style="color:orange"></i>
                                         </span>
@@ -807,11 +806,9 @@
 
                                     <td class='ellipsis'>{{share.meta.farmerState.dataReceivedCount}}</td>
 
+                                    <td class='ellipsis'>{{share.rp}}</td>
+
                                     <td class='ellipsis'>{{share.rt}}</td>
-
-                                    <td class='ellipsis'>{{share.tr}}</td>
-
-                                    <td class='ellipsis'>{{share.meta.farmerState.lastActivity | number:0 }}s ago</td>
 
                                     <td class='ellipsis'>{{share.meta.uptimeMs/1000 | secondsToTimeString}}</td>
 
@@ -824,9 +821,9 @@
                                     <td style="font-weight: bold;">{{entry.totalSpaceUsed}}</td>
                                     <td style="font-weight: bold;">{{entry.totalChange}}</td>
                                     <td style="font-weight: bold;">{{entry.totalShardsReceived}}</td>
+                                    <td class='ellipsis' style="font-weight: bold;">{{entry.avgRp}}</td>
                                     <td class='ellipsis' style="font-weight: bold;">{{entry.avgRt}}</td>
-                                    <td class='ellipsis' style="font-weight: bold;">{{entry.avgTr}}</td>
-                                    <td colspan="2"></td>
+                                    <td></td>
                                 </tr>
                             </table>
                         </div>
