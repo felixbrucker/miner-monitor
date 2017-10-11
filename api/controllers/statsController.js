@@ -482,7 +482,7 @@ async function getStorjshareBridgeApiStats() {
         avgTr = avgTr / (counter2 ? counter2 : 1);
         stats.entries[groupName][entryId].avgRt = avgRt > 1000 ? `${(avgRt / 1000).toFixed(2)} s` : `${avgRt.toFixed(0)} ms`;
         stats.entries[groupName][entryId].avgTr = `${(avgTr * 100).toFixed(2)} %`;
-        stats.entries[groupName][entryId].avgRp = avgRp;
+        stats.entries[groupName][entryId].avgRp = avgRp.toFixed(0);
       }
     }
   }
