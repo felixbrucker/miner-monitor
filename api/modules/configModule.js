@@ -37,6 +37,7 @@ var config = module.exports = {
       'ethBalance',
       'burstBalance',
       'nicehashBalance',
+      'dashboard-api',
     ]
   },
   getConfig: function () {

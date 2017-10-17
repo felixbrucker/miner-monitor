@@ -9,6 +9,7 @@ const minerManager = require('../lib/miner/minerManager');
 const baikalMiner = require('../lib/miner/baikalMiner');
 const openHardwareMonitor = require('../lib/miner/openHardwareMonitor');
 const cloudAggregator = require('../lib/miner/cloudAggregator');
+const dashboardApi = require('../lib/miner/dashboardApi');
 
 // Pools
 const nicehash = require('../lib/pool/nicehash');
@@ -488,6 +489,31 @@ async function getStorjshareBridgeApiStats() {
   }
 }
 
+// #############################
+// #####   dashboard-api   #####
+// #############################
+
+async function getAllDashboardApiStats() {
+  for (let dashboard of configModule.config.dashboardData) {
+    if (dashboard.type === 'dashboard-api' && dashboard.enabled) {
+      let dashboardData = null;
+      try {
+        dashboardData = await dashboardApi(dashboard.baseUrl);
+      } catch (error) {
+        console.log(`[${dashboard.name} :: Dashboard-API] => ${error.message}`);
+      }
+      if (dashboardData) {
+        stats.dashboardData[dashboard.id] = {
+          name: dashboard.name,
+          type: dashboard.type,
+          enabled: dashboard.enabled,
+          data: dashboardData,
+        };
+      }
+    }
+  }
+}
+
 // #########################
 // #####     Pools     #####
 // #########################
@@ -812,6 +838,7 @@ function init() {
   getAllBurstStats();
   getAllNicehashBalanceStats();
   updateLatestCoreRelease();
+  getAllDashboardApiStats();
   setTimeout(getStorjshareBridgeApiStats, 20 * 1000); // delayed init
   dashboardIntervals.push(setInterval(getAllMPHStats, 1 * 60 * 1000));
   dashboardIntervals.push(setInterval(getAllBitcoinbalances, 3 * 60 * 1000));
@@ -824,6 +851,7 @@ function init() {
   dashboardIntervals.push(setInterval(getAllBurstStats, 3 * 60 * 1000));
   dashboardIntervals.push(setInterval(getAllNicehashBalanceStats, 3 * 60 * 1000));
   dashboardIntervals.push(setInterval(updateLatestCoreRelease, 10 * 60 * 1000));
+  dashboardIntervals.push(setInterval(getAllDashboardApiStats, 10 * 60 * 1000));
 
   const nicehashDashboards = [];
   for (let dashboard of configModule.config.dashboardData) {

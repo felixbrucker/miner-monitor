@@ -129,6 +129,30 @@
             </table>
         </div>
 
+        <div ng-repeat="(id, dashboard) in statsVm.current.dashboardData track by $index">
+            <div class="masonry-brick col-md-2" ng-if="dashboard.enabled && (dashboard.type==='dashboard-api')">
+                <div style="float: left;">{{dashboard.name}}</div>
+                <table class="table table-bordered table-condensed leftAlign">
+                    <thead>
+                    <tr>
+                        <th><span data-toggle="tooltip" title="Training" data-placement="bottom">T</span></th>
+                        <th><span data-toggle="tooltip" title="Keepalive" data-placement="bottom">K</span></th>
+                        <th><span data-toggle="tooltip" title="Graveyard" data-placement="bottom">G</span></th>
+                        <th>Total</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{dashboard.data.training}}</td>
+                            <td>{{dashboard.data.keepalive}}</td>
+                            <td>{{dashboard.data.graveyard}}</td>
+                            <td>{{dashboard.data.total}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <div ng-repeat="(id3,group) in statsVm.current.entries | orderBy:'name' track by $index">
             <div ng-repeat="(id4, entry) in group.devices | toArray | filter: {type: 'cloud-aggregator'} | orderBy:'name' track by $index">
                 <div class="col-md-2 table-responsive masonry-brick"

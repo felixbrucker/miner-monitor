@@ -108,7 +108,7 @@
           types.push('cryptoidBalance');
           break;
         case 'baseUrl':
-          types.push('genericMPOS');
+          types.push('genericMPOS', 'dashboard-api');
           break;
         case 'apiKey':
           types.push('genericMPOS', 'miningpoolhub', 'cryptoidBalance', 'nicehashBalance');
