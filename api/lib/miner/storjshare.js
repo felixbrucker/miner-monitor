@@ -67,28 +67,32 @@ function mergeStorjshareStats(stats, storjshareData) {
   shares.forEach((share, index) => {
     storjshareData[index].meta.farmerState = Object.assign(share.meta.farmerState, storjshareData[index].meta.farmerState);
     share = Object.assign(share, storjshareData[index]);
-    if (share.meta.farmerState.spaceUsedBytes) {
-      // init
-      if (!share.lastSpaceUpdate) {
-        share.lastSpaceUpdate = Date.now();
-        share.meta.farmerState.lastSpaceUsed = share.meta.farmerState.spaceUsedBytes;
-      }
-      if ((Date.now() - share.lastSpaceUpdate) / 1000 > 60 * 60 * 12) {
-        // we need to save the current space used
-        share.lastSpaceUpdate = Date.now();
-        share.meta.farmerState.lastSpaceUsed = share.meta.farmerState.spaceUsedBytes;
-      }
-      // calculate diff
-      const change = share.meta.farmerState.spaceUsedBytes - share.meta.farmerState.lastSpaceUsed;
-      if (change < 0) {
-        share.meta.farmerState.change = `- ${bytes(-1 * change)}`;
-      } else {
-        share.meta.farmerState.change = `+ ${bytes(change)}`;
-      }
-      share.meta.farmerState.changeBytes = change;
+    // init
+    if (!share.lastSpaceUpdate) {
+      share.lastSpaceUpdate = Date.now();
+      share.meta.farmerState.lastSpaceUsed = share.meta.farmerState.spaceUsedBytes || 0;
     }
+    if ((Date.now() - share.lastSpaceUpdate) / 1000 > 60 * 60 * 12) {
+      // we need to save the current space used
+      share.lastSpaceUpdate = Date.now();
+      share.meta.farmerState.lastSpaceUsed = share.meta.farmerState.spaceUsedBytes || 0;
+    }
+    // calculate diff
+    const change = (share.meta.farmerState.spaceUsedBytes || 0) - share.meta.farmerState.lastSpaceUsed;
+    if (change < 0) {
+      share.meta.farmerState.change = `- ${bytes(-1 * change)}`;
+    } else {
+      share.meta.farmerState.change = `+ ${bytes(change)}`;
+    }
+    if (share.meta.farmerState.percentUsed === '...') {
+      share.meta.farmerState.percentUsed = '0';
+    }
+    if (share.meta.farmerState.spaceUsed === '...') {
+      share.meta.farmerState.spaceUsed = '0B';
+    }
+    share.meta.farmerState.changeBytes = change;
     obj.totalChange += share.meta.farmerState.changeBytes;
-    obj.totalSpaceUsed += share.meta.farmerState.spaceUsedBytes;
+    obj.totalSpaceUsed += share.meta.farmerState.spaceUsedBytes || 0;
     obj.totalPeers += share.meta.farmerState.totalPeers;
     obj.totalRestarts += share.meta.numRestarts;
     obj.totalShardsReceived += share.meta.farmerState.dataReceivedCount;
