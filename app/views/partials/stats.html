@@ -420,87 +420,87 @@
                                 <tr ng-if="entry.type==='miner-agent'" ng-repeat="d in entry.entries track by $index">
 
                                     <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='sgminer-gm'">
-                                        {{d.miner}}
+                                        {{d.data.miner}}
                                     </td>
-                                    <td ng-if="d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-cryptonight'||d.type==='optiminer-zec'">
+                                    <td ng-if="d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-xmr'||d.type==='optiminer-zec'">
                                         {{d.type}}
-                                        {{d.version}}
+                                        {{d.data.version}}
                                     </td>
                                     <td ng-if="d.type==='nheqminer'">nheqminer</td>
                                     <td ng-if="d.type==='other'">other</td>
 
                                     <td class='ellipsis'
                                         ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='sgminer-gm'">
-                                        {{d.algorithm}}
+                                        {{d.data.algorithm}}
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='claymore-eth'">dagger</td>
                                     <td class='ellipsis'
                                         ng-if="d.type==='claymore-zec'||d.type==='optiminer-zec'||d.type==='nheqminer'">
                                         equihash
                                     </td>
-                                    <td class='ellipsis' ng-if="d.type==='claymore-cryptonight'">cryptonight</td>
+                                    <td class='ellipsis' ng-if="d.type==='claymore-xmr'">cryptonight</td>
                                     <td class='ellipsis' ng-if="d.type==='other'">other</td>
 
                                     <td class='ellipsis'
                                         ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='sgminer-gm'"
-                                        ng-class="{danger:d.hashrate==0}">
-                                        {{d.hashrate
+                                        ng-class="{danger:d.data.hashrate==0}">
+                                        {{d.data.hashrate
                                         |hashrate}}
                                     </td>
-                                    <td class='ellipsis' ng-if="d.type==='claymore-cryptonight'"
-                                        ng-class="{danger:d.hashrate/1000==0}">
-                                        {{d.hashrate/1000
+                                    <td class='ellipsis' ng-if="d.type==='claymore-xmr'"
+                                        ng-class="{danger:d.data.hashrate/1000==0}">
+                                        {{d.data.hashrate/1000
                                         |hashrate}}
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='claymore-eth'"
-                                        ng-class="{danger:d['eth-hashrate']==0}">{{d['eth-hashrate'] |
+                                        ng-class="{danger:d.data['eth-hashrate']==0}">{{d.data['eth-hashrate'] |
                                         hashrate}}<span
-                                                ng-if="d['alt-hashrate']!=='0'"><br/>alt: {{d['alt-hashrate'] | hashrate}}</span>
+                                                ng-if="d.data['alt-hashrate']!=='0'"><br/>alt: {{d.data['alt-hashrate'] | hashrate}}</span>
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='claymore-zec'"
-                                        ng-class="{danger:d['zec-hashrate']==0}">{{d['zec-hashrate'] |
+                                        ng-class="{danger:d.data['zec-hashrate']==0}">{{d.data['zec-hashrate'] |
                                         solutionrate}}
                                     </td>
-                                    <td class='ellipsis' ng-if="d.type==='nheqminer'" ng-class="{danger:d.solutionRate==0}">
-                                        {{d.solutionRate |
+                                    <td class='ellipsis' ng-if="d.type==='nheqminer'" ng-class="{danger:d.data.solutionRate==0}">
+                                        {{d.data.solutionRate |
                                         solutionrate}}
                                     </td>
-                                    <td class='ellipsis' ng-if="d.type==='optiminer-zec'" ng-class="{danger:d.hashrate==0}">
-                                        {{d.hashrate | solutionrate}}
+                                    <td class='ellipsis' ng-if="d.type==='optiminer-zec'" ng-class="{danger:d.data.hashrate==0}">
+                                        {{d.data.hashrate | solutionrate}}
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='other'">-</td>
 
-                                    <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-cryptonight'||d.type==='optiminer-zec'||d.type==='sgminer-gm'">
-                                        {{d.accepted}}
+                                    <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-xmr'||d.type==='optiminer-zec'||d.type==='sgminer-gm'">
+                                        {{d.data.accepted}}
                                     </td>
-                                    <td ng-if="d.type==='claymore-eth'">{{d['eth-accepted']}}<span
-                                            ng-if="d['alt-hashrate']!=='0'"><br/>alt: {{d['alt-accepted']}}</span>
+                                    <td ng-if="d.type==='claymore-eth'">{{d.data['eth-accepted']}}<span
+                                            ng-if="d.data['alt-hashrate']!=='0'"><br/>alt: {{d.data['alt-accepted']}}</span>
                                     </td>
-                                    <td ng-if="d.type==='claymore-zec'">{{d['zec-accepted']}}</td>
+                                    <td ng-if="d.type==='claymore-zec'">{{d.data['zec-accepted']}}</td>
                                     <td ng-if="d.type==='other'||d.type==='nheqminer'">-</td>
 
                                     <td class='ellipsis'
-                                        ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-cryptonight'||d.type==='optiminer-zec'||d.type==='sgminer-gm'"
-                                        ng-class="{danger:d.rejected/(d.accepted+d.rejected)>.1}">{{d.rejected}}
-                                        [{{d.rejected/(d.accepted+d.rejected)*100|number:2}}%]
+                                        ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-xmr'||d.type==='optiminer-zec'||d.type==='sgminer-gm'"
+                                        ng-class="{danger:d.data.rejected/(d.data.accepted+d.data.rejected)>.1}">{{d.data.rejected}}
+                                        [{{d.data.rejected/(d.data.accepted+d.data.rejected)*100|number:2}}%]
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='claymore-eth'"
-                                        ng-class="{danger:d['eth-rejected']/(d['eth-accepted']+d['eth-rejected'])>.1}">
-                                        {{d['eth-rejected']}}
-                                        [{{d['eth-rejected']/(d['eth-accepted']+d['eth-rejected'])*100|number:2}}%]<span
-                                            ng-if="d['alt-hashrate']!=='0'"><br/>alt: {{d['alt-rejected']}} [{{d['alt-rejected']/(d['alt-accepted']+d['alt-rejected'])*100|number:2}}%]</span>
+                                        ng-class="{danger:d.data['eth-rejected']/(d.data['eth-accepted']+d.data['eth-rejected'])>.1}">
+                                        {{d.data['eth-rejected']}}
+                                        [{{d.data['eth-rejected']/(d.data['eth-accepted']+d.data['eth-rejected'])*100|number:2}}%]<span
+                                            ng-if="d.data['alt-hashrate']!=='0'"><br/>alt: {{d.data['alt-rejected']}} [{{d.data['alt-rejected']/(d.data['alt-accepted']+d.data['alt-rejected'])*100|number:2}}%]</span>
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='claymore-zec'"
-                                        ng-class="{danger:d['zec-rejected']/(d['zec-accepted']+d['zec-rejected'])>.1}">
-                                        {{d['zec-rejected']}}
-                                        [{{d['zec-rejected']/(d['zec-accepted']+d['zec-rejected'])*100|number:2}}%]
+                                        ng-class="{danger:d.data['zec-rejected']/(d.data['zec-accepted']+d.data['zec-rejected'])>.1}">
+                                        {{d.data['zec-rejected']}}
+                                        [{{d.data['zec-rejected']/(d.data['zec-accepted']+d.data['zec-rejected'])*100|number:2}}%]
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='other'||d.type==='nheqminer'">-</td>
 
 
                                     <td class='ellipsis'
-                                        ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-cryptonight'||d.type==='optiminer-zec'||d.type==='sgminer-gm'">
-                                        {{d.uptime | secondsToTimeString}}
+                                        ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-xmr'||d.type==='optiminer-zec'||d.type==='sgminer-gm'">
+                                        {{d.data.uptime | secondsToTimeString}}
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='other'||d.type==='nheqminer'">-</td>
 
@@ -600,89 +600,89 @@
                                 <tr ng-if="entry.type==='miner-agent'" ng-repeat="d in entry.entries track by $index">
 
                                     <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='sgminer-gm'">
-                                        {{d.miner}}
+                                        {{d.data.miner}}
                                     </td>
-                                    <td ng-if="d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-cryptonight'||d.type==='optiminer-zec'">
+                                    <td ng-if="d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-xmr'||d.type==='optiminer-zec'">
                                         {{d.type}}
-                                        {{d.version}}
+                                        {{d.data.version}}
                                     </td>
                                     <td ng-if="d.type==='nheqminer'">nheqminer</td>
                                     <td ng-if="d.type==='other'">other</td>
 
                                     <td class='ellipsis'
                                         ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='sgminer-gm'">
-                                        {{d.algorithm}}
+                                        {{d.data.algorithm}}
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='claymore-eth'">dagger</td>
                                     <td class='ellipsis'
                                         ng-if="d.type==='claymore-zec'||d.type==='optiminer-zec'||d.type==='nheqminer'">
                                         equihash
                                     </td>
-                                    <td class='ellipsis' ng-if="d.type==='claymore-cryptonight'">cryptonight</td>
+                                    <td class='ellipsis' ng-if="d.type==='claymore-xmr'">cryptonight</td>
                                     <td class='ellipsis' ng-if="d.type==='other'">other</td>
 
                                     <td class='ellipsis'
                                         ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='sgminer-gm'"
-                                        ng-class="{danger:d.hashrate==0}">
-                                        {{d.hashrate
+                                        ng-class="{danger:d.data.hashrate==0}">
+                                        {{d.data.hashrate
                                         |hashrate}}
                                     </td>
-                                    <td class='ellipsis' ng-if="d.type==='claymore-cryptonight'"
-                                        ng-class="{danger:d.hashrate/1000==0}">
-                                        {{d.hashrate/1000
+                                    <td class='ellipsis' ng-if="d.type==='claymore-xmr'"
+                                        ng-class="{danger:d.data.hashrate/1000==0}">
+                                        {{d.data.hashrate/1000
                                         |hashrate}}
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='claymore-eth'"
-                                        ng-class="{danger:d['eth-hashrate']==0}">{{d['eth-hashrate'] |
+                                        ng-class="{danger:d.data['eth-hashrate']==0}">{{d.data['eth-hashrate'] |
                                         hashrate}}<span
-                                                ng-if="d['alt-hashrate']!=='0'"><br/>alt: {{d['alt-hashrate'] | hashrate}}</span>
+                                                ng-if="d.data['alt-hashrate']!=='0'"><br/>alt: {{d.data['alt-hashrate'] | hashrate}}</span>
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='claymore-zec'"
-                                        ng-class="{danger:d['zec-hashrate']==0}">{{d['zec-hashrate'] |
+                                        ng-class="{danger:d.data['zec-hashrate']==0}">{{d.data['zec-hashrate'] |
                                         solutionrate}}
                                     </td>
-                                    <td class='ellipsis' ng-if="d.type==='nheqminer'" ng-class="{danger:d.solutionRate==0}">
-                                        {{d.solutionRate |
+                                    <td class='ellipsis' ng-if="d.type==='nheqminer'" ng-class="{danger:d.data.solutionRate==0}">
+                                        {{d.data.solutionRate |
                                         solutionrate}}
                                     </td>
-                                    <td class='ellipsis' ng-if="d.type==='optiminer-zec'" ng-class="{danger:d.hashrate==0}">
-                                        {{d.hashrate | solutionrate}}
+                                    <td class='ellipsis' ng-if="d.type==='optiminer-zec'" ng-class="{danger:d.data.hashrate==0}">
+                                        {{d.data.hashrate | solutionrate}}
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='other'">-</td>
 
-                                    <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-cryptonight'||d.type==='optiminer-zec'||d.type==='sgminer-gm'">
-                                        {{d.accepted}}
+                                    <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-xmr'||d.type==='optiminer-zec'||d.type==='sgminer-gm'">
+                                        {{d.data.accepted}}
                                     </td>
-                                    <td ng-if="d.type==='claymore-eth'">{{d['eth-accepted']}}<span
-                                            ng-if="d['alt-hashrate']!=='0'"><br/>alt: {{d['alt-accepted']}}</span>
+                                    <td ng-if="d.type==='claymore-eth'">{{d.data['eth-accepted']}}<span
+                                            ng-if="d.data['alt-hashrate']!=='0'"><br/>alt: {{d.data['alt-accepted']}}</span>
                                     </td>
-                                    <td ng-if="d.type==='claymore-zec'">{{d['zec-accepted']}}</td>
+                                    <td ng-if="d.type==='claymore-zec'">{{d.data['zec-accepted']}}</td>
                                     <td ng-if="d.type==='other'||d.type==='nheqminer'">-</td>
 
                                     <td class='ellipsis'
-                                        ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-cryptonight'||d.type==='optiminer-zec'||d.type==='sgminer-gm'"
-                                        ng-class="{danger:d.rejected/(d.accepted+d.rejected)>.1}">{{d.rejected}}
-                                        [{{d.rejected/(d.accepted+d.rejected)*100|number:2}}%]
+                                        ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-xmr'||d.type==='optiminer-zec'||d.type==='sgminer-gm'"
+                                        ng-class="{danger:d.data.rejected/(d.data.accepted+d.data.rejected)>.1}">{{d.data.rejected}}
+                                        [{{d.data.rejected/(d.data.accepted+d.data.rejected)*100|number:2}}%]
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='claymore-eth'"
-                                        ng-class="{danger:d['eth-rejected']/(d['eth-accepted']+d['eth-rejected'])>.1}">
-                                        {{d['eth-rejected']}}
-                                        [{{d['eth-rejected']/(d['eth-accepted']+d['eth-rejected'])*100|number:2}}%]<span
-                                            ng-if="d['alt-hashrate']!=='0'"><br/>alt: {{d['alt-rejected']}} [{{d['alt-rejected']/(d['alt-accepted']+d['alt-rejected'])*100|number:2}}%]</span>
+                                        ng-class="{danger:d.data['eth-rejected']/(d.data['eth-accepted']+d.data['eth-rejected'])>.1}">
+                                        {{d.data['eth-rejected']}}
+                                        [{{d.data['eth-rejected']/(d.data['eth-accepted']+d.data['eth-rejected'])*100|number:2}}%]<span
+                                            ng-if="d.data['alt-hashrate']!=='0'"><br/>alt: {{d.data['alt-rejected']}} [{{d.data['alt-rejected']/(d.data['alt-accepted']+d.data['alt-rejected'])*100|number:2}}%]</span>
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='claymore-zec'"
-                                        ng-class="{danger:d['zec-rejected']/(d['zec-accepted']+d['zec-rejected'])>.1}">
-                                        {{d['zec-rejected']}}
-                                        [{{d['zec-rejected']/(d['zec-accepted']+d['zec-rejected'])*100|number:2}}%]
+                                        ng-class="{danger:d.data['zec-rejected']/(d.data['zec-accepted']+d.data['zec-rejected'])>.1}">
+                                        {{d.data['zec-rejected']}}
+                                        [{{d.data['zec-rejected']/(d.data['zec-accepted']+d.data['zec-rejected'])*100|number:2}}%]
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='other'||d.type==='nheqminer'">-</td>
 
-                                    <td ng-if="d.type==='cpuminer-opt'&&d.temperature" ng-class="{danger:d.temperature>70}">
-                                        {{d.temperature}} °C
+                                    <td ng-if="d.type==='cpuminer-opt'&&d.data.temperature" ng-class="{danger:d.data.temperature>70}">
+                                        {{d.data.temperature}} °C
                                     </td>
-                                    <td ng-if="d.type==='cpuminer-opt'&&!d.temperature">-</td>
-                                    <td ng-if="d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-cryptonight'"><span
-                                            style="margin-right: 4px;" ng-repeat="temp in d.temps"><span class="label"
+                                    <td ng-if="d.type==='cpuminer-opt'&&!d.data.temperature">-</td>
+                                    <td ng-if="d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-xmr'"><span
+                                            style="margin-right: 4px;" ng-repeat="temp in d.data.temps"><span class="label"
                                                                                                          ng-class="{'label-danger':temp>80,'label-info':temp<=80}">{{temp}} °C</span></span>
                                     </td>
                                     <td ng-if="d.type==='other'||d.type==='ccminer'||d.type==='nheqminer'||d.type==='optiminer-zec'||d.type==='sgminer-gm'">
@@ -690,8 +690,8 @@
                                     </td>
 
                                     <td class='ellipsis'
-                                        ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-cryptonight'||d.type==='optiminer-zec'||d.type==='sgminer-gm'">
-                                        {{d.uptime | secondsToTimeString}}
+                                        ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-eth'||d.type==='claymore-zec'||d.type==='claymore-xmr'||d.type==='optiminer-zec'||d.type==='sgminer-gm'">
+                                        {{d.data.uptime | secondsToTimeString}}
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='other'||d.type==='nheqminer'">-</td>
 
