@@ -447,15 +447,14 @@
                                         {{d.data.hashrate
                                         |hashrate}}
                                     </td>
-                                    <td class='ellipsis' ng-if="d.type==='claymore-xmr'"
-                                        ng-class="{danger:d.data.hashrate/1000==0}">
-                                        {{d.data.hashrate/1000
-                                        |hashrate}}
-                                    </td>
                                     <td class='ellipsis' ng-if="d.type==='claymore-eth'"
                                         ng-class="{danger:d.data['eth-hashrate']==0}">{{d.data['eth-hashrate'] |
                                         hashrate}}<span
                                                 ng-if="d.data['alt-hashrate']!=='0'"><br/>alt: {{d.data['alt-hashrate'] | hashrate}}</span>
+                                    </td>
+                                    <td class='ellipsis' ng-if="d.type==='claymore-xmr'"
+                                        ng-class="{danger:d.data['xmr-hashrate']==0}">{{d.data['xmr-hashrate'] |
+                                        hashrate}}
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='claymore-zec'"
                                         ng-class="{danger:d.data['zec-hashrate']==0}">{{d.data['zec-hashrate'] |
@@ -470,17 +469,18 @@
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='other'">-</td>
 
-                                    <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-xmr'||d.type==='optiminer-zec'||d.type==='sgminer-gm'">
+                                    <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='optiminer-zec'||d.type==='sgminer-gm'">
                                         {{d.data.accepted}}
                                     </td>
                                     <td ng-if="d.type==='claymore-eth'">{{d.data['eth-accepted']}}<span
                                             ng-if="d.data['alt-hashrate']!=='0'"><br/>alt: {{d.data['alt-accepted']}}</span>
                                     </td>
+                                    <td ng-if="d.type==='claymore-xmr'">{{d.data['xmr-accepted']}}</td>
                                     <td ng-if="d.type==='claymore-zec'">{{d.data['zec-accepted']}}</td>
                                     <td ng-if="d.type==='other'||d.type==='nheqminer'">-</td>
 
                                     <td class='ellipsis'
-                                        ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-xmr'||d.type==='optiminer-zec'||d.type==='sgminer-gm'"
+                                        ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='optiminer-zec'||d.type==='sgminer-gm'"
                                         ng-class="{danger:d.data.rejected/(d.data.accepted+d.data.rejected)>.1}">{{d.data.rejected}}
                                         [{{d.data.rejected/(d.data.accepted+d.data.rejected)*100|number:2}}%]
                                     </td>
@@ -489,6 +489,11 @@
                                         {{d.data['eth-rejected']}}
                                         [{{d.data['eth-rejected']/(d.data['eth-accepted']+d.data['eth-rejected'])*100|number:2}}%]<span
                                             ng-if="d.data['alt-hashrate']!=='0'"><br/>alt: {{d.data['alt-rejected']}} [{{d.data['alt-rejected']/(d.data['alt-accepted']+d.data['alt-rejected'])*100|number:2}}%]</span>
+                                    </td>
+                                    <td class='ellipsis' ng-if="d.type==='claymore-xmr'"
+                                        ng-class="{danger:d.data['xmr-rejected']/(d.data['xmr-accepted']+d.data['xmr-rejected'])>.1}">
+                                        {{d.data['xmr-rejected']}}
+                                        [{{d.data['xmr-rejected']/(d.data['xmr-accepted']+d.data['xmr-rejected'])*100|number:2}}%]
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='claymore-zec'"
                                         ng-class="{danger:d.data['zec-rejected']/(d.data['zec-accepted']+d.data['zec-rejected'])>.1}">
@@ -628,9 +633,8 @@
                                         |hashrate}}
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='claymore-xmr'"
-                                        ng-class="{danger:d.data.hashrate/1000==0}">
-                                        {{d.data.hashrate/1000
-                                        |hashrate}}
+                                        ng-class="{danger:d.data['xmr-hashrate']==0}">{{d.data['xmr-hashrate'] |
+                                        hashrate}}
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='claymore-eth'"
                                         ng-class="{danger:d.data['eth-hashrate']==0}">{{d.data['eth-hashrate'] |
@@ -650,17 +654,18 @@
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='other'">-</td>
 
-                                    <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-xmr'||d.type==='optiminer-zec'||d.type==='sgminer-gm'">
+                                    <td ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='optiminer-zec'||d.type==='sgminer-gm'">
                                         {{d.data.accepted}}
                                     </td>
                                     <td ng-if="d.type==='claymore-eth'">{{d.data['eth-accepted']}}<span
                                             ng-if="d.data['alt-hashrate']!=='0'"><br/>alt: {{d.data['alt-accepted']}}</span>
                                     </td>
+                                    <td ng-if="d.type==='claymore-xmr'">{{d.data['xmr-accepted']}}</td>
                                     <td ng-if="d.type==='claymore-zec'">{{d.data['zec-accepted']}}</td>
                                     <td ng-if="d.type==='other'||d.type==='nheqminer'">-</td>
 
                                     <td class='ellipsis'
-                                        ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='claymore-xmr'||d.type==='optiminer-zec'||d.type==='sgminer-gm'"
+                                        ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='optiminer-zec'||d.type==='sgminer-gm'"
                                         ng-class="{danger:d.data.rejected/(d.data.accepted+d.data.rejected)>.1}">{{d.data.rejected}}
                                         [{{d.data.rejected/(d.data.accepted+d.data.rejected)*100|number:2}}%]
                                     </td>
@@ -669,6 +674,11 @@
                                         {{d.data['eth-rejected']}}
                                         [{{d.data['eth-rejected']/(d.data['eth-accepted']+d.data['eth-rejected'])*100|number:2}}%]<span
                                             ng-if="d.data['alt-hashrate']!=='0'"><br/>alt: {{d.data['alt-rejected']}} [{{d.data['alt-rejected']/(d.data['alt-accepted']+d.data['alt-rejected'])*100|number:2}}%]</span>
+                                    </td>
+                                    <td class='ellipsis' ng-if="d.type==='claymore-xmr'"
+                                        ng-class="{danger:d.data['xmr-rejected']/(d.data['xmr-accepted']+d.data['xmr-rejected'])>.1}">
+                                        {{d.data['xmr-rejected']}}
+                                        [{{d.data['xmr-rejected']/(d.data['xmr-accepted']+d.data['xmr-rejected'])*100|number:2}}%]
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='claymore-zec'"
                                         ng-class="{danger:d.data['zec-rejected']/(d.data['zec-accepted']+d.data['zec-rejected'])>.1}">
