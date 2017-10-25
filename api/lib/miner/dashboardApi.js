@@ -10,10 +10,12 @@ module.exports = async (baseUrl) => {
   const trainingCount = nodes.filter(node => node.state === 'training').length;
   const keepaliveCount = nodes.filter(node => node.state === 'keepalive').length;
   const graveyardCount = nodes.filter(node => node.state === 'graveyard').length;
+  const removedCount = nodes.filter(node => node.state === 'removed').length;
   return {
     training: trainingCount,
     keepalive: keepaliveCount,
     graveyard: graveyardCount,
+    removed: removedCount,
     total: nodes.length,
   };
 };
