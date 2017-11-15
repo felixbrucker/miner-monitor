@@ -210,8 +210,8 @@
                             </thead>
                             <tbody>
                             <tr ng-repeat="(id2, data) in dashboard.data.current track by $index">
-                                <td ng-if="data.data['1']!=='0'"><span ng-click="statsVm.toggle('dashboard', id, id2)">{{data.name}}</span></td>
-                                <td ng-if="data.data['1']!=='0' && data.data['0'].a!==undefined"
+                                <td ng-if="data.data['1']!==0"><span ng-click="statsVm.toggle('dashboard', id, id2)">{{data.name}}</span></td>
+                                <td ng-if="data.data['1']!==0 && data.data['0'].a!==undefined"
                                     class='ellipsisbig'><span
                                         data-highlighter="data.data['0'].a">{{data.data['0'].a}}</span>
                                     {{data.suffix}}/s
@@ -222,16 +222,16 @@
               </span>
           </span>
                                 </td>
-                                <td ng-if="data.data['1']!=='0' && data.data['0'].a==undefined">0.00 {{data.suffix}}/s
+                                <td ng-if="data.data['1']!==0 && data.data['0'].a==undefined">0.00 {{data.suffix}}/s
                                 </td>
-                                <td ng-if="data.data['1']!=='0' && data.data['0'].a!==undefined" class='ellipsis'><span
+                                <td ng-if="data.data['1']!==0 && data.data['0'].a!==undefined" class='ellipsis'><span
                                         data-highlighter="data.profitability">{{data.profitability * data.data['0'].a | number:4}}</span>
                                     BTC/Day
                                 </td>
-                                <td ng-if="data.data['1']!=='0' && data.data['0'].a==undefined" class='ellipsis'>0.0000
+                                <td ng-if="data.data['1']!==0 && data.data['0'].a==undefined" class='ellipsis'>0.0000
                                     BTC/Day
                                 </td>
-                                <td ng-if="data.data['1']!=='0'"><span data-highlighter="data.data['1']"
+                                <td ng-if="data.data['1']!==0"><span data-highlighter="data.data['1']"
                                                                        class='ellipsis'>{{data.data['1']|number:8}}</span>
                                     BTC
                                 </td>
@@ -452,7 +452,7 @@
                                     <td class='ellipsis' ng-if="d.type==='claymore-eth'"
                                         ng-class="{danger:d.data['eth-hashrate']==0}">{{d.data['eth-hashrate'] |
                                         hashrate}}<span
-                                                ng-if="d.data['alt-hashrate']!=='0'"><br/>alt: {{d.data['alt-hashrate'] | hashrate}}</span>
+                                                ng-if="d.data['alt-hashrate']!==0"><br/>alt: {{d.data['alt-hashrate'] | hashrate}}</span>
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='claymore-xmr'"
                                         ng-class="{danger:d.data['xmr-hashrate']==0}">{{d.data['xmr-hashrate'] |
@@ -475,7 +475,7 @@
                                         {{d.data.accepted}}
                                     </td>
                                     <td ng-if="d.type==='claymore-eth'">{{d.data['eth-accepted']}}<span
-                                            ng-if="d.data['alt-hashrate']!=='0'"><br/>alt: {{d.data['alt-accepted']}}</span>
+                                            ng-if="d.data['alt-hashrate']!==0"><br/>alt: {{d.data['alt-accepted']}}</span>
                                     </td>
                                     <td ng-if="d.type==='claymore-xmr'">{{d.data['xmr-accepted']}}</td>
                                     <td ng-if="d.type==='claymore-zec'">{{d.data['zec-accepted']}}</td>
@@ -490,7 +490,7 @@
                                         ng-class="{danger:d.data['eth-rejected']/(d.data['eth-accepted']+d.data['eth-rejected'])>.1}">
                                         {{d.data['eth-rejected']}}
                                         [{{d.data['eth-rejected']/(d.data['eth-accepted']+d.data['eth-rejected'])*100|number:2}}%]<span
-                                            ng-if="d.data['alt-hashrate']!=='0'"><br/>alt: {{d.data['alt-rejected']}} [{{d.data['alt-rejected']/(d.data['alt-accepted']+d.data['alt-rejected'])*100|number:2}}%]</span>
+                                            ng-if="d.data['alt-hashrate']!==0"><br/>alt: {{d.data['alt-rejected']}} [{{d.data['alt-rejected']/(d.data['alt-accepted']+d.data['alt-rejected'])*100|number:2}}%]</span>
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='claymore-xmr'"
                                         ng-class="{danger:d.data['xmr-rejected']/(d.data['xmr-accepted']+d.data['xmr-rejected'])>.1}">
@@ -630,28 +630,28 @@
 
                                     <td class='ellipsis'
                                         ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='sgminer-gm'"
-                                        ng-class="{danger:d.data.hashrate==0 ) || d.data.hashrate * 1000 < (d.expectedHr * 0.95) }">
+                                        ng-class="{danger:d.data.hashrate==0 ) || d.data.hashrate * 1000 < (d.expectedHr) }">
                                         {{d.data.hashrate
                                         |hashrate}}
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='claymore-xmr'"
-                                        ng-class="{danger:d.data['xmr-hashrate']==0 || d.data['xmr-hashrate'] * 1000 < (d.expectedHr * 0.95)}">{{d.data['xmr-hashrate'] |
+                                        ng-class="{danger:d.data['xmr-hashrate']==0 || d.data['xmr-hashrate'] * 1000 < (d.expectedHr)}">{{d.data['xmr-hashrate'] |
                                         hashrate}}
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='claymore-eth'"
-                                        ng-class="{danger:d.data['eth-hashrate']==0 || d.data['eth-hashrate'] * 1000 < (d.expectedHr * 0.95)}">{{d.data['eth-hashrate'] |
+                                        ng-class="{danger:d.data['eth-hashrate']==0 || d.data['eth-hashrate'] * 1000 < (d.expectedHr)}">{{d.data['eth-hashrate'] |
                                         hashrate}}<span
                                                 ng-if="d.data['alt-hashrate']!==0"><br/>alt: {{d.data['alt-hashrate'] | hashrate}}</span>
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='claymore-zec'"
-                                        ng-class="{danger:d.data['zec-hashrate']==0 || d.data['zec-hashrate'] < (d.expectedHr * 0.95)}">{{d.data['zec-hashrate'] |
+                                        ng-class="{danger:d.data['zec-hashrate']==0 || d.data['zec-hashrate'] < (d.expectedHr)}">{{d.data['zec-hashrate'] |
                                         solutionrate}}
                                     </td>
-                                    <td class='ellipsis' ng-if="d.type==='nheqminer'" ng-class="{danger:d.data.solutionRate==0 || d.data.solutionRate < (d.expectedHr * 0.95)}">
+                                    <td class='ellipsis' ng-if="d.type==='nheqminer'" ng-class="{danger:d.data.solutionRate==0 || d.data.solutionRate < (d.expectedHr)}">
                                         {{d.data.solutionRate |
                                         solutionrate}}
                                     </td>
-                                    <td class='ellipsis' ng-if="d.type==='optiminer-zec'" ng-class="{danger:d.data.hashrate==0 || d.data.hashrate < (d.expectedHr * 0.95)}">
+                                    <td class='ellipsis' ng-if="d.type==='optiminer-zec'" ng-class="{danger:d.data.hashrate==0 || d.data.hashrate < (d.expectedHr)}">
                                         {{d.data.hashrate | solutionrate}}
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='other'">-</td>
