@@ -641,7 +641,7 @@
                                     <td class='ellipsis' ng-if="d.type==='claymore-eth'"
                                         ng-class="{danger:d.data['eth-hashrate']==0 || d.data['eth-hashrate'] * 1000 < (d.expectedHr * 0.95)}">{{d.data['eth-hashrate'] |
                                         hashrate}}<span
-                                                ng-if="d.data['alt-hashrate']!=='0'"><br/>alt: {{d.data['alt-hashrate'] | hashrate}}</span>
+                                                ng-if="d.data['alt-hashrate']!==0"><br/>alt: {{d.data['alt-hashrate'] | hashrate}}</span>
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='claymore-zec'"
                                         ng-class="{danger:d.data['zec-hashrate']==0 || d.data['zec-hashrate'] < (d.expectedHr * 0.95)}">{{d.data['zec-hashrate'] |
