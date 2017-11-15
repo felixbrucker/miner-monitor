@@ -660,7 +660,7 @@
                                         {{d.data.accepted}}
                                     </td>
                                     <td ng-if="d.type==='claymore-eth'">{{d.data['eth-accepted']}}<span
-                                            ng-if="d.data['alt-hashrate']!=='0'"><br/>alt: {{d.data['alt-accepted']}}</span>
+                                            ng-if="d.data['alt-hashrate']!==0"><br/>alt: {{d.data['alt-accepted']}}</span>
                                     </td>
                                     <td ng-if="d.type==='claymore-xmr'">{{d.data['xmr-accepted']}}</td>
                                     <td ng-if="d.type==='claymore-zec'">{{d.data['zec-accepted']}}</td>
@@ -675,7 +675,7 @@
                                         ng-class="{danger:d.data['eth-rejected']/(d.data['eth-accepted']+d.data['eth-rejected'])>.1}">
                                         {{d.data['eth-rejected']}}
                                         [{{d.data['eth-rejected']/(d.data['eth-accepted']+d.data['eth-rejected'])*100|number:2}}%]<span
-                                            ng-if="d.data['alt-hashrate']!=='0'"><br/>alt: {{d.data['alt-rejected']}} [{{d.data['alt-rejected']/(d.data['alt-accepted']+d.data['alt-rejected'])*100|number:2}}%]</span>
+                                            ng-if="d.data['alt-hashrate']!==0"><br/>alt: {{d.data['alt-rejected']}} [{{d.data['alt-rejected']/(d.data['alt-accepted']+d.data['alt-rejected'])*100|number:2}}%]</span>
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='claymore-xmr'"
                                         ng-class="{danger:d.data['xmr-rejected']/(d.data['xmr-accepted']+d.data['xmr-rejected'])>.1}">
