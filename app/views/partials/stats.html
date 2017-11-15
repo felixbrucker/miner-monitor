@@ -630,28 +630,28 @@
 
                                     <td class='ellipsis'
                                         ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='sgminer-gm'"
-                                        ng-class="{danger:d.data.hashrate==0}">
+                                        ng-class="{danger:d.data.hashrate==0 ) || d.data.hashrate * 1000 < (d.expectedHr * 0.95) }">
                                         {{d.data.hashrate
                                         |hashrate}}
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='claymore-xmr'"
-                                        ng-class="{danger:d.data['xmr-hashrate']==0}">{{d.data['xmr-hashrate'] |
+                                        ng-class="{danger:d.data['xmr-hashrate']==0 || d.data['xmr-hashrate'] * 1000 < (d.expectedHr * 0.95)}">{{d.data['xmr-hashrate'] |
                                         hashrate}}
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='claymore-eth'"
-                                        ng-class="{danger:d.data['eth-hashrate']==0}">{{d.data['eth-hashrate'] |
+                                        ng-class="{danger:d.data['eth-hashrate']==0 || d.data['eth-hashrate'] * 1000 < (d.expectedHr * 0.95)}">{{d.data['eth-hashrate'] |
                                         hashrate}}<span
                                                 ng-if="d.data['alt-hashrate']!=='0'"><br/>alt: {{d.data['alt-hashrate'] | hashrate}}</span>
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='claymore-zec'"
-                                        ng-class="{danger:d.data['zec-hashrate']==0}">{{d.data['zec-hashrate'] |
+                                        ng-class="{danger:d.data['zec-hashrate']==0 || d.data['zec-hashrate'] < (d.expectedHr * 0.95)}">{{d.data['zec-hashrate'] |
                                         solutionrate}}
                                     </td>
-                                    <td class='ellipsis' ng-if="d.type==='nheqminer'" ng-class="{danger:d.data.solutionRate==0}">
+                                    <td class='ellipsis' ng-if="d.type==='nheqminer'" ng-class="{danger:d.data.solutionRate==0 || d.data.solutionRate < (d.expectedHr * 0.95)}">
                                         {{d.data.solutionRate |
                                         solutionrate}}
                                     </td>
-                                    <td class='ellipsis' ng-if="d.type==='optiminer-zec'" ng-class="{danger:d.data.hashrate==0}">
+                                    <td class='ellipsis' ng-if="d.type==='optiminer-zec'" ng-class="{danger:d.data.hashrate==0 || d.data.hashrate < (d.expectedHr * 0.95)}">
                                         {{d.data.hashrate | solutionrate}}
                                     </td>
                                     <td class='ellipsis' ng-if="d.type==='other'">-</td>
