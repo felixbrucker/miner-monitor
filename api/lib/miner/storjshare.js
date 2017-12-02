@@ -4,18 +4,13 @@ const https = require('https');
 const bytes = require('bytes');
 
 async function getStorjshareDaemonStats(hostname, port) {
-  let sock = dnode.connect(hostname, port);
-
   return new Promise((resolve, reject) => {
-    sock.on('error', () => {
-      sock.end();
-      sock = null;
-      reject(new Error('daemon not running'));
-    });
-
-    sock.on('remote', (remote) => {
+    dnode.connect({host: hostname, port}, (remote, conn) => {
       remote.status((err, shares) => {
-        sock.end();
+        conn.end();
+        if (err) {
+          return reject(err);
+        }
         shares.sort((a, b) => {
           if (a.config.storagePath < b.config.storagePath) return -1;
           if (a.config.storagePath > b.config.storagePath) return 1;
@@ -24,8 +19,8 @@ async function getStorjshareDaemonStats(hostname, port) {
         shares.forEach((share) => {
           share.meta.farmerState.lastActivity = (Date.now() - share.meta.farmerState.lastActivity) / 1000;
         });
-        sock = null;
-        resolve(shares);
+
+        return resolve(shares);
       });
     });
   });
