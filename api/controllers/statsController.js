@@ -68,7 +68,7 @@ function getStats(req, res, next) {
     return 0;
   });
   res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify({entries, dashboardData, latestCoreRelease}));
+  res.send(JSON.stringify({entries, dashboardData, latestCoreRelease, exchangeRates}));
 }
 
 // #############################

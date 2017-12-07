@@ -296,7 +296,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="(id2, data) in dashboard.data | orderBy:'name' track by $index">
+                            <tr ng-repeat="(id2, data) in dashboard.data.statsData | orderBy:'name' track by $index">
                                 <td ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">
                                     <span ng-click="statsVm.toggle('dashboard-mph', id, id2)">{{data.name}}</span>
                                 </td>
@@ -327,6 +327,14 @@
                                     ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">
                                     {{data.onExchange}} {{data.symbol}}
                                 </td>
+                            </tr>
+                            <tr ng-if="dashboard.data.profitabilitySum!==undefined && dashboard.data.profitabilitySum!==null">
+                                <td colspan="2" style="font-weight: bold;">Total</td>
+                                <td style="font-weight: bold;">{{dashboard.data.profitabilitySum | number:4}}
+                                    BTC/Day<br/>{{dashboard.data.profitabilitySum * statsVm.current.exchangeRates.eurPerBTC
+                                    | number:2}} EUR/Day
+                                </td>
+                                <td colspan="3"></td>
                             </tr>
                             </tbody>
                         </table>

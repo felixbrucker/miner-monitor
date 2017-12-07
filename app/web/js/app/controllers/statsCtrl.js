@@ -23,6 +23,7 @@
       entries:null,
       dashboardData:null,
       latestCoreRelease: null,
+      exchangeRates: null,
     };
     vm.layout="";
     vm.enabled={};
@@ -129,6 +130,7 @@
           vm.current.entries = response.data.entries;
           vm.current.dashboardData=response.data.dashboardData;
           vm.current.latestCoreRelease = response.data.latestCoreRelease;
+          vm.current.exchangeRates = response.data.exchangeRates;
         }, function errorCallback(response) {
           console.log(response);
         });

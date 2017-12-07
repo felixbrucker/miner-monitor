@@ -4,6 +4,7 @@ module.exports = async (address, apiKey, userId) => {
   const poolData = await axios.get(`https://miningpoolhub.com/index.php?page=api&action=getminingandprofitsstatistics`);
   const coinArr = poolData.data.return;
   const statsData = [];
+  let profitabilitySum = 0;
   for (let coin of coinArr) {
     let dashboardData = await axios.get(`https://${coin.coin_name}.miningpoolhub.com/index.php?page=api&action=getdashboarddata&api_key=${apiKey}&id=${userId}`);
     dashboardData = dashboardData.data.getdashboarddata.data;
@@ -26,7 +27,9 @@ module.exports = async (address, apiKey, userId) => {
           return worker;
         });
       statsData.push(coinStats);
+      profitabilitySum += coinStats.profitability * coinStats.hashrate;
     }
   }
-  return statsData;
+
+  return {statsData, profitabilitySum};
 };
