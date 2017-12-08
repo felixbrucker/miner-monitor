@@ -1,11 +1,25 @@
-const axios = require('axios');
+const util = require('../util');
 
-module.exports = async (address) => {
-  const balanceData = await axios.get(`https://api.ethplorer.io/getAddressInfo/${address}?apiKey=freekey`);
-  return {
-    eth: balanceData.data.ETH,
-    tokens: balanceData.data.tokens,
+module.exports = async (address, rates) => {
+  const balanceData = await util.getUrl(`https://api.ethplorer.io/getAddressInfo/${address}?apiKey=freekey`);
+  const result = {
+    eth: balanceData.ETH,
+    tokens: balanceData.tokens,
   };
+  result.eth.balance = result.eth.balance || 0;
+  const rate = util.getRateForTicker(rates, 'ETH');
+  if (rate) {
+    result.eth.balanceFiat = parseFloat(rate['price_eur']) * result.eth.balance;
+  }
+  result.tokens.forEach((token) => {
+    token.balance = token.balance / (Math.pow(10, parseInt(token.tokenInfo.decimals)));
+    const rate = util.getRateForTicker(rates, token.tokenInfo.symbol.toUpperCase());
+    if (rate) {
+      token.balanceFiat = parseFloat(rate['price_eur']) * token.balance;
+    }
+  });
+
+  return result;
 };
 
 

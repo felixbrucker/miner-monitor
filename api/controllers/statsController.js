@@ -1,4 +1,3 @@
-const getExchangeRates = require("get-exchange-rates");
 const Rx = require('rx');
 const semver = require('semver');
 const axios = require('axios');
@@ -23,6 +22,8 @@ const cryptoid = require('../lib/balances/chainz.cryptoid.info');
 const blockchain = require('../lib/balances/blockchain.info');
 const burstcoin = require('../lib/balances/burstcoin');
 
+// Rates
+const coinMarketCap = require('../lib/rates/coin-market-cap');
 
 const timeEvents = Rx.Observable.interval(500);
 
@@ -38,10 +39,7 @@ let stats = {
   dashboardData: {}
 };
 
-let exchangeRates = {
-  eurPerBTC: 0,
-  usdPerBTC: 0,
-};
+let exchangeRates = [];
 
 let latestCoreRelease = null;
 
@@ -68,7 +66,7 @@ function getStats(req, res, next) {
     return 0;
   });
   res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify({entries, dashboardData, latestCoreRelease, exchangeRates}));
+  res.send(JSON.stringify({entries, dashboardData, latestCoreRelease}));
 }
 
 // #############################
@@ -553,7 +551,7 @@ async function getAllMPHStats() {
     if (dashboard.type === 'miningpoolhub' && dashboard.enabled) {
       let poolData = null;
       try {
-        poolData = await mph(dashboard.address, dashboard.api_key, dashboard.user_id);
+        poolData = await mph(dashboard.address, dashboard.api_key, dashboard.user_id, exchangeRates);
       } catch (error) {
         console.log(`[${dashboard.name} :: MiningPoolHub-API] => ${error.message}`);
       }
@@ -574,7 +572,14 @@ async function getAllMPOSStats() {
     if (dashboard.type === 'genericMPOS' && dashboard.enabled) {
       let poolData = null;
       try {
-        poolData = await mpos(dashboard.address, dashboard.baseUrl, dashboard.api_key, dashboard.user_id, dashboard.hrModifier);
+        poolData = await mpos(
+          dashboard.address,
+          dashboard.baseUrl,
+          dashboard.api_key,
+          dashboard.user_id,
+          dashboard.hrModifier,
+          exchangeRates
+        );
       } catch (error) {
         console.log(`[${dashboard.name} :: MPOS-API] => ${error.message}`);
       }
@@ -599,7 +604,7 @@ async function getAllBitcoinbalances() {
     if (dashboard.type === 'bitcoinBalance' && dashboard.enabled) {
       let balanceData = null;
       try {
-        balanceData = await blockchain(dashboard.address);
+        balanceData = await blockchain(dashboard.address, exchangeRates, 'eur');
       } catch (error) {
         console.log(`[${dashboard.name} :: Blockchain-API] => ${error.message}`);
       }
@@ -621,7 +626,7 @@ async function getAllCryptoidBalances() {
     if (dashboard.type === 'cryptoidBalance' && dashboard.enabled) {
       let balanceData = null;
       try {
-        balanceData = await cryptoid(dashboard.address, dashboard.ticker, dashboard.api_key);
+        balanceData = await cryptoid(dashboard.address, dashboard.ticker, dashboard.api_key, exchangeRates);
       } catch (error) {
         console.log(`[${dashboard.name} :: CryptoID-API] => ${error.message}`);
       }
@@ -644,7 +649,7 @@ async function getAllCounterpartyBalances() {
     if (dashboard.type === 'counterpartyBalance' && dashboard.enabled) {
       let balanceData = null;
       try {
-        balanceData = await counterpartychain(dashboard.address);
+        balanceData = await counterpartychain(dashboard.address, exchangeRates);
       } catch (error) {
         console.log(error);
       }
@@ -666,7 +671,7 @@ async function getAllEthStats() {
     if (dashboard.type === 'ethBalance' && dashboard.enabled) {
       let balanceData = null;
       try {
-        balanceData = await ethplorer(dashboard.address);
+        balanceData = await ethplorer(dashboard.address, exchangeRates);
       } catch (error) {
         console.log(`[${dashboard.name} :: Ethplorer-API] => ${error.message}`);
       }
@@ -688,7 +693,7 @@ async function getAllBurstStats() {
     if (dashboard.type === 'burstBalance' && dashboard.enabled) {
       let balanceData = null;
       try {
-        balanceData = await burstcoin(dashboard.address);
+        balanceData = await burstcoin(dashboard.address, exchangeRates);
       } catch (error) {
         console.log(`[${dashboard.name} :: BurstBtfgSpace-API] => ${error.message}`);
       }
@@ -710,7 +715,7 @@ async function getAllNicehashBalanceStats() {
     if (dashboard.type === 'nicehashBalance' && dashboard.enabled) {
       let balanceData = null;
       try {
-        balanceData = await nicehash.balance(dashboard.user_id, dashboard.api_key);
+        balanceData = await nicehash.balance(dashboard.user_id, dashboard.api_key, exchangeRates);
       } catch (error) {
         console.log(`[${dashboard.name} :: Nicehash-API] => ${error.message}`);
       }
@@ -785,15 +790,12 @@ function initAllMinerStats() {
   }
 }
 
-function updateExchangeRates() {
-  getExchangeRates()
-    .then(rates => {
-      exchangeRates.eurPerBTC = 1 / rates.BTC;
-      exchangeRates.usdPerBTC = exchangeRates.eurPerBTC * rates.USD;
-    })
-    .catch(err => {
-      console.log(err);
-    });
+async function updateExchangeRates() {
+  try {
+    exchangeRates = await coinMarketCap();
+  } catch (err) {
+    console.log(`[CoinMarketCap] => ${err.message}`);
+  }
 }
 
 async function updateLatestCoreRelease() {
@@ -840,10 +842,10 @@ function init() {
   updateLatestCoreRelease();
   getAllDashboardApiStats();
   setTimeout(getStorjshareBridgeApiStats, 20 * 1000); // delayed init
-  dashboardIntervals.push(setInterval(getAllMPHStats, 1 * 60 * 1000));
+  dashboardIntervals.push(setInterval(getAllMPHStats, 3 * 60 * 1000));
   dashboardIntervals.push(setInterval(getAllBitcoinbalances, 3 * 60 * 1000));
-  dashboardIntervals.push(setInterval(getAllMPOSStats, 30000));
-  dashboardIntervals.push(setInterval(updateExchangeRates, 3 * 60 * 1000));
+  dashboardIntervals.push(setInterval(getAllMPOSStats, 3 * 60 * 1000));
+  dashboardIntervals.push(setInterval(updateExchangeRates, 5 * 60 * 1000));
   dashboardIntervals.push(setInterval(getAllCryptoidBalances, 3 * 60 * 1000));
   dashboardIntervals.push(setInterval(getAllCounterpartyBalances, 3 * 60 * 1000));
   dashboardIntervals.push(setInterval(getAllEthStats, 3 * 60 * 1000));

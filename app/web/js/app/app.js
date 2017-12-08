@@ -171,12 +171,11 @@
     };
   });
   app.filter('isEmpty', function () {
-    var bar;
     return function (obj) {
-      if(Object.keys(obj).length===0)
+      if (!obj) {
         return true;
-      else
-        return false;
+      }
+      return Object.keys(obj).length===0;
     };
   });
 

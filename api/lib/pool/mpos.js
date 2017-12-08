@@ -1,31 +1,26 @@
-const axios = require('axios');
+const util = require('../util');
 
-module.exports = async (address, baseUrl, apiKey, userId, hrModifier) => {
-  let dashboardData = await axios.get(`${baseUrl}/index.php?page=api&action=getdashboarddata&api_key=${apiKey}&id=${userId}`);
-  dashboardData = dashboardData.data.getdashboarddata.data;
-  let workerData = await axios.get(`${baseUrl}/index.php?page=api&action=getuserworkers&api_key=${apiKey}&id=${userId}`);
-  workerData = workerData.data.getuserworkers.data;
-  let balanceData = await axios.get(`${baseUrl}/index.php?page=api&action=getuserbalance&api_key=${apiKey}&id=${userId}`);
-  balanceData = balanceData.data.getuserbalance.data;
+module.exports = async (address, baseUrl, apiKey, userId, hrModifier, rates) => {
+  let dashboardData = await util.getUrl(`${baseUrl}/index.php?page=api&action=getdashboarddata&api_key=${apiKey}&id=${userId}`);
+  dashboardData = dashboardData.getdashboarddata.data;
+  let workerData = await util.getUrl(`${baseUrl}/index.php?page=api&action=getuserworkers&api_key=${apiKey}&id=${userId}`);
+  workerData = workerData.getuserworkers.data;
+  let balanceData = await util.getUrl(`${baseUrl}/index.php?page=api&action=getuserbalance&api_key=${apiKey}&id=${userId}`);
+  balanceData = balanceData.getuserbalance.data;
   workerData = workerData
-    .sort(function (a, b) {
+    .sort((a, b) => {
       if (a.username < b.username) return -1;
       if (a.username > b.username) return 1;
       return 0;
     })
-    .filter((worker) => {
-      if (worker.hashrate !== 0) {
-        return true;
-      }
-      return false;
-    })
+    .filter((worker) => worker.hashrate !== 0)
     .map((worker) => {
       const arr = worker.username.split(".");
       worker.username = arr[(arr.length === 1 ? 0 : 1)];
       worker.hashrate = worker.hashrate / hrModifier;
     });
 
-  return {
+  const result = {
     baseUrl,
     hashrate: dashboardData.raw.personal.hashrate / hrModifier,
     symbol: dashboardData.pool.info.currency,
@@ -34,4 +29,13 @@ module.exports = async (address, baseUrl, apiKey, userId, hrModifier) => {
     confirmed: balanceData.confirmed,
     unconfirmed: balanceData.unconfirmed,
   };
+
+  const rate = util.getRateForTicker(rates, result.symbol.toUpperCase());
+  if (rate) {
+    result.confirmedFiat = parseFloat(rate['price_eur']) * result.confirmed;
+    result.unconfirmedFiat = parseFloat(rate['price_eur']) * result.unconfirmed;
+    result.estimatedFiat = parseFloat(rate['price_eur']) * result.estimated;
+  }
+
+  return result;
 };
