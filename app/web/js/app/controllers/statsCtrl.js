@@ -50,7 +50,8 @@
      */
     function init() {
       angular.element(document).ready(function () {
-        $("body").tooltip({ selector: '[data-toggle=tooltip]' });
+        // doesn't automatically render the updated content, use standard tooltips for now
+        // $("body").tooltip({ selector: '[data-toggle=tooltip]' });
 
         var layout=localStorage.getItem('layout');
         if (layout!==null&&layout!==""&&layout!=="NaN")
@@ -125,7 +126,6 @@
           vm.current.entries = response.data.entries;
           vm.current.dashboardData=response.data.dashboardData;
           vm.current.latestCoreRelease = response.data.latestCoreRelease;
-          vm.current.exchangeRates = response.data.exchangeRates;
         }, function errorCallback(response) {
           console.log(response);
         });
