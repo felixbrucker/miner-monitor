@@ -21,16 +21,18 @@ module.exports = async (address, apiKey, userId, rates) => {
       hashrate: dashboardData.raw.personal.hashrate, //kh/s
       symbol: dashboardData.pool.info.currency
     };
-    const workerData = await util.getUrl(`https://${coin.coin_name}.miningpoolhub.com/index.php?page=api&action=getuserworkers&api_key=${apiKey}&id=${userId}`);
-    if (Array.isArray(workerData.getuserworkers.data)) {
-      coinStats.workers = workerData.getuserworkers.data
-        .filter((worker) => worker.hashrate !== 0)
-        .map((worker) => {
-          const arr = worker.username.split(".");
-          worker.username = arr[(arr.length === 1 ? 0 : 1)];
-          return worker;
-        });
-    }
+    try {
+      const workerData = await util.getUrl(`https://${coin.coin_name}.miningpoolhub.com/index.php?page=api&action=getuserworkers&api_key=${apiKey}&id=${userId}`);
+      if (Array.isArray(workerData.getuserworkers.data)) {
+        coinStats.workers = workerData.getuserworkers.data
+          .filter((worker) => worker.hashrate !== 0)
+          .map((worker) => {
+            const arr = worker.username.split('.');
+            worker.username = arr[(arr.length === 1 ? 0 : 1)];
+            return worker;
+          });
+      }
+    } catch (err) {} // discard worker retrieval errors
     const rate = util.getRateForTicker(rates, coinStats.symbol.toUpperCase());
     if (rate) {
       coinStats.balance.confirmedFiat = parseFloat(rate['price_eur']) * coinStats.balance.confirmed;
