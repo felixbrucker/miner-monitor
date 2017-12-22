@@ -16,7 +16,7 @@ module.exports = {
         if (algo.data['0'].a !== undefined) {
           profitability += parseFloat(algo.data['0'].a) * parseFloat(algo.profitability);
           let workers = await util.getUrl(`https://api.nicehash.com/api?method=stats.provider.workers&addr=${address}&algo=${algo.algo}`);
-          workers = workers.data.result.workers;
+          workers = workers.result.workers;
           workers.sort((a, b) => {
             if (a[0] < b[0]) return -1;
             if (a[0] > b[0]) return 1;
