@@ -8,26 +8,16 @@ const minerManager = require('../lib/miner/minerManager');
 const baikalMiner = require('../lib/miner/baikalMiner');
 const openHardwareMonitor = require('../lib/miner/openHardwareMonitor');
 const cloudAggregator = require('../lib/miner/cloudAggregator');
-const dashboardApi = require('../lib/miner/dashboardApi');
-
-// Pools
-const nicehash = require('../lib/pool/nicehash');
-const mph = require('../lib/pool/mph');
-const mpos = require('../lib/pool/mpos');
-
-// Balances
-const ethplorer = require('../lib/balances/ethplorer.io');
-const counterpartychain = require('../lib/balances/counterpartychain.io');
-const cryptoid = require('../lib/balances/chainz.cryptoid.info');
-const blockchain = require('../lib/balances/blockchain.info');
-const burstcoin = require('../lib/balances/burstcoin');
 
 // Rates
-const coinMarketCap = require('../lib/rates/coin-market-cap');
+const Coinmarketcap = require('../lib/rates/coinmarketcap');
+
+// Util
+const util = require('../lib/util');
+const dashboardUtil = require('../lib/dashboards/dashboard-util');
+
 
 const timeEvents = Rx.Observable.interval(500);
-
-const nicehashTimeEvents = Rx.Observable.interval(11 * 1000); // stupid nicehash rate limit
 
 const configModule = require(__basedir + 'api/modules/configModule');
 const mailController = require(__basedir + 'api/controllers/mailController');
@@ -39,7 +29,7 @@ let stats = {
   dashboardData: {}
 };
 
-let exchangeRates = [];
+let instances = [];
 
 let latestCoreRelease = null;
 
@@ -47,6 +37,8 @@ let problemCounter = {};
 
 let groupIntervals = [];
 let dashboardIntervals = [];
+
+const coinmarketcap = new Coinmarketcap();
 
 function getStats(req, res, next) {
   const entries = [];
@@ -56,10 +48,7 @@ function getStats(req, res, next) {
     });
     entries.push({name, devices});
   });
-  const dashboardData = [];
-  Object.keys(stats.dashboardData).forEach((key) => {
-    dashboardData.push(stats.dashboardData[key]);
-  });
+  const dashboardData = instances.map(instance => instance.getStats());
   dashboardData.sort(function (a, b) {
     if (a.name < b.name) return -1;
     if (a.name > b.name) return 1;
@@ -487,250 +476,24 @@ async function getStorjshareBridgeApiStats() {
   }
 }
 
-// #############################
-// #####   dashboard-api   #####
-// #############################
-
-async function getAllDashboardApiStats() {
-  for (let dashboard of configModule.config.dashboardData) {
-    if (dashboard.type === 'dashboard-api' && dashboard.enabled) {
-      let dashboardData = null;
-      try {
-        dashboardData = await dashboardApi(dashboard.baseUrl);
-      } catch (error) {
-        console.log(`[${dashboard.name} :: Dashboard-API] => ${error.message}`);
-      }
-      if (dashboardData) {
-        stats.dashboardData[dashboard.id] = {
-          name: dashboard.name,
-          type: dashboard.type,
-          enabled: dashboard.enabled,
-          data: dashboardData,
-        };
-      }
-    }
+async function initializeAllDashboards() {
+  const dashboards = configModule.config.dashboardData
+    .filter(dashboard => dashboard.enabled);
+  const nonNicehashDashboards = dashboards.filter(dashboard => dashboard.type !== 'nicehash');
+  const nicehashDashboards = dashboards.filter(dashboard => dashboard.type === 'nicehash');
+  instances = [];
+  for (const dashboard of nonNicehashDashboards) {
+    const Class = dashboardUtil.getClassForDashboardType(dashboard.type);
+    instances.push(new Class({ dashboard }, coinmarketcap));
+    await util.sleep(1);
+  }
+  // start nicehash dashboards with 31 sec delays to workaround nicehash api limits
+  for (const dashboard of nicehashDashboards) {
+    const Class = dashboardUtil.getClassForDashboardType(dashboard.type);
+    instances.push(new Class({ dashboard }, coinmarketcap));
+    await util.sleep(31);
   }
 }
-
-// #########################
-// #####     Pools     #####
-// #########################
-
-async function getAllNicehashStats() {
-  const nicehashDashboards = [];
-  for (let dashboard of configModule.config.dashboardData) {
-    if (dashboard.type === 'nicehash' && dashboard.enabled) {
-      nicehashDashboards.push(dashboard);
-    }
-  }
-
-  const nicehashDashboardEvents = Rx.Observable
-    .fromArray(nicehashDashboards);
-
-  Rx.Observable.zip(nicehashTimeEvents, nicehashDashboardEvents, (i, dashboard) => dashboard)
-    .subscribe(async (dashboard) => {
-      let poolData = null;
-      try {
-        poolData = await nicehash.poolStats(dashboard.address, exchangeRates);
-      } catch (error) {
-        console.log(`[${dashboard.name} :: Nicehash-API] => ${error.message}`);
-      }
-      if (poolData) {
-        stats.dashboardData[dashboard.id] = {
-          name: dashboard.name,
-          type: dashboard.type,
-          enabled: dashboard.enabled,
-          data: poolData,
-        };
-      }
-    });
-}
-
-async function getAllMPHStats() {
-  for (let dashboard of configModule.config.dashboardData) {
-    if (dashboard.type === 'miningpoolhub' && dashboard.enabled) {
-      let poolData = null;
-      try {
-        poolData = await mph(dashboard.address, dashboard.api_key, dashboard.user_id, exchangeRates);
-      } catch (error) {
-        console.log(`[${dashboard.name} :: MiningPoolHub-API] => ${error.message}`);
-      }
-      if (poolData) {
-        stats.dashboardData[dashboard.id] = {
-          name: dashboard.name,
-          type: dashboard.type,
-          enabled: dashboard.enabled,
-          data: poolData,
-        };
-      }
-    }
-  }
-}
-
-async function getAllMPOSStats() {
-  for (let dashboard of configModule.config.dashboardData) {
-    if (dashboard.type === 'genericMPOS' && dashboard.enabled) {
-      let poolData = null;
-      try {
-        poolData = await mpos(
-          dashboard.address,
-          dashboard.baseUrl,
-          dashboard.api_key,
-          dashboard.user_id,
-          dashboard.hrModifier,
-          exchangeRates
-        );
-      } catch (error) {
-        console.log(`[${dashboard.name} :: MPOS-API] => ${error.message}`);
-      }
-      if (poolData) {
-        stats.dashboardData[dashboard.id] = {
-          name: dashboard.name,
-          type: dashboard.type,
-          enabled: dashboard.enabled,
-          data: poolData,
-        };
-      }
-    }
-  }
-}
-
-// ########################
-// #####   Balances   #####
-// ########################
-
-async function getAllBitcoinbalances() {
-  for (let dashboard of configModule.config.dashboardData) {
-    if (dashboard.type === 'bitcoinBalance' && dashboard.enabled) {
-      let balanceData = null;
-      try {
-        balanceData = await blockchain(dashboard.address, exchangeRates, 'eur');
-      } catch (error) {
-        console.log(`[${dashboard.name} :: Blockchain-API] => ${error.message}`);
-      }
-      if (balanceData !== null) {
-        stats.dashboardData[dashboard.id] = {
-          name: dashboard.name,
-          type: dashboard.type,
-          enabled: dashboard.enabled,
-          data: balanceData,
-          addr: dashboard.address,
-        };
-      }
-    }
-  }
-}
-
-async function getAllCryptoidBalances() {
-  for (let dashboard of configModule.config.dashboardData) {
-    if (dashboard.type === 'cryptoidBalance' && dashboard.enabled) {
-      let balanceData = null;
-      try {
-        balanceData = await cryptoid(dashboard.address, dashboard.ticker, dashboard.api_key, exchangeRates);
-      } catch (error) {
-        console.log(`[${dashboard.name} :: CryptoID-API] => ${error.message}`);
-      }
-      if (balanceData !== null) {
-        stats.dashboardData[dashboard.id] = {
-          name: dashboard.name,
-          type: dashboard.type,
-          enabled: dashboard.enabled,
-          data: balanceData,
-          ticker: dashboard.ticker.toUpperCase(),
-          addr: dashboard.address,
-        };
-      }
-    }
-  }
-}
-
-async function getAllCounterpartyBalances() {
-  for (let dashboard of configModule.config.dashboardData) {
-    if (dashboard.type === 'counterpartyBalance' && dashboard.enabled) {
-      let balanceData = null;
-      try {
-        balanceData = await counterpartychain(dashboard.address, exchangeRates);
-      } catch (error) {
-        console.log(error);
-      }
-      if (balanceData !== null) {
-        stats.dashboardData[dashboard.id] = {
-          name: dashboard.name,
-          type: dashboard.type,
-          enabled: dashboard.enabled,
-          data: balanceData,
-          addr: dashboard.address,
-        };
-      }
-    }
-  }
-}
-
-async function getAllEthStats() {
-  for (let dashboard of configModule.config.dashboardData) {
-    if (dashboard.type === 'ethBalance' && dashboard.enabled) {
-      let balanceData = null;
-      try {
-        balanceData = await ethplorer(dashboard.address, exchangeRates);
-      } catch (error) {
-        console.log(`[${dashboard.name} :: Ethplorer-API] => ${error.message}`);
-      }
-      if (balanceData !== null) {
-        stats.dashboardData[dashboard.id] = {
-          name: dashboard.name,
-          type: dashboard.type,
-          enabled: dashboard.enabled,
-          data: balanceData,
-          addr: dashboard.address,
-        };
-      }
-    }
-  }
-}
-
-async function getAllBurstStats() {
-  for (let dashboard of configModule.config.dashboardData) {
-    if (dashboard.type === 'burstBalance' && dashboard.enabled) {
-      let balanceData = null;
-      try {
-        balanceData = await burstcoin(dashboard.address, exchangeRates);
-      } catch (error) {
-        console.log(`[${dashboard.name} :: BurstBtfgSpace-API] => ${error.message}`);
-      }
-      if (balanceData !== null) {
-        stats.dashboardData[dashboard.id] = {
-          name: dashboard.name,
-          type: dashboard.type,
-          enabled: dashboard.enabled,
-          data: balanceData,
-          addr: dashboard.address,
-        };
-      }
-    }
-  }
-}
-
-async function getAllNicehashBalanceStats() {
-  for (let dashboard of configModule.config.dashboardData) {
-    if (dashboard.type === 'nicehashBalance' && dashboard.enabled) {
-      let balanceData = null;
-      try {
-        balanceData = await nicehash.balance(dashboard.user_id, dashboard.api_key, exchangeRates);
-      } catch (error) {
-        console.log(`[${dashboard.name} :: Nicehash-API] => ${error.message}`);
-      }
-      if (balanceData !== null) {
-        stats.dashboardData[dashboard.id] = {
-          name: dashboard.name,
-          type: dashboard.type,
-          enabled: dashboard.enabled,
-          data: balanceData,
-        };
-      }
-    }
-  }
-}
-
 
 // ####################
 // #####   Init   #####
@@ -790,14 +553,6 @@ function initAllMinerStats() {
   }
 }
 
-async function updateExchangeRates() {
-  try {
-    exchangeRates = await coinMarketCap();
-  } catch (err) {
-    console.log(`[CoinMarketCap] => ${err.message}`);
-  }
-}
-
 async function updateLatestCoreRelease() {
   try {
     const tag = semver.valid((await axios.get(storjCoreTagUrl)).data.tag_name);
@@ -828,40 +583,12 @@ function restartInterval() {
 }
 
 function init() {
+  initializeAllDashboards();
   initAllMinerStats();
-  getAllNicehashStats();
-  getAllBitcoinbalances();
-  getAllMPHStats();
-  getAllMPOSStats();
-  updateExchangeRates();
-  getAllCryptoidBalances();
-  getAllCounterpartyBalances();
-  getAllEthStats();
-  getAllBurstStats();
-  getAllNicehashBalanceStats();
   updateLatestCoreRelease();
-  getAllDashboardApiStats();
   setTimeout(getStorjshareBridgeApiStats, 20 * 1000); // delayed init
-  dashboardIntervals.push(setInterval(getAllMPHStats, 3 * 60 * 1000));
-  dashboardIntervals.push(setInterval(getAllBitcoinbalances, 3 * 60 * 1000));
-  dashboardIntervals.push(setInterval(getAllMPOSStats, 3 * 60 * 1000));
-  dashboardIntervals.push(setInterval(updateExchangeRates, 5 * 60 * 1000));
-  dashboardIntervals.push(setInterval(getAllCryptoidBalances, 3 * 60 * 1000));
-  dashboardIntervals.push(setInterval(getAllCounterpartyBalances, 3 * 60 * 1000));
-  dashboardIntervals.push(setInterval(getAllEthStats, 3 * 60 * 1000));
   dashboardIntervals.push(setInterval(getStorjshareBridgeApiStats, 10 * 60 * 1000));
-  dashboardIntervals.push(setInterval(getAllBurstStats, 3 * 60 * 1000));
-  dashboardIntervals.push(setInterval(getAllNicehashBalanceStats, 3 * 60 * 1000));
   dashboardIntervals.push(setInterval(updateLatestCoreRelease, 10 * 60 * 1000));
-  dashboardIntervals.push(setInterval(getAllDashboardApiStats, 10 * 60 * 1000));
-
-  const nicehashDashboards = [];
-  for (let dashboard of configModule.config.dashboardData) {
-    if (dashboard.type === 'nicehash' && dashboard.enabled) {
-      nicehashDashboards.push(dashboard);
-    }
-  }
-  dashboardIntervals.push(setInterval(getAllNicehashStats, (nicehashDashboards.length ? nicehashDashboards.length : 1) * 11 * 1000)); // stupid nicehash rate limit
 }
 
 setTimeout(init, 2000);
