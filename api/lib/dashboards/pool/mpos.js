@@ -20,11 +20,11 @@ module.exports = class Mpos extends Dashboard {
 
   async updateStats() {
     try {
-      let dashboardData = await util.getUrl(`${this.dashboard.baseUrl}/index.php?page=api&action=getdashboarddata&api_key=${this.dashboard.apiKey}&id=${this.dashboard.userId}`);
+      let dashboardData = await util.getUrl(`${this.dashboard.baseUrl}/index.php?page=api&action=getdashboarddata&api_key=${this.dashboard.api_key}&id=${this.dashboard.user_id}`);
       dashboardData = dashboardData.getdashboarddata.data;
-      let workerData = await util.getUrl(`${this.dashboard.baseUrl}/index.php?page=api&action=getuserworkers&api_key=${this.dashboard.apiKey}&id=${this.dashboard.userId}`);
+      let workerData = await util.getUrl(`${this.dashboard.baseUrl}/index.php?page=api&action=getuserworkers&api_key=${this.dashboard.api_key}&id=${this.dashboard.user_id}`);
       workerData = workerData.getuserworkers.data;
-      let balanceData = await util.getUrl(`${this.dashboard.baseUrl}/index.php?page=api&action=getuserbalance&api_key=${this.dashboard.apiKey}&id=${this.dashboard.userId}`);
+      let balanceData = await util.getUrl(`${this.dashboard.baseUrl}/index.php?page=api&action=getuserbalance&api_key=${this.dashboard.api_key}&id=${this.dashboard.user_id}`);
       balanceData = balanceData.getuserbalance.data;
       workerData = workerData
         .sort((a, b) => {

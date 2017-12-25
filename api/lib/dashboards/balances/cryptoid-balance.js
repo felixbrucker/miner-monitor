@@ -23,7 +23,7 @@ module.exports = class CryptoidBalance extends Dashboard {
 
   async updateStats() {
     try {
-      const balance = await util.getUrl(`https://chainz.cryptoid.info/${this.dashboard.ticker}/api.dws?q=getbalance&a=${this.dashboard.address}${this.dashboard.apiKey ? '&key=' + this.dashboard.apiKey : ''}`);
+      const balance = await util.getUrl(`https://chainz.cryptoid.info/${this.dashboard.ticker}/api.dws?q=getbalance&a=${this.dashboard.address}${this.dashboard.api_key ? '&key=' + this.dashboard.api_key : ''}`);
       const result = {
         balance,
       };

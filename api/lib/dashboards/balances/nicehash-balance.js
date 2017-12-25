@@ -20,7 +20,7 @@ module.exports = class NicehashBalance extends Dashboard {
 
   async updateStats() {
     try {
-      const balanceData = await util.getUrl(`https://api.nicehash.com/api?method=balance&id=${this.dashboard.userId}&key=${this.dashboard.apiKey}`);
+      const balanceData = await util.getUrl(`https://api.nicehash.com/api?method=balance&id=${this.dashboard.user_id}&key=${this.dashboard.api_key}`);
       const result = {
         balance: balanceData.result['balance_confirmed'],
       };
