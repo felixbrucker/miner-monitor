@@ -30,6 +30,10 @@ global.listener = app.listen(process.env.PORT || 8085, function(){
   console.log(colors.green('server running on port '+listener.address().port));
 });
 
-process.on('uncaughtException', function (err) {
-  console.log(err.stack);
+process.on('uncaughtException', err => {
+  console.error('uncaughtException', err.stack);
+});
+
+process.on('unhandledRejection', err => {
+  console.error('unhandledRejection', err.stack);
 });

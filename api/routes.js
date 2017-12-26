@@ -16,7 +16,6 @@ module.exports = function(app) {
   router.post('/config/updateMiner', configController.updateMiner);
   router.post('/config/updateAgent', configController.updateAgent);
   router.post('/config/rebootSystem', configController.rebootSystem);
-  router.post('/config/restartStorjshareShares', configController.restartStorjshareShares);
 
   router.get('/mining/stats', statsController.getStats);
 

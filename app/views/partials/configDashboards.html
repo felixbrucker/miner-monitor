@@ -35,7 +35,12 @@
           <td ng-if="!(configVm.getDashboardTypes('userId') | contains: entry.type)"><input type="text" name="user_id-{{entry.name}}" ng-model="entry.user_id" placeholder="" size="7" disabled></td>
           <td ng-if="configVm.getDashboardTypes('hashrateModifier') | contains: entry.type"><input type="number" name="hrModifier-{{entry.name}}" ng-model="entry.hrModifier" placeholder="1" required></td>
           <td ng-if="!(configVm.getDashboardTypes('hashrateModifier') | contains: entry.type)"><input type="number" name="hrModifier-{{entry.name}}" ng-model="entry.hrModifier" placeholder="" disabled></td>
-          <td><button type="button" class="btn btn-warning" ng-click="configVm.delDashboard(entry.id)">remove Dashboard</button></td>
+          <td>
+            <button type="button" class="btn btn-warning" ng-click="configVm.delDashboard(entry.id)">
+              <i class="fa fa-trash-o" aria-hidden="true"></i>
+              Remove
+            </button>
+          </td>
         </tr>
         <tr style="border-top: 1px solid lightgrey;">
           <td><input type="checkbox" ng-model="configVm.newDashboard.enabled"></td>
@@ -53,7 +58,12 @@
           <td ng-if="!(configVm.getDashboardTypes('userId') | contains: configVm.newDashboard.type)"><input type="text" name="user_id-{{configVm.newDashboard.name}}" ng-model="configVm.newDashboard.user_id" placeholder="" size="7" disabled></td>
           <td ng-if="configVm.getDashboardTypes('hashrateModifier') | contains: configVm.newDashboard.type"><input type="number" name="hrModifier-{{configVm.newDashboard.name}}" ng-model="configVm.newDashboard.hrModifier" placeholder="1"></td>
           <td ng-if="!(configVm.getDashboardTypes('hashrateModifier') | contains: configVm.newDashboard.type)"><input type="number" name="hrModifier-{{configVm.newDashboard.name}}" ng-model="configVm.newDashboard.hrModifier" placeholder="" disabled></td>
-          <td><button type="button" class="btn btn-success" ng-click="configVm.addDashboard()">add Dashboard</button></td>
+          <td>
+            <button type="button" class="btn btn-success" ng-click="configVm.addDashboard()">
+              <i class="fa fa-plus-square" aria-hidden="true"></i>
+              Add
+            </button>
+          </td>
         </tr>
       </table>
     </div>

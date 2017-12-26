@@ -23,8 +23,6 @@
       devices: [],
       groups: [],
       interval: null,
-      layout: null,
-      layouts: null,
       dashboardData: [],
       dashboardTypes: null,
       mailConfig: null,
@@ -32,7 +30,6 @@
     };
 
     vm.localStorage = {
-      layout: null,
       enabled: null,
       refreshInterval: null
     };
@@ -50,8 +47,7 @@
       name: "",
       type: "",
       hostname: "",
-      group: "",
-      ohm: ""
+      group: null,
     };
 
     vm.newGroup = {
@@ -94,7 +90,6 @@
     vm.rebootSystem = rebootSystem;
     vm.addDashboard = addDashboard;
     vm.delDashboard = delDashboard;
-    vm.restartStorjshareShares = restartStorjshareShares;
     vm.getDashboardTypes = getDashboardTypes;
 
 
@@ -193,31 +188,11 @@
     }
 
     /**
-     * @name restartStorjshareShares
-     * @desc restarts all Storjshare shares
-     * @memberOf configCtrl
-     */
-    function restartStorjshareShares(id) {
-      return $http({
-        method: 'POST',
-        url: 'api/config/restartStorjshareShares',
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8'
-        },
-        data: {id: id}
-      }).then((response) => {
-      }, (err) => {
-        console.log(err);
-      });
-    }
-
-    /**
      * @name getLocalStorage
      * @desc get localstorage data
      * @memberOf configCtrl
      */
     function getLocalStorage() {
-      vm.localStorage.layout = localStorage.getItem('layout');
       vm.localStorage.refreshInterval = parseInt(localStorage.getItem('refreshInterval'));
     }
 
@@ -227,11 +202,6 @@
      * @memberOf configCtrl
      */
     function setLocalStorage() {
-      if (vm.localStorage.layout !== null)
-        localStorage.setItem('layout', vm.localStorage.layout);
-      else
-        localStorage.removeItem('layout');
-
       if (vm.localStorage.refreshInterval !== null)
         localStorage.setItem('refreshInterval', vm.localStorage.refreshInterval.toString());
       else
@@ -271,8 +241,7 @@
           name: "",
           type: "",
           hostname: "",
-          group: "",
-          ohm: ""
+          group: null,
         };
         vm.setConfig();
       } else {
@@ -307,7 +276,6 @@
           vm.newDevice.type = entry.type;
           vm.newDevice.hostname = entry.hostname;
           vm.newDevice.group = entry.group;
-          vm.newDevice.ohm = entry.ohm;
         }
       });
     }
@@ -411,8 +379,6 @@
         vm.config.devices = response.data.devices;
         vm.config.groups = response.data.groups;
         vm.config.interval = response.data.interval;
-        vm.config.layout = response.data.layout;
-        vm.config.layouts = response.data.layouts;
         vm.config.dashboardData = response.data.dashboardData;
         vm.config.dashboardTypes = response.data.dashboardTypes;
         if (response.data.mailConfig === null)

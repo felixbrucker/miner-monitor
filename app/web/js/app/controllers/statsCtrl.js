@@ -22,10 +22,7 @@
     vm.current = {
       entries:null,
       dashboardData:null,
-      latestCoreRelease: null,
-      exchangeRates: null,
     };
-    vm.layout="";
     vm.enabled={};
     vm.hidden={};
 
@@ -33,7 +30,6 @@
     // controller API
     vm.init = init;
     vm.getStats = getStats;
-    vm.getLayout = getLayout;
     vm.parseName = parseName;
     vm.atLeastOneBalanceDashboard=atLeastOneBalanceDashboard;
     vm.secondsSince = secondsSince;
@@ -52,12 +48,6 @@
       angular.element(document).ready(function () {
         // doesn't automatically render the updated content, use standard tooltips for now
         // $("body").tooltip({ selector: '[data-toggle=tooltip]' });
-
-        var layout=localStorage.getItem('layout');
-        if (layout!==null&&layout!==""&&layout!=="NaN")
-          vm.layout = layout;
-        else
-          vm.getLayout();
 
 
         var interval=localStorage.getItem('refreshInterval');
@@ -125,27 +115,10 @@
         }).then(function successCallback(response) {
           vm.current.entries = response.data.entries;
           vm.current.dashboardData=response.data.dashboardData;
-          vm.current.latestCoreRelease = response.data.latestCoreRelease;
         }, function errorCallback(response) {
           console.log(response);
         });
       }
-    }
-
-    /**
-     * @name getStats
-     * @desc get the stats
-     * @memberOf statsCtrl
-     */
-    function getLayout() {
-      $http({
-        method: 'GET',
-        url: 'api/config/layout'
-      }).then(function successCallback(response) {
-          vm.layout = response.data;
-      }, function errorCallback(response) {
-        console.log(response);
-      });
     }
 
     function formatHr(hr) {

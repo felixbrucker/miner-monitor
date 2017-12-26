@@ -1,13 +1,13 @@
 const https = require('https');
 const axios = require('axios');
-const dnode = require('dnode');
 const url = require('url');
 const colors = require('colors/safe');
 
 
 const configModule = require(__basedir + 'api/modules/configModule');
 const statsController = require(__basedir + 'api/controllers/statsController');
-const mailController = require(__basedir + 'api/controllers/mailController');
+
+const mailService = require('../lib/services/mail-service');
 
 Array.prototype.contains = (element) => this.indexOf(element) > -1;
 
@@ -23,9 +23,8 @@ function getConfig(req, res, next) {
 function setConfig(req, res) {
   configModule.setConfig(req.body); 
   configModule.saveConfig();
-  statsController.cleanup();
   statsController.restartInterval();
-  mailController.reloadTransport();
+  mailService.createTransport();
   res.setHeader('Content-Type', 'application/json');
   res.send(JSON.stringify({result: true}));
 }
@@ -132,69 +131,10 @@ async function rebootSystem(req, res) {
   }
 }
 
-function verifyTransport(req,res,next){
-  mailController.verifyTransport((result) => {
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify({result: result}));
-  });
-}
-
-async function restartStorjshareShares(req, res) {
-  const id = req.body.id;
-  const devices = configModule.config.devices.filter((device) => device.id === id);
-  if (devices.length === 1) {
-    const device = devices[0];
-    let arr = device.hostname.split("://");
-    arr = arr[arr.length === 1 ? 0 : 1];
-    arr = arr.split("@");
-    arr = arr[arr.length > 1 ? 1 : 0];
-    arr = arr.split(":");
-    const hostname = arr[0];
-    const port = arr[1] ? arr[1] : 443;
-    switch (device.type) {
-      case 'storjshare-daemon':
-        let sock = dnode.connect(hostname, port);
-
-        sock.on('error', () => {
-          sock = null;
-          console.log(colors.red(`Error: daemon for device ${device.name} not running`));
-        });
-
-        sock.on('remote', (remote) => {
-          remote.restart('*', (err) => {
-            sock.end();
-            sock = null;
-            if (err) {
-              console.error(`cannot restart node, reason: ${err.message}`);
-            }
-            res.setHeader('Content-Type', 'application/json');
-            res.send(JSON.stringify({result: true}));
-          });
-        });
-        break;
-      case 'storjshare-daemon-proxy':
-        const agent = new https.Agent({
-          rejectUnauthorized: false
-        });
-        let response = null;
-        try {
-          response = await axios.post(url.resolve(device.hostname, '/restart'), {param: '*'}, {httpsAgent: agent});
-        } catch (error) {
-          console.log(colors.red(`Error: daemon-proxy for device ${device.name} not running`));
-          console.log(error.message);
-          res.setHeader('Content-Type', 'application/json');
-          res.send(JSON.stringify({result: false}));
-        }
-        if (response !== null) {
-          res.setHeader('Content-Type', 'application/json');
-          res.send(JSON.stringify({result: true}));
-        }
-        break;
-    }
-  }else{
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify({result: false}));
-  }
+async function verifyTransport(req,res,next){
+  const result = await mailService.verifyTransport();
+  res.setHeader('Content-Type', 'application/json');
+  res.send(JSON.stringify({result}));
 }
 
 function init() {
@@ -210,4 +150,3 @@ exports.updateMiner = updateMiner;
 exports.updateAgent = updateAgent;
 exports.verifyTransport = verifyTransport;
 exports.rebootSystem = rebootSystem;
-exports.restartStorjshareShares = restartStorjshareShares;
