@@ -8,7 +8,7 @@ function onInit() {
 }
 
 function createTransport() {
-  transport = nodemailer.createTransport(config.config.mailConfig);
+  transport = nodemailer.createTransport(config.config.mailConfig || {});
 }
 
 async function sendMail(options) {
@@ -25,7 +25,7 @@ async function sendMail(options) {
 async function verifyTransport(){
   let status = null;
   try {
-    status = await transporter.verify();
+    status = await transport.verify();
   } catch(err) {
     console.error(`[Mail] SMTP Connection Verification failed: ${err.message}`);
     return false;
