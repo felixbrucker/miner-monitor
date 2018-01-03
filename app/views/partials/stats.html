@@ -467,17 +467,17 @@
                                 <td class='ellipsis'
                                     ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='sgminer-gm'"
                                     ng-class="{danger:d.data.hashrate==0 ) || d.data.hashrate * 1000 < (d.expectedHr) }">
-                                    <span data-toggle="tooltip" title="E: {{d.expectedHr | hashrate}}" data-placement="bottom">{{d.data.hashrate
+                                    <span data-toggle="tooltip" title="E: {{d.expectedHr | hashrate:1:0}}" data-placement="bottom">{{d.data.hashrate
                                         |hashrate}}</span>
                                 </td>
                                 <td class='ellipsis' ng-if="d.type==='claymore-xmr'"
                                     ng-class="{danger:d.data['xmr-hashrate']==0 || d.data['xmr-hashrate'] * 1000 < (d.expectedHr)}">
-                                    <span data-toggle="tooltip" title="E: {{d.expectedHr | hashrate}}" data-placement="bottom">{{d.data['xmr-hashrate'] |
+                                    <span data-toggle="tooltip" title="E: {{d.expectedHr | hashrate:1:0}}" data-placement="bottom">{{d.data['xmr-hashrate'] |
                                         hashrate}}</span>
                                 </td>
                                 <td class='ellipsis' ng-if="d.type==='claymore-eth'"
                                     ng-class="{danger:d.data['eth-hashrate']==0 || d.data['eth-hashrate'] * 1000 < (d.expectedHr)}">
-                                    <span data-toggle="tooltip" title="E: {{d.expectedHr | hashrate}}" data-placement="bottom">{{d.data['eth-hashrate'] |
+                                    <span data-toggle="tooltip" title="E: {{d.expectedHr | hashrate:1:0}}" data-placement="bottom">{{d.data['eth-hashrate'] |
                                         hashrate}}</span><span
                                             ng-if="d.data['alt-hashrate']!==0"><br/>alt: {{d.data['alt-hashrate'] | hashrate}}</span>
                                 </td>
