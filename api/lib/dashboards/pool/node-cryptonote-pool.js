@@ -41,7 +41,7 @@ module.exports = class NodeCryptonotePool extends Dashboard {
       }
 
       const reward = liveStats.network.reward / liveStats.config.coinUnits;
-      const daysToFindBlock = (liveStats.network.difficulty / util.parseHashrate(dashboardData.stats.hashrate || '0')) / (60 * 60 * 24);
+      const daysToFindBlock = (liveStats.network.difficulty / util.parseHashrate(dashboardData.stats.hashrate || '0 H')) / (60 * 60 * 24);
       const estimatedDailyProfit = reward / daysToFindBlock;
 
       const result = {
