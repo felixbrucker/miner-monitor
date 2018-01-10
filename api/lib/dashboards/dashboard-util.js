@@ -1,6 +1,7 @@
 const Nicehash = require('./pool/nicehash');
 const Miningpoolhub = require('./pool/miningpoolhub');
 const Mpos = require('./pool/mpos');
+const NodeCryptonotePool = require('./pool/node-cryptonote-pool');
 const DashboardApi = require('./custom/dashboard-api');
 const BitcoinBalance = require('./balances/bitcoin-balance');
 const CryptoidBalance = require('./balances/cryptoid-balance');
@@ -31,6 +32,8 @@ function getClassForDashboardType(type) {
       return BurstBalance;
     case 'nicehashBalance':
       return NicehashBalance;
+    case 'node-cryptonote-pool':
+      return NodeCryptonotePool;
     default:
       throw new Error(`No class matched '${type}'`);
   }

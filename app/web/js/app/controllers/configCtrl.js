@@ -97,13 +97,13 @@
       const types = [];
       switch (column) {
         case 'address':
-          types.push('nicehash', 'bitcoinBalance', 'cryptoidBalance', 'counterpartyBalance', 'ethBalance', 'burstBalance');
+          types.push('nicehash', 'bitcoinBalance', 'cryptoidBalance', 'counterpartyBalance', 'ethBalance', 'burstBalance', 'node-cryptonote-pool');
           break;
         case 'ticker':
-          types.push('cryptoidBalance');
+          types.push('cryptoidBalance', 'node-cryptonote-pool');
           break;
         case 'baseUrl':
-          types.push('genericMPOS', 'dashboard-api');
+          types.push('genericMPOS', 'dashboard-api', 'node-cryptonote-pool');
           break;
         case 'apiKey':
           types.push('genericMPOS', 'miningpoolhub', 'cryptoidBalance', 'nicehashBalance');

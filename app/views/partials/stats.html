@@ -178,7 +178,7 @@
     </div>
 
     <div ng-repeat="(id, dashboard) in statsVm.current.dashboardData track by $index">
-        <div class="masonry-brick col-md-6" ng-if="dashboard.enabled && (dashboard.type==='nicehash' || dashboard.type==='miningpoolhub' || dashboard.type==='genericMPOS')"
+        <div class="masonry-brick col-md-6" ng-if="dashboard.enabled && (dashboard.type==='nicehash' || dashboard.type==='miningpoolhub' || dashboard.type==='genericMPOS' || dashboard.type === 'node-cryptonote-pool')"
              style="margin-bottom: 10px;">
             <div id="board{{id}}" ng-if="dashboard.type==='nicehash'">
                 <div class="col-md-12 table-responsive">
@@ -386,6 +386,48 @@
                             <td class='ellipsis'>
                                 <span data-toggle="tooltip" title="{{(dashboard.data.estimatedFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
                                     {{dashboard.data.estimated}} {{dashboard.data.symbol}}
+                                </span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-12 centerAlign">
+                    <a href="{{dashboard.data.baseUrl}}/index.php?page=statistics&action=pool" target="_blank">Pool
+                        Homepage</a>
+                </div>
+            </div>
+
+            <div id="board{{id}}" ng-if="dashboard.type==='node-cryptonote-pool'">
+                <div class="col-md-12  table-responsive">
+                    <div class="centerAlign">Stats ({{statsVm.parseName(dashboard.name)}}):</div>
+                    <table class="table table-bordered table-condensed leftAlign">
+                        <thead>
+                        <tr>
+                            <th>Hashrate</th>
+                            <th>Pending</th>
+                            <th>Paid</th>
+                            <th>Last Share Submitted</th>
+                            <th>Estimated Daily Profit</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class='ellipsis'>{{dashboard.data.hashrate}}/s</td>
+                            <td class='ellipsis'>
+                                <span data-toggle="tooltip" title="{{(dashboard.data.pendingFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
+                                    {{dashboard.data.pending | number: 8}} {{dashboard.data.symbol}}
+                                </span>
+                            </td>
+                            <td class='ellipsis'>
+                                <span data-toggle="tooltip" title="{{(dashboard.data.paidFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
+                                    {{dashboard.data.paid | number: 8}} {{dashboard.data.symbol}}
+                                </span>
+                            </td>
+                            <td class='ellipsis'>{{dashboard.data.lastShareSubmitted}}</td>
+                            <td class='ellipsis'>
+                                <span data-toggle="tooltip" title="{{(dashboard.data.estimatedProfitFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
+                                    {{dashboard.data.estimatedProfit | number: 8}} {{dashboard.data.symbol}}
                                 </span>
                             </td>
                         </tr>

@@ -36,7 +36,6 @@
     vm.isDashboardTypeEnabled = isDashboardTypeEnabled;
     vm.toggle = toggle;
     vm.isHidden = isHidden;
-    vm.formatHr = formatHr;
 
 
     /**
@@ -119,42 +118,6 @@
           console.log(response);
         });
       }
-    }
-
-    function formatHr(hr) {
-      // base is kh/s
-      hr *= 1000;
-      var modifier = 0;
-      var result = '';
-      while (hr / 1000 >= 1) {
-        modifier += 1;
-        hr /= 1000;
-      }
-      result += hr.toFixed(2);
-      switch (modifier) {
-        case 0:
-          result += ' H/s';
-          break;
-        case 1:
-          result += ' KH/s';
-          break;
-        case 2:
-          result += ' MH/s';
-          break;
-        case 3:
-          result += ' GH/s';
-          break;
-        case 4:
-          result += ' TH/s';
-          break;
-        case 5:
-          result += ' PH/s';
-          break;
-        case 6:
-          result += ' EH/s';
-          break;
-      }
-      return result;
     }
 
     $scope.$on('$destroy', function () {
