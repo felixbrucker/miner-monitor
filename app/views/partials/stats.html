@@ -409,6 +409,7 @@
                             <th>Paid</th>
                             <th>Last Share Submitted</th>
                             <th>Estimated Daily Profit</th>
+                            <th>Last Block found</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -430,6 +431,7 @@
                                     {{dashboard.data.estimatedProfit | number: 8}} {{dashboard.data.symbol}}
                                 </span>
                             </td>
+                            <td class='ellipsis'>{{dashboard.data.lastBlockFound}}</td>
                         </tr>
                         </tbody>
                     </table>

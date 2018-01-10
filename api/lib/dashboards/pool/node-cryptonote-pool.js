@@ -30,14 +30,15 @@ module.exports = class NodeCryptonotePool extends Dashboard {
 
       const result = {
         hashrate: dashboardData.stats.hashrate,
-        symbol: this.dashboard.ticker.toUpperCase(),
+        symbol: liveStats.config.symbol.toUpperCase(),
         pending: dashboardData.stats.balance ? dashboardData.stats.balance / liveStats.config.coinUnits  : 0,
         paid: dashboardData.stats.paid ? dashboardData.stats.paid / liveStats.config.coinUnits  : 0,
         lastShareSubmitted: moment.unix(dashboardData.stats.lastShare).fromNow(),
         estimatedProfit: estimatedDailyProfit,
+        lastBlockFound: moment(parseInt(liveStats.pool.lastBlockFound, 10)).fromNow(),
       };
 
-      const rate = util.getRateForTicker(this.coinmarketcap.getRates(), result.symbol.toUpperCase());
+      const rate = util.getRateForTicker(this.coinmarketcap.getRates(), result.symbol);
       if (rate) {
         result.pendingFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * result.pending;
         result.paidFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * result.paid;

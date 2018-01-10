@@ -100,7 +100,7 @@
           types.push('nicehash', 'bitcoinBalance', 'cryptoidBalance', 'counterpartyBalance', 'ethBalance', 'burstBalance', 'node-cryptonote-pool');
           break;
         case 'ticker':
-          types.push('cryptoidBalance', 'node-cryptonote-pool');
+          types.push('cryptoidBalance');
           break;
         case 'baseUrl':
           types.push('genericMPOS', 'dashboard-api', 'node-cryptonote-pool');
