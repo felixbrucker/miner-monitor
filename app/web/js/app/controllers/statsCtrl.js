@@ -36,6 +36,7 @@
     vm.isDashboardTypeEnabled = isDashboardTypeEnabled;
     vm.toggle = toggle;
     vm.isHidden = isHidden;
+    vm.stripNodeCryptonotePoolUrl = stripNodeCryptonotePoolUrl;
 
 
     /**
@@ -99,6 +100,15 @@
 
     function secondsSince(date) {
         return (Date.now() - date) / 1000;
+    }
+
+    function stripNodeCryptonotePoolUrl(url) {
+      var arr = url.split(':');
+      if (arr.length === 3) {
+        arr.splice(2, 1);
+      }
+      arr[1] = arr[1].replace('/api', '');
+      return arr.join(':');
     }
 
     /**
