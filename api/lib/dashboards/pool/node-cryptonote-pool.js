@@ -35,6 +35,7 @@ module.exports = class NodeCryptonotePool extends Dashboard {
           pendingFiat: 0,
           paidFiat: 0,
           estimatedProfitFiat: 0,
+          symbol: liveStats.config.symbol.toUpperCase(),
         };
 
         throw new Error(dashboardData.error);
@@ -45,7 +46,7 @@ module.exports = class NodeCryptonotePool extends Dashboard {
       const estimatedDailyProfit = reward / daysToFindBlock;
 
       const result = {
-        hashrate: dashboardData.stats.hashrate || 0,
+        hashrate: dashboardData.stats.hashrate || '0 H',
         symbol: liveStats.config.symbol.toUpperCase(),
         pending: dashboardData.stats.balance ? dashboardData.stats.balance / liveStats.config.coinUnits  : 0,
         paid: dashboardData.stats.paid ? dashboardData.stats.paid / liveStats.config.coinUnits  : 0,

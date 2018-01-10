@@ -179,7 +179,7 @@
     </div>
 
     <div ng-repeat="(id, dashboard) in statsVm.current.dashboardData track by $index">
-        <div class="masonry-brick col-md-6" ng-if="dashboard.enabled && (dashboard.type==='nicehash' || dashboard.type==='miningpoolhub' || dashboard.type==='genericMPOS' || dashboard.type === 'node-cryptonote-pool')"
+        <div class="masonry-brick col-md-6" ng-if="dashboard.enabled && (dashboard.type==='nicehash' || dashboard.type==='miningpoolhub' || dashboard.type==='genericMPOS')"
              style="margin-bottom: 10px;">
             <div id="board{{id}}" ng-if="dashboard.type==='nicehash'">
                 <div class="col-md-12 table-responsive">
@@ -398,49 +398,48 @@
                         Homepage</a>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <div id="board{{id}}" ng-if="dashboard.type==='node-cryptonote-pool'">
-                <div class="col-md-12  table-responsive">
-                    <div class="centerAlign">Stats ({{statsVm.parseName(dashboard.name)}}):</div>
-                    <table class="table table-bordered table-condensed leftAlign">
-                        <thead>
-                        <tr>
-                            <th>Hashrate</th>
-                            <th>Pending</th>
-                            <th>Paid</th>
-                            <th>Last Share Submitted</th>
-                            <th>Estimated Daily Profit</th>
-                            <th>Last Block found</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td class='ellipsis'>{{dashboard.data.hashrate}}/s</td>
-                            <td class='ellipsis'>
+    <div class="masonry-brick col-md-6" ng-if="statsVm.isDashboardTypeEnabled('node-cryptonote-pool')">
+        <div class="col-md-12  table-responsive">
+            <div class="centerAlign">Node-Cryptonote-pools:</div>
+            <table class="table table-bordered table-condensed leftAlign">
+                <thead>
+                <tr>
+                    <th>Hashrate</th>
+                    <th>Pending</th>
+                    <th>Paid</th>
+                    <th>Last Share</th>
+                    <th>Est. Daily Profit</th>
+                    <th>Last Block found</th>
+                    <th>Homepage</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="(id, dashboard) in statsVm.current.dashboardData | filter: {type: 'node-cryptonote-pool'} track by $index">
+                    <td class='ellipsis'>{{dashboard.data.hashrate}}/s</td>
+                    <td class='ellipsis'>
                                 <span data-toggle="tooltip" title="{{(dashboard.data.pendingFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
                                     {{dashboard.data.pending | number: 8}} {{dashboard.data.symbol}}
                                 </span>
-                            </td>
-                            <td class='ellipsis'>
+                    </td>
+                    <td class='ellipsis'>
                                 <span data-toggle="tooltip" title="{{(dashboard.data.paidFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
                                     {{dashboard.data.paid | number: 8}} {{dashboard.data.symbol}}
                                 </span>
-                            </td>
-                            <td class='ellipsis'>{{dashboard.data.lastShareSubmitted}}</td>
-                            <td class='ellipsis'>
+                    </td>
+                    <td class='ellipsis'>{{dashboard.data.lastShareSubmitted}}</td>
+                    <td class='ellipsis'>
                                 <span data-toggle="tooltip" title="{{(dashboard.data.estimatedProfitFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
                                     {{dashboard.data.estimatedProfit | number: 8}} {{dashboard.data.symbol}}
                                 </span>
-                            </td>
-                            <td class='ellipsis'>{{dashboard.data.lastBlockFound}}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="col-md-12 centerAlign">
-                    <a href="{{statsVm.stripNodeCryptonotePoolUrl(dashboard.baseUrl)}}" target="_blank">Pool Homepage</a>
-                </div>
-            </div>
+                    </td>
+                    <td class='ellipsis'>{{dashboard.data.lastBlockFound}}</td>
+                    <td><a href="{{statsVm.stripNodeCryptonotePoolUrl(dashboard.baseUrl)}}" target="_blank">Pool</a></td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
