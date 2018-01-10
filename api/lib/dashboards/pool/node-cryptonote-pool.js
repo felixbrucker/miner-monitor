@@ -41,11 +41,11 @@ module.exports = class NodeCryptonotePool extends Dashboard {
       }
 
       const reward = liveStats.network.reward / liveStats.config.coinUnits;
-      const daysToFindBlock = (liveStats.network.difficulty / util.parseHashrate(dashboardData.stats.hashrate)) / (60 * 60 * 24);
+      const daysToFindBlock = (liveStats.network.difficulty / util.parseHashrate(dashboardData.stats.hashrate || 0)) / (60 * 60 * 24);
       const estimatedDailyProfit = reward / daysToFindBlock;
 
       const result = {
-        hashrate: dashboardData.stats.hashrate,
+        hashrate: dashboardData.stats.hashrate || 0,
         symbol: liveStats.config.symbol.toUpperCase(),
         pending: dashboardData.stats.balance ? dashboardData.stats.balance / liveStats.config.coinUnits  : 0,
         paid: dashboardData.stats.paid ? dashboardData.stats.paid / liveStats.config.coinUnits  : 0,
