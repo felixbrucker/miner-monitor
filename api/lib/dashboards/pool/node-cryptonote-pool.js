@@ -21,8 +21,24 @@ module.exports = class NodeCryptonotePool extends Dashboard {
 
   async updateStats() {
     try {
-      const dashboardData = await util.getUrl(`${this.dashboard.baseUrl}/api/stats_address?address=${this.dashboard.address}&longpoll=false`);
-      const liveStats = await util.getUrl(`${this.dashboard.baseUrl}/api/stats`);
+      const dashboardData = await util.getUrl(`${this.dashboard.baseUrl}/stats_address?address=${this.dashboard.address}&longpoll=false`);
+      const liveStats = await util.getUrl(`${this.dashboard.baseUrl}/stats`);
+
+      if (dashboardData.error) {
+        this.stats = {
+          hashrate: '0 H',
+          pending: 0,
+          paid: 0,
+          lastShareSubmitted: 'never',
+          estimatedProfit: 0,
+          lastBlockFound: moment(parseInt(liveStats.pool.lastBlockFound, 10)).fromNow(),
+          pendingFiat: 0,
+          paidFiat: 0,
+          estimatedProfitFiat: 0,
+        };
+
+        throw new Error(dashboardData.error);
+      }
 
       const reward = liveStats.network.reward / liveStats.config.coinUnits;
       const daysToFindBlock = (liveStats.network.difficulty / util.parseHashrate(dashboardData.stats.hashrate)) / (60 * 60 * 24);

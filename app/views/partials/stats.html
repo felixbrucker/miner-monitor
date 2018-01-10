@@ -95,12 +95,13 @@
                             {{dashboard.data.eth.balance | number: 8}} ETH
                         </span>
                     </span>
-                    <span ng-repeat="entry in dashboard.data.tokens">
-                        <span ng-if="dashboard.data.eth.balance !== 0">
-                            <br/>
-                        </span>
+                    <span ng-if="dashboard.data.eth.balance !== 0"><br/></span>
+                    <span ng-repeat="(index, entry) in dashboard.data.tokens">
                         <span data-toggle="tooltip" title="{{(entry.balanceFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
                             {{entry.balance | number:6}} {{entry.tokenInfo.symbol}}
+                        </span>
+                        <span ng-if="index !== dashboard.data.tokens.length - 1">
+                            <br/>
                         </span>
                     </span>
                 </td>
