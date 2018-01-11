@@ -184,6 +184,11 @@
       return Object.keys(obj).length===0;
     };
   });
+  app.filter('nodeCryptonightPool', function() {
+    return function(arr) {
+      return arr.filter(obj => obj.type === 'node-cryptonote-pool' || obj.type === 'snipa-nodejs-pool');
+    };
+  });
 
   function config($stateProvider, $urlRouterProvider, $locationProvider) {
 

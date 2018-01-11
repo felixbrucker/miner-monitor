@@ -401,9 +401,9 @@
         </div>
     </div>
 
-    <div class="masonry-brick col-md-6" ng-if="statsVm.isDashboardTypeEnabled('node-cryptonote-pool')">
+    <div class="masonry-brick col-md-6" ng-if="statsVm.isDashboardTypeEnabled('node-cryptonote-pool') || statsVm.isDashboardTypeEnabled('snipa-nodejs-pool')">
         <div class="col-md-12  table-responsive">
-            <div class="centerAlign">Node-Cryptonote-pools:</div>
+            <div class="centerAlign">Node-Cryptonote-Pools:</div>
             <table class="table table-bordered table-condensed leftAlign">
                 <thead>
                 <tr>
@@ -417,8 +417,8 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="(id, dashboard) in statsVm.current.dashboardData | filter: {type: 'node-cryptonote-pool'} track by $index">
-                    <td class='ellipsis'>{{dashboard.data.hashrate}}/s</td>
+                <tr ng-repeat="(id, dashboard) in statsVm.current.dashboardData | nodeCryptonightPool track by $index">
+                    <td class='ellipsis'>{{dashboard.data.hashrate | hashrate:null:0}}</td>
                     <td class='ellipsis'>
                                 <span data-toggle="tooltip" title="{{(dashboard.data.pendingFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
                                     {{dashboard.data.pending | number: 8}} {{dashboard.data.symbol}}

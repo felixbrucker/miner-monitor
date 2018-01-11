@@ -4,6 +4,10 @@ let instance = {};
 
 function getStats(req, res, next) {
   res.setHeader('Content-Type', 'application/json');
+  if (!instance) {
+    return res.send({entries: [], dashboardData: []});
+  }
+
   res.send(JSON.stringify(instance.getStats()));
 }
 

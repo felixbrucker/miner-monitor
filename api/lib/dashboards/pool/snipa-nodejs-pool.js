@@ -2,7 +2,7 @@ const moment = require('moment');
 const util = require('../../util');
 const Dashboard = require('../dashboard');
 
-module.exports = class NodeCryptonotePool extends Dashboard {
+module.exports = class SnipaNodejsPool extends Dashboard {
 
   static getDefaults() {
     return {
@@ -11,7 +11,7 @@ module.exports = class NodeCryptonotePool extends Dashboard {
   }
 
   constructor(options = {}, coinmarketcap) {
-    options = Object.assign(NodeCryptonotePool.getDefaults(), options);
+    options = Object.assign(SnipaNodejsPool.getDefaults(), options);
     super(options, coinmarketcap);
   }
 
@@ -21,39 +21,39 @@ module.exports = class NodeCryptonotePool extends Dashboard {
 
   async updateStats() {
     try {
-      const dashboardData = await util.getUrl(`${this.dashboard.baseUrl}/stats_address?address=${this.dashboard.address}&longpoll=false`);
-      const liveStats = await util.getUrl(`${this.dashboard.baseUrl}/stats`);
+      const dashboardData = await util.getUrl(`${this.dashboard.baseUrl}/api/miner/${this.dashboard.address}/stats`);
+      const networkStats = await util.getUrl(`${this.dashboard.baseUrl}/api/network/stats`);
+      const poolStats = await util.getUrl(`${this.dashboard.baseUrl}/api/pool/stats`);
 
-      if (dashboardData.error) {
+
+      if (dashboardData.lastHash === null) {
         this.stats = {
           hashrate: 0,
           pending: 0,
           paid: 0,
           lastShareSubmitted: 'never',
           estimatedProfit: 0,
-          lastBlockFound: moment(parseInt(liveStats.pool.lastBlockFound, 10)).fromNow(),
+          lastBlockFound: moment.unix(poolStats.pool_statistics.lastBlockFoundTime).fromNow(),
           pendingFiat: 0,
           paidFiat: 0,
           estimatedProfitFiat: 0,
-          symbol: liveStats.config.symbol.toUpperCase(),
+          symbol: this.dashboard.ticker.toUpperCase(),
         };
         return;
       }
 
-      const hashrate = util.parseHashrate(dashboardData.stats.hashrate || '0 H');
-
-      const reward = liveStats.network.reward / liveStats.config.coinUnits;
-      const daysToFindBlock = (liveStats.network.difficulty / hashrate) / (60 * 60 * 24);
+      const reward = networkStats.value / Math.pow(10, 8);
+      const daysToFindBlock = (networkStats.difficulty / (dashboardData.hash || 0)) / (60 * 60 * 24);
       const estimatedDailyProfit = reward / daysToFindBlock;
 
       const result = {
-        hashrate,
-        symbol: liveStats.config.symbol.toUpperCase(),
-        pending: dashboardData.stats.balance ? dashboardData.stats.balance / liveStats.config.coinUnits  : 0,
-        paid: dashboardData.stats.paid ? dashboardData.stats.paid / liveStats.config.coinUnits  : 0,
-        lastShareSubmitted: moment.unix(dashboardData.stats.lastShare).fromNow(),
+        hashrate: dashboardData.hash || 0,
+        symbol: this.dashboard.ticker.toUpperCase(),
+        pending: dashboardData.amtDue ? (dashboardData.amtDue / Math.pow(10, 8)) : 0,
+        paid: dashboardData.amtPaid ? (dashboardData.amtPaid / Math.pow(10, 8)) : 0,
+        lastShareSubmitted: moment.unix(dashboardData.lastHash).fromNow(),
         estimatedProfit: estimatedDailyProfit,
-        lastBlockFound: moment(parseInt(liveStats.pool.lastBlockFound, 10)).fromNow(),
+        lastBlockFound: moment.unix(poolStats.pool_statistics.lastBlockFoundTime).fromNow(),
       };
 
       const rate = util.getRateForTicker(this.coinmarketcap.getRates(), result.symbol);
@@ -65,7 +65,7 @@ module.exports = class NodeCryptonotePool extends Dashboard {
 
       this.stats = result;
     } catch(err) {
-      console.error(`[${this.dashboard.name} :: Node-Cryptonote-Pool-API] => ${err.message}`);
+      console.error(`[${this.dashboard.name} :: Snipa-Nodejs-Pool-API] => ${err.message}`);
     }
   }
 };

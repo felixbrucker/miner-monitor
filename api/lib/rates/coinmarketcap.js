@@ -33,7 +33,11 @@ module.exports = class Coinmarketcap {
 
   async updateRates() {
     try {
-      this.rates = await util.getUrl(`https://api.coinmarketcap.com/v1/ticker/?limit=0&convert=${this.currency}`);
+      const rates = await util.getUrl(`https://api.coinmarketcap.com/v1/ticker/?limit=0&convert=${this.currency}`);
+      if (!rates.length) {
+        throw new Error(`no array returned: ${JSON.stringify(rates)}`);
+      }
+      this.rates = rates;
     } catch(err) {
       console.error(`[CoinMarketCap] => ${err.message}`);
     }
