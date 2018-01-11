@@ -95,7 +95,7 @@
     return function (hashrate, precision, start = 1) {
       if (isNaN(parseFloat(hashrate)) || !isFinite(hashrate)) return '';
       if (parseFloat(hashrate) === 0) return '0 H/s';
-      if (typeof precision === 'undefined') precision = 1;
+      if (precision !== 0 && !precision) precision = 1;
       switch (start) {
         case 0:
           break;
