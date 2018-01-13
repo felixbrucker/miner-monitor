@@ -189,6 +189,11 @@
       return arr.filter(obj => obj.type === 'node-cryptonote-pool' || obj.type === 'snipa-nodejs-pool');
     };
   });
+  app.filter('nhOrMphOrMpos', function() {
+    return function(arr) {
+      return arr.filter(obj => obj.enabled && (obj.type==='nicehash' || obj.type==='miningpoolhub' || obj.type==='genericMPOS'));
+    };
+  });
 
   function config($stateProvider, $urlRouterProvider, $locationProvider) {
 
