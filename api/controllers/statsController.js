@@ -1,6 +1,6 @@
 const Stats = require('../lib/stats');
 
-let instance = {};
+let instance = null;
 
 function getStats(req, res, next) {
   res.setHeader('Content-Type', 'application/json');

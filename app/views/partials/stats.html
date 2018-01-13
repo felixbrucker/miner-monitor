@@ -153,7 +153,7 @@
     </div>
 
     <div ng-repeat="(id, dashboard) in statsVm.current.dashboardData track by $index">
-        <div class="masonry-brick col-md-2" ng-if="dashboard.enabled && (dashboard.type==='dashboard-api')">
+        <div class="masonry-brick col-md-3" ng-if="dashboard.enabled && (dashboard.type==='dashboard-api')">
             <div style="float: left;">{{dashboard.name}}</div>
             <table class="table table-bordered table-condensed leftAlign">
                 <thead>
@@ -163,6 +163,7 @@
                     <th><span data-toggle="tooltip" title="Graveyard" data-placement="bottom">G</span></th>
                     <th><span data-toggle="tooltip" title="Removed" data-placement="bottom">R</span></th>
                     <th>Total</th>
+                    <th>Balances</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -172,6 +173,17 @@
                         <td>{{dashboard.data.graveyard}}</td>
                         <td>{{dashboard.data.removed}}</td>
                         <td>{{dashboard.data.total}}</td>
+                        <td>
+                            <span ng-if="dashboard.data.totalEth > 0">
+                                <span data-toggle="tooltip" title="{{(dashboard.data.totalEthFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
+                                    {{dashboard.data.totalEth.toFixed(6)}} ETH
+                                </span>
+                                <br>
+                            </span>
+                            <span data-toggle="tooltip" title="{{(dashboard.data.totalStorjFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
+                                {{dashboard.data.totalStorj.toFixed(0)}} STORJ
+                            </span>
+                        </td>
                     </tr>
                 </tbody>
             </table>
