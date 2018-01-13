@@ -30,7 +30,7 @@ module.exports = class Stats {
     for (const dashboard of nonNicehashDashboards) {
       const Class = dashboardUtil.getClassForDashboardType(dashboard.type);
       this.instances.dashboard.push(new Class({ dashboard }, this.coinmarketcap));
-      await util.sleep(1);
+      // await util.sleep(1);
     }
     // start nicehash dashboards with 31 sec delays to workaround nicehash api limits
     for (const dashboard of nicehashDashboards) {
@@ -70,6 +70,16 @@ module.exports = class Stats {
     });
 
     return { entries, dashboardData };
+  }
+
+  cleanup() {
+    this.instances.dashboard.map(dashboard => dashboard.cleanup());
+    this.instances.group.map(group => group.cleanup());
+    this.instances = {
+      dashboard: [],
+      group: [],
+    };
+    this.coinmarketcap = null;
   }
 
   async onInit() {

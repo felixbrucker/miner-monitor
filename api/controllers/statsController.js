@@ -12,6 +12,7 @@ function getStats(req, res, next) {
 }
 
 function restartInterval() {
+  instance.cleanup();
   init();
 }
 

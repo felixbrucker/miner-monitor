@@ -26,8 +26,16 @@ module.exports = class Dashboard {
 
   async updateStats() {}
 
+  cleanup() {
+    if (this.runningInterval) {
+      clearInterval(this.runningInterval);
+      this.runningInterval = null;
+    }
+    this.stats = {};
+  }
+
   onInit() {
     this.updateStats();
-    setInterval(() => this.updateStats(), this.interval);
+    this.runningInterval = setInterval(() => this.updateStats(), this.interval);
   }
 };

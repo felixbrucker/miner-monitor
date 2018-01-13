@@ -29,6 +29,11 @@ module.exports = class Group {
     });
   }
 
+  cleanup() {
+    this.miner.map(miner => miner.cleanup());
+    this.miner = [];
+  }
+
   onInit() {
     this.setUpMiner();
   }

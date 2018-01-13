@@ -35,8 +35,16 @@ module.exports = class Miner {
     };
   }
 
+  cleanup() {
+    if (this.runningInterval) {
+      clearInterval(this.runningInterval);
+      this.runningInterval = null;
+    }
+    this.stats = {};
+  }
+
   onInit() {
     this.updateStats();
-    setInterval(this.updateStats.bind(this), this.interval);
+    this.runningInterval = setInterval(this.updateStats.bind(this), this.interval);
   }
 };
