@@ -96,7 +96,7 @@
                         </span>
                     </span>
                     <span ng-if="dashboard.data.eth.balance !== 0"><br/></span>
-                    <span ng-repeat="(index, entry) in dashboard.data.tokens">
+                    <span ng-repeat="(index, entry) in dashboard.data.tokens track by $index">
                         <span data-toggle="tooltip" title="{{(entry.balanceFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
                             {{entry.balance | number:6}} {{entry.tokenInfo.symbol}}
                         </span>
