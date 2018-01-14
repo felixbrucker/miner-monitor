@@ -139,14 +139,7 @@
   });
   app.filter('secondsToTimeString', function () {
     return function (seconds) {
-      var days = Math.floor(seconds / 86400);
-      var hours = Math.floor((seconds % 86400) / 3600);
-      var minutes = Math.floor(((seconds % 86400) % 3600) / 60);
-      var timeString = '';
-      if (days > 0) timeString += (days > 1 ) ? (days + "d ") : (days + "d ");
-      if (hours > 0) timeString += (hours > 1) ? (hours + "h ") : (hours + "h ");
-      if (minutes >= 0) timeString += (minutes > 1 || minutes===0) ? (minutes + "m") : (minutes + "m");
-      return timeString;
+      return moment().subtract(seconds, 'seconds').fromNow(true);
     }
   });
   app.filter('secondsToHrMin', function () {
@@ -191,6 +184,9 @@
   });
   app.filter('nhOrMphOrMpos', function() {
     return function(arr) {
+      if (!arr) {
+        return [];
+      }
       return arr.filter(obj => obj.enabled && (obj.type==='nicehash' || obj.type==='miningpoolhub' || obj.type==='genericMPOS'));
     };
   });
