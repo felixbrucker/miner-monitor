@@ -6,7 +6,7 @@ const agent = new https.Agent({
 });
 
 async function getUrl(url) {
-  const result = await axios.get(url, {httpsAgent: agent});
+  const result = await axios.get(url, {httpsAgent: agent, timeout: 2 * 60 * 1000});
   return result.data;
 }
 
