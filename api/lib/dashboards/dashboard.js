@@ -36,6 +36,6 @@ module.exports = class Dashboard {
 
   onInit() {
     this.updateStats();
-    this.runningInterval = setInterval(() => this.updateStats(), this.interval);
+    this.runningInterval = setInterval(this.updateStats.bind(this), this.interval);
   }
 };
