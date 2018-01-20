@@ -45,6 +45,6 @@ module.exports = class Coinmarketcap {
 
   onInit() {
     this.updateRates();
-    setInterval(this.updateRates, this.interval);
+    setInterval(this.updateRates.bind(this), this.interval);
   }
 };
