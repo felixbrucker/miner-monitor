@@ -37,6 +37,7 @@
     vm.toggle = toggle;
     vm.isHidden = isHidden;
     vm.stripNodeCryptonotePoolUrl = stripNodeCryptonotePoolUrl;
+    vm.getNodeCryptonotePoolFiatTotal = getNodeCryptonotePoolFiatTotal;
 
 
     /**
@@ -58,6 +59,13 @@
 
         vm.getStats();
       });
+    }
+
+    function getNodeCryptonotePoolFiatTotal(key) {
+      var dashboards = vm.current.dashboardData.filter(obj => obj.type === 'node-cryptonote-pool' || obj.type === 'snipa-nodejs-pool');
+      return dashboards
+        .map(dashboard => dashboard.data[key + 'Fiat'] ? dashboard.data[key + 'Fiat'] : 0)
+        .reduce((acc, right) => acc + right, 0);
     }
 
     function toggle(ns, id, id2) {
