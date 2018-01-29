@@ -18,8 +18,8 @@ module.exports = class Storj extends Miner {
         this.stats.shares.find(oldShare => share.id === oldShare.id) : null;
       if (oldShareData) {
         // merge old data not present in new
-        share = Object.assign(oldShareData, share);
         share.meta.farmerState =  Object.assign(oldShareData.meta.farmerState, share.meta.farmerState);
+        share = Object.assign(oldShareData, share);
       }
 
       if (!share.lastSpaceUpdate) {
