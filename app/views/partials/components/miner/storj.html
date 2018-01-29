@@ -10,8 +10,7 @@
             <thead>
             <tr>
                 <th><span ng-click="$ctrl.toggleHidden()">Location</span></th>
-                <th><span data-toggle="tooltip" title="Share / Timeouts" data-placement="bottom">Status</span>
-                </th>
+                <th><span data-toggle="tooltip" title="Status" data-placement="bottom">S</span>
                 <th><span data-toggle="tooltip" title="Restarts" data-placement="bottom">R</span></th>
                 <th><span data-toggle="tooltip" title="Peers" data-placement="bottom">P</span></th>
                 <th><span data-toggle="tooltip" title="Shared space (% used)" data-placement="bottom">Shared</span>
@@ -36,34 +35,16 @@
                 </td>
 
                 <td>
-                    <span ng-if="share.state===0">
-                        <span data-toggle="tooltip" title="stopped"><i
+                    <span ng-if="share.state === 0 || share.state === 2 || share.hasTr">
+                        <span data-toggle="tooltip" title="Problems:
+                        {{share.state === 0 ? 'share stopped' : ''}}{{share.state === 2 ? 'share errored' : ''}}
+                        {{share.hasTr ? 'TR: ' + share.tr : ''}}"><i
                                 class="fa fa-stop-circle-o" aria-hidden="true" style="color:red"></i>
                         </span>
                     </span>
-                    <span ng-if="share.state===1">
-                        <span data-toggle="tooltip" title="running"><i
+                    <span ng-if="share.state===1 && !share.hasTr">
+                        <span data-toggle="tooltip" title="running & no timeouts"><i
                                 class="fa fa-check-circle-o" aria-hidden="true" style="color:green"></i>
-                        </span>
-                    </span>
-                    <span ng-if="share.state===2">
-                        <span data-toggle="tooltip" title="error"><i
-                                class="fa fa-exclamation-triangle" aria-hidden="true"
-                                style="color:red"></i>
-                        </span>
-                    </span>
-                    /
-                    <span ng-if="share.hasTr === false">
-                        <span data-toggle="tooltip"
-                              title="no timeouts"><i
-                                class="fa fa-check-circle-o" aria-hidden="true" style="color:green"></i>
-                        </span>
-                    </span>
-                    <span ng-if="share.hasTr === true">
-                        <span data-toggle="tooltip"
-                              title="TR: {{share.tr}}"><i
-                                class="fa fa-exclamation-triangle" aria-hidden="true"
-                                style="color:orange"></i>
                         </span>
                     </span>
                 </td>
