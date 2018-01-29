@@ -1,0 +1,50 @@
+<div class="col-md-12  table-responsive">
+    <div class="centerAlign">Node-Cryptonote-Pools:</div>
+    <table class="table table-bordered table-condensed leftAlign">
+        <thead>
+        <tr>
+            <th>Hashrate</th>
+            <th>Pending</th>
+            <th>Paid</th>
+            <th>Est. Daily Profit</th>
+            <th>Last Share</th>
+            <th>
+                <span data-toggle="tooltip" title="Last Block found by Pool" data-placement="bottom">
+                    Last Block found
+                </span>
+            </th>
+            <th>Homepage</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="(id, dashboard) in $ctrl.dashboards | nodeCryptonightPool track by $index">
+            <td class='ellipsis'>{{dashboard.data.hashrate | hashrate:null:0}}</td>
+            <td class='ellipsis'>
+                                    <span data-toggle="tooltip" title="{{(dashboard.data.pendingFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
+                                        {{dashboard.data.pending | number: 8}} {{dashboard.data.symbol}}
+                                    </span>
+            </td>
+            <td class='ellipsis'>
+                                    <span data-toggle="tooltip" title="{{(dashboard.data.paidFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
+                                        {{dashboard.data.paid | number: 8}} {{dashboard.data.symbol}}
+                                    </span>
+            </td>
+            <td class='ellipsis'>
+                                    <span data-toggle="tooltip" title="{{(dashboard.data.estimatedProfitFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
+                                        {{dashboard.data.estimatedProfit | number: 8}} {{dashboard.data.symbol}}
+                                    </span>
+            </td>
+            <td class='ellipsis'>{{dashboard.data.lastShareSubmitted}}</td>
+            <td class='ellipsis'>{{dashboard.data.lastBlockFound}}</td>
+            <td><a href="{{$ctrl.stripNodeCryptonotePoolUrl(dashboard.baseUrl)}}" target="_blank">Pool</a></td>
+        </tr>
+        <tr>
+            <td><strong>Total</strong></td>
+            <td><strong>{{$ctrl.getNodeCryptonotePoolFiatTotal('pending') | number: 2}} €</strong></td>
+            <td><strong>{{$ctrl.getNodeCryptonotePoolFiatTotal('paid') | number: 2}} €</strong></td>
+            <td><strong>{{$ctrl.getNodeCryptonotePoolFiatTotal('estimatedProfit') | number: 2}} €</strong></td>
+            <td colspan="3"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>

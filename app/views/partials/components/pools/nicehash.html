@@ -1,0 +1,82 @@
+<div class="col-md-12 table-responsive">
+    <div class="centerAlign">Workers ({{$ctrl.parseName($ctrl.dashboard.name)}}):</div>
+    <table class="table table-bordered table-condensed leftAlign">
+        <thead>
+        <tr>
+            <th class="leftAlign">Algorithm</th>
+            <th class="leftAlign">Hashrate</th>
+            <th class="leftAlign">Profitability</th>
+            <th class="leftAlign">Unpaid balance</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="(id2, data) in $ctrl.dashboard.data.current track by $index">
+            <td ng-if="data.data['1']!==0"><span ng-click="$ctrl.toggleHidden(id2)">{{data.name}}</span></td>
+            <td ng-if="data.data['1']!==0 && data.data['0'].a!==undefined"
+                class='ellipsisbig'><span
+                    data-highlighter="data.data['0'].a">{{data.data['0'].a}}</span>
+                {{data.suffix}}/s
+                <span ng-if="data.worker!==undefined" style="font-size:small;">
+                    <span ng-repeat="(key, value) in data.worker track by $index" ng-hide="$ctrl.isHidden(id2)">
+                        <br/>
+                        {{value['0']}}: {{value['1'].a}}<span class="nomobile"> {{data.suffix}}/s (diff: {{value['4']}}, connected: {{value['2']}} min)</span>
+                    </span>
+                </span>
+            </td>
+            <td ng-if="data.data['1']!==0 && data.data['0'].a==undefined">0.00 {{data.suffix}}/s
+            </td>
+            <td ng-if="data.data['1']!==0 && data.data['0'].a!==undefined" class='ellipsis'><span
+                    data-highlighter="data.profitability">{{data.profitability * data.data['0'].a | number:4}}</span>
+                BTC/Day
+            </td>
+            <td ng-if="data.data['1']!==0 && data.data['0'].a==undefined" class='ellipsis'>0.0000
+                BTC/Day
+            </td>
+            <td ng-if="data.data['1']!==0"><span data-highlighter="data.data['1']"
+                                                 class='ellipsis'>{{data.data['1']|number:8}}</span>
+                BTC
+            </td>
+        </tr>
+        </tbody>
+        <tr ng-if="$ctrl.dashboard.data.sum!==undefined && $ctrl.dashboard.data.sum!==null">
+            <td colspan="2" style="font-weight: bold;">Total</td>
+            <td style="font-weight: bold;">{{$ctrl.dashboard.data.sum.profitability | number:4}}
+                BTC/Day<br/>{{$ctrl.dashboard.data.sum.profitabilityFiat
+                | number:2}} EUR/Day
+            </td>
+            <td style="font-weight: bold;">{{$ctrl.dashboard.data.sum.unpaidBalance | number:8}} BTC<br/>{{$ctrl.dashboard.data.sum.unpaidBalanceFiat
+                | number:2}} EUR
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="col-md-12 table-responsive">
+    <div class="centerAlign">Payments ({{$ctrl.parseName($ctrl.dashboard.name)}}):</div>
+    <table class="table table-bordered table-condensed leftAlign">
+        <thead>
+        <tr>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Fee</th>
+            <th>TXID</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="(id, data) in $ctrl.dashboard.data.payments track by $index">
+            <td>{{data.time * 1000 | date: "yyyy-MM-dd HH:mm"}}</td>
+            <td>{{data.amount}} BTC</td>
+            <td>{{data.fee}} BTC</td>
+            <td class='ellipsisbig'><a href="https://blockchain.info/tx/{{data.TXID}}"
+                                       target="_blank">{{data.TXID}}</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="col-md-12 centerAlign">
+    <a href="https://www.nicehash.com/?p=miners&addr={{$ctrl.dashboard.data.address}}" target="_blank">Nicehash
+        {{$ctrl.parseName($ctrl.dashboard.name)}}</a>
+</div>
+<div class="col-md-12 centerAlign">
+    <a href="https://www.nicehash.com/" target="_blank">Nicehash Homepage</a>
+</div>

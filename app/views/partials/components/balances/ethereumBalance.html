@@ -1,0 +1,32 @@
+<div class="centerAlign">Ethereum balances:</div>
+<table class="table table-bordered table-condensed leftAlign">
+    <thead>
+    <tr>
+        <th>Wallet</th>
+        <th>Amount</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="(id, dashboard) in $ctrl.dashboards track by $index">
+        <td>
+            <a href="https://etherscan.io/address/{{dashboard.addr}}">{{dashboard.name}}</a>
+        </td>
+        <td class='ellipsis'>
+            <span ng-if="dashboard.data.eth.balance !== 0 || !dashboard.data.tokens">
+                <span data-toggle="tooltip" title="{{(dashboard.data.eth.balanceFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
+                    {{dashboard.data.eth.balance | number: 8}} ETH
+                </span>
+            </span>
+            <span ng-if="dashboard.data.eth.balance !== 0"><br/></span>
+            <span ng-repeat="(index, entry) in dashboard.data.tokens track by $index">
+                <span data-toggle="tooltip" title="{{(entry.balanceFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
+                    {{entry.balance | number:6}} {{entry.tokenInfo.symbol}}
+                </span>
+                <span ng-if="index !== dashboard.data.tokens.length - 1">
+                    <br/>
+                </span>
+            </span>
+        </td>
+    </tr>
+    </tbody>
+</table>

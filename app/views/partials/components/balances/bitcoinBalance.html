@@ -1,0 +1,21 @@
+<div class="centerAlign">Bitcoin balances:</div>
+<table class="table table-bordered table-condensed leftAlign">
+    <thead>
+    <tr>
+        <th>Wallet</th>
+        <th>Amount</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="(id, dashboard) in $ctrl.dashboards track by $index">
+        <td>
+            <a href="https://blockchain.info/address/{{dashboard.addr}}" target="_blank">{{dashboard.name}}</a>
+        </td>
+        <td class='ellipsissmall'>
+            <span data-toggle="tooltip" title="{{(dashboard.data.balanceFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
+                {{(dashboard.data.balance) | number:8}} BTC
+            </span>
+        </td>
+    </tr>
+    </tbody>
+</table>

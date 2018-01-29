@@ -23,6 +23,23 @@
       entries:null,
       dashboardData:null,
     };
+    vm.balances = {
+      bitcoin: [],
+      burst: [],
+      cryptoid: [],
+      counterparty: [],
+      ethereum: [],
+      nicehash: [],
+    };
+    vm.custom = {
+      dashboardApi: [],
+    };
+    vm.dashboards = {
+      nicehash: [],
+      mpos: [],
+      mph: [],
+      nodeCryptonotePools: [],
+    };
     vm.enabled={};
     vm.hidden={};
 
@@ -30,15 +47,9 @@
     // controller API
     vm.init = init;
     vm.getStats = getStats;
-    vm.parseName = parseName;
     vm.atLeastOneBalanceDashboard=atLeastOneBalanceDashboard;
     vm.secondsSince = secondsSince;
     vm.isDashboardTypeEnabled = isDashboardTypeEnabled;
-    vm.toggle = toggle;
-    vm.isHidden = isHidden;
-    vm.stripNodeCryptonotePoolUrl = stripNodeCryptonotePoolUrl;
-    vm.getNodeCryptonotePoolFiatTotal = getNodeCryptonotePoolFiatTotal;
-
 
     /**
      * @name init
@@ -59,24 +70,6 @@
 
         vm.getStats();
       });
-    }
-
-    function getNodeCryptonotePoolFiatTotal(key) {
-      var dashboards = vm.current.dashboardData.filter(obj => obj.type === 'node-cryptonote-pool' || obj.type === 'snipa-nodejs-pool');
-      return dashboards
-        .map(dashboard => dashboard.data[key + 'Fiat'] ? dashboard.data[key + 'Fiat'] : 0)
-        .reduce((acc, right) => acc + right, 0);
-    }
-
-    function toggle(ns, id, id2) {
-      vm.hidden[`${ns}-${id}-${id2}`] = !vm.hidden[`${ns}-${id}-${id2}`];
-    }
-    function isHidden(ns, id, id2) {
-      return vm.hidden[`${ns}-${id}-${id2}`];
-    }
-
-    function parseName(name){
-      return (isNaN(name.charAt(0)) ? name : name.substr(1));
     }
 
     function atLeastOneBalanceDashboard(){
@@ -106,17 +99,28 @@
       return false;
     }
 
+    function getDashboardArrForTypes(types) {
+      return vm.current.dashboardData ? vm.current.dashboardData
+          .filter(dashboard => types.indexOf(dashboard.type) !== -1 && dashboard.enabled)
+        : [];
+    }
+
     function secondsSince(date) {
         return (Date.now() - date) / 1000;
     }
 
-    function stripNodeCryptonotePoolUrl(url) {
-      var arr = url.split(':');
-      if (arr.length === 3) {
-        arr.splice(2, 1);
-      }
-      arr[1] = arr[1].replace('/api', '');
-      return arr.join(':');
+    function updateArrays() {
+      vm.balances.bitcoin = getDashboardArrForTypes(['bitcoinBalance']);
+      vm.balances.burst = getDashboardArrForTypes(['burstBalance']);
+      vm.balances.cryptoid = getDashboardArrForTypes(['cryptoidBalance']);
+      vm.balances.counterparty = getDashboardArrForTypes(['counterpartyBalance']);
+      vm.balances.ethereum = getDashboardArrForTypes(['ethBalance']);
+      vm.balances.nicehash = getDashboardArrForTypes(['nicehashBalance']);
+      vm.custom.dashboardApi = getDashboardArrForTypes(['dashboard-api']);
+      vm.dashboards.nicehash = getDashboardArrForTypes(['nicehash']);
+      vm.dashboards.mpos = getDashboardArrForTypes(['genericMPOS']);
+      vm.dashboards.mph = getDashboardArrForTypes(['miningpoolhub']);
+      vm.dashboards.nodeCryptonotePools = getDashboardArrForTypes(['node-cryptonote-pool', 'snipa-nodejs-pool']);
     }
 
     /**
@@ -132,6 +136,7 @@
         }).then(function successCallback(response) {
           vm.current.entries = response.data.entries;
           vm.current.dashboardData=response.data.dashboardData;
+          updateArrays();
         }, function errorCallback(response) {
           console.log(response);
         });

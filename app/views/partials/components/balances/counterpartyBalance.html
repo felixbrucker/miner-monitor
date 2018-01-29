@@ -1,0 +1,27 @@
+<div class="centerAlign">Counterparty balances:</div>
+<table class="table table-bordered table-condensed leftAlign">
+    <thead>
+    <tr>
+        <th>Wallet</th>
+        <th>Amount</th>
+        <th>Token</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="(id, dashboard) in $ctrl.dashboards track by $index">
+        <td>
+            <a href="https://counterpartychain.io/address/{{dashboard.addr}}" target="_blank">{{dashboard.name}}</a>
+        </td>
+        <td class='ellipsissmall'>
+            <span ng-repeat="entry in dashboard.data track by $index">
+                <span data-toggle="tooltip" title="{{(entry.balanceFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
+                    {{entry.balance | number:6}}
+                </span><br/>
+            </span>
+        </td>
+        <td class='ellipsissmall'>
+            <span ng-repeat="entry in dashboard.data">{{entry.asset}}<br/></span>
+        </td>
+    </tr>
+    </tbody>
+</table>

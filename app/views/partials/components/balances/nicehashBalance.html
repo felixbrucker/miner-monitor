@@ -1,0 +1,19 @@
+<div class="centerAlign">Nicehash balances:</div>
+<table class="table table-bordered table-condensed leftAlign">
+    <thead>
+    <tr>
+        <th>Wallet</th>
+        <th>Amount</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="(id, dashboard) in $ctrl.dashboards track by $index">
+        <td>{{dashboard.name}}</td>
+        <td class='ellipsis'>
+            <span data-toggle="tooltip" title="{{(dashboard.data.balanceFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
+                {{dashboard.data.balance}} BTC
+            </span>
+        </td>
+    </tr>
+    </tbody>
+</table>

@@ -1,0 +1,82 @@
+<div class="col-md-12  table-responsive">
+    <div class="centerAlign">Stats ({{$ctrl.parseName($ctrl.dashboard.name)}}):</div>
+    <table class="table table-bordered table-condensed leftAlign">
+        <thead>
+        <tr>
+            <th>Coin</th>
+            <th>Hashrate</th>
+            <th>Profitability</th>
+            <th>Balance</th>
+            <th>Balance (AE)</th>
+            <th>On Exchange</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="(id, data) in $ctrl.dashboard.data.statsData | orderBy:'name' track by $index">
+            <td ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">
+                <span ng-click="$ctrl.toggleHidden(id)">{{data.name}}</span>
+            </td>
+            <td class='ellipsis'
+                ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">
+                {{data.hashrate|hashrate}}
+                <span ng-if="data.workers!==[] && !$ctrl.isHidden(id)" style="font-size:small;">
+                                <span ng-repeat="(key, value) in data.workers track by $index">
+                                    <br/>
+                                    {{value.username}}: {{value.hashrate|hashrate}}<span
+                                        class="nomobile"> (diff: {{value.difficulty}})</span>
+                                </span>
+                            </span>
+            </td>
+            <td class='ellipsis'
+                ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">
+                {{data.profitability * data.hashrate|number:4}} BTC/Day
+            </td>
+            <td class='ellipsis'
+                ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">
+                            <span data-toggle="tooltip" title="{{(data.balance.confirmedFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
+                                {{data.balance.confirmed}}
+                            </span>
+                <span data-toggle="tooltip" title="{{(data.balance.unconfirmedFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
+                                ({{data.balance.unconfirmed}})
+                            </span>
+                {{data.symbol}}
+            </td>
+            <td class='ellipsis'
+                ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">
+                            <span data-toggle="tooltip" title="{{(data.balance_ae.confirmedFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
+                                {{data.balance_ae.confirmed}}
+                            </span>
+                <span data-toggle="tooltip" title="{{(data.balance_ae.unconfirmedFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
+                                ({{data.balance_ae.unconfirmed}})
+                            </span>
+                {{data.symbol}}
+            </td>
+            <td class='ellipsis'
+                ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">
+                            <span data-toggle="tooltip" title="{{(data.onExchangeFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
+                                {{data.onExchange}} {{data.symbol}}
+                            </span>
+            </td>
+        </tr>
+        <tr ng-if="$ctrl.dashboard.data.profitabilitySum!==undefined && $ctrl.dashboard.data.profitabilitySum!==null">
+            <td colspan="2" style="font-weight: bold;">Total</td>
+            <td style="font-weight: bold;">{{$ctrl.dashboard.data.profitabilitySum | number:4}}
+                BTC/Day<br/>{{$ctrl.dashboard.data.profitabilitySumFiat | number:2}} EUR/Day
+            </td>
+            <td style="font-weight: bold;">
+                {{$ctrl.dashboard.data.balanceSumFiat | number:2}} EUR<br/>
+                Total: {{$ctrl.dashboard.data.balanceTotalSumFiat | number:2}} EUR
+            </td>
+            <td style="font-weight: bold;">
+                {{$ctrl.dashboard.data.balanceAESumFiat | number:2}} EUR
+            </td>
+            <td style="font-weight: bold;">
+                {{$ctrl.dashboard.data.balanceOnExchangeSumFiat | number:2}} EUR
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="col-md-12 centerAlign">
+    <a href="https://miningpoolhub.com/" target="_blank">MPH Homepage</a>
+</div>

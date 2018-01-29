@@ -1,0 +1,33 @@
+<div style="float: left;">{{$ctrl.dashboard.name}}</div>
+<table class="table table-bordered table-condensed leftAlign">
+    <thead>
+    <tr>
+        <th><span data-toggle="tooltip" title="Training" data-placement="bottom">T</span></th>
+        <th><span data-toggle="tooltip" title="Keepalive" data-placement="bottom">K</span></th>
+        <th><span data-toggle="tooltip" title="Graveyard" data-placement="bottom">G</span></th>
+        <th><span data-toggle="tooltip" title="Removed" data-placement="bottom">R</span></th>
+        <th>Total</th>
+        <th>Balances</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>{{$ctrl.dashboard.data.training}}</td>
+        <td>{{$ctrl.dashboard.data.keepalive}}</td>
+        <td>{{$ctrl.dashboard.data.graveyard}}</td>
+        <td>{{$ctrl.dashboard.data.removed}}</td>
+        <td>{{$ctrl.dashboard.data.total}}</td>
+        <td>
+                        <span ng-if="$ctrl.dashboard.data.totalEth > 0">
+                            <span data-toggle="tooltip" title="{{($ctrl.dashboard.data.totalEthFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
+                                {{$ctrl.dashboard.data.totalEth.toFixed(6)}} ETH
+                            </span>
+                            <br>
+                        </span>
+            <span data-toggle="tooltip" title="{{($ctrl.dashboard.data.totalStorjFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
+                            {{$ctrl.dashboard.data.totalStorj.toFixed(0)}} STORJ
+                        </span>
+        </td>
+    </tr>
+    </tbody>
+</table>
