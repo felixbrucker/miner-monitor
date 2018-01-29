@@ -40,6 +40,7 @@
       mph: [],
       nodeCryptonotePools: [],
     };
+    vm.devices = [];
     vm.enabled={};
     vm.hidden={};
 
@@ -109,6 +110,16 @@
         return (Date.now() - date) / 1000;
     }
 
+    function sortByName(a, b) {
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
+    }
+
     function updateArrays() {
       vm.balances.bitcoin = getDashboardArrForTypes(['bitcoinBalance']);
       vm.balances.burst = getDashboardArrForTypes(['burstBalance']);
@@ -121,6 +132,13 @@
       vm.dashboards.mpos = getDashboardArrForTypes(['genericMPOS']);
       vm.dashboards.mph = getDashboardArrForTypes(['miningpoolhub']);
       vm.dashboards.nodeCryptonotePools = getDashboardArrForTypes(['node-cryptonote-pool', 'snipa-nodejs-pool']);
+      vm.devices = vm.current.entries
+        .sort(sortByName)
+        .map(group => Object.keys(group.devices)
+            .map(key => group.devices[key])
+            .sort(sortByName)
+        )
+        .reduce((acc, curr) => acc.concat(curr), []);
     }
 
     /**

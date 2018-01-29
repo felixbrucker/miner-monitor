@@ -41,14 +41,15 @@
         <node-cryptonote-pools dashboards="statsVm.dashboards.nodeCryptonotePools"></node-cryptonote-pools>
     </div>
 
-    <span ng-repeat="(id,group) in statsVm.current.entries | orderBy:'name' track by $index">
-        <div class="col-md-4 table-responsive masonry-brick" ng-repeat="(id2, entry) in group.devices | toArray | orderBy:'name' | filter: {type: 'miner-agent'} track by $index">
+    <span ng-repeat="(id, entry) in statsVm.devices track by $index">
+        <div class="col-md-4 table-responsive masonry-brick" ng-if="entry.type === 'miner-agent'">
             <miner-manager entry="entry"></miner-manager>
         </div>
-        <div class="col-md-4 table-responsive masonry-brick" ng-repeat="(id2, entry) in group.devices | toArray | orderBy:'name' | filter: {type: 'storj'} track by $index">
+        <div class="col-md-4 table-responsive masonry-brick" ng-if="entry.type === 'storj'">
             <storj entry="entry"></storj>
         </div>
     </span>
+
 </div>
 
 
