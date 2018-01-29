@@ -1,0 +1,109 @@
+<div class="row">
+    <div class="col-md-12">
+        <div style="float: left;font-size:120%;">{{$ctrl.entry.name}}
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 table-responsive">
+        <table class="table table-bordered table-condensed">
+            <thead>
+            <tr>
+                <th><span ng-click="$ctrl.toggleHidden()">Location</span></th>
+                <th><span data-toggle="tooltip" title="Share / Timeouts" data-placement="bottom">Status</span>
+                </th>
+                <th><span data-toggle="tooltip" title="Restarts" data-placement="bottom">R</span></th>
+                <th><span data-toggle="tooltip" title="Peers" data-placement="bottom">P</span></th>
+                <th><span data-toggle="tooltip" title="Shared space (% used)" data-placement="bottom">Shared</span>
+                </th>
+                <th><span data-toggle="tooltip" title="Change (since)" data-placement="bottom">CH ({{$ctrl.secondsSince($ctrl.entry.stats.shares[0].lastSpaceUpdate || 0) | secondsToHrMin}})</span>
+                </th>
+                <th><span data-toggle="tooltip" title="Shards received since launch"
+                          data-placement="bottom">SR</span></th>
+                <th><span data-toggle="tooltip" title="Reputation Points" data-placement="bottom">RP</span>
+                </th>
+                <th><span data-toggle="tooltip" title="Response time" data-placement="bottom">RT</span>
+                </th>
+                <th><span data-toggle="tooltip" title="Share Uptime"
+                          data-placement="bottom">Uptime</span></th>
+            </tr>
+            </thead>
+            <tbody ng-hide="$ctrl.hidden">
+            <tr ng-repeat="share in $ctrl.entry.stats.shares track by $index">
+
+                <td class='ellipsissmall'><i class="fa fa-hdd-o" aria-hidden="true"></i>
+                    <a href="https://api.storj.io/contacts/{{share.id}}" target="_blank">{{share.config.storagePath}}</a>
+                </td>
+
+                <td>
+                    <span ng-if="share.state===0">
+                        <span data-toggle="tooltip" title="stopped"><i
+                                class="fa fa-stop-circle-o" aria-hidden="true" style="color:red"></i>
+                        </span>
+                    </span>
+                    <span ng-if="share.state===1">
+                        <span data-toggle="tooltip" title="running"><i
+                                class="fa fa-check-circle-o" aria-hidden="true" style="color:green"></i>
+                        </span>
+                    </span>
+                    <span ng-if="share.state===2">
+                        <span data-toggle="tooltip" title="error"><i
+                                class="fa fa-exclamation-triangle" aria-hidden="true"
+                                style="color:red"></i>
+                        </span>
+                    </span>
+                    /
+                    <span ng-if="share.hasTr === false">
+                        <span data-toggle="tooltip"
+                              title="no timeouts"><i
+                                class="fa fa-check-circle-o" aria-hidden="true" style="color:green"></i>
+                        </span>
+                    </span>
+                    <span ng-if="share.hasTr === true">
+                        <span data-toggle="tooltip"
+                              title="TR: {{share.tr}}"><i
+                                class="fa fa-exclamation-triangle" aria-hidden="true"
+                                style="color:orange"></i>
+                        </span>
+                    </span>
+                </td>
+
+                <td ng-class="{danger: (share.meta.numRestarts || 0) > 10 }">{{share.meta.numRestarts || 0}}</td>
+
+                <td ng-class="{danger: (share.meta.farmerState.totalPeers || 0) < 100 }">{{share.meta.farmerState.totalPeers || 0}}</td>
+
+                <td class='ellipsis'>
+                    <span data-toggle="tooltip" title="{{share.meta.farmerState.percentUsed}}%" data-placement="bottom">
+                        {{share.meta.farmerState.spaceUsed}}
+                    </span>
+                </td>
+
+                <td class='ellipsis'><span data-toggle="tooltip"
+                                           title="since {{$ctrl.secondsSince(share.lastSpaceUpdate) | secondsToHrMin}} ago"
+                                           data-placement="bottom">{{share.meta.farmerState.change}}</span>
+                </td>
+
+                <td class='ellipsis'>{{share.meta.farmerState.dataReceivedCount}}</td>
+
+                <td class='ellipsis'>{{share.rp}}</td>
+
+                <td class='ellipsis'>{{share.rt}}</td>
+
+                <td class='ellipsis'>{{share.meta.uptimeMs/1000 | secondsToTimeString}}</td>
+
+            </tr>
+            </tbody>
+            <tr>
+                <td colspan="2" style="font-weight: bold;">Total/Avg</td>
+                <td style="font-weight: bold;">{{$ctrl.entry.stats.totalRestarts}}</td>
+                <td style="font-weight: bold;">{{$ctrl.entry.stats.avgPeers | number:0}}</td>
+                <td style="font-weight: bold;">{{$ctrl.entry.stats.totalSpaceUsed}}</td>
+                <td style="font-weight: bold;">{{$ctrl.entry.stats.totalChange}}</td>
+                <td style="font-weight: bold;">{{$ctrl.entry.stats.totalShardsReceived}}</td>
+                <td class='ellipsis' style="font-weight: bold;">{{$ctrl.entry.stats.avgRp}}</td>
+                <td class='ellipsis' style="font-weight: bold;">{{$ctrl.entry.stats.avgRt}}</td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+</div>

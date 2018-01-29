@@ -20,6 +20,7 @@ var config = module.exports = {
   configNonPersistent:{
     types:[
       'miner-agent',
+      'storj',
     ],
     dashboardTypes:[
       'bitcoinBalance',

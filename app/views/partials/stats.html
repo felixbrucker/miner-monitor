@@ -45,6 +45,9 @@
         <div class="col-md-4 table-responsive masonry-brick" ng-repeat="(id2, entry) in group.devices | toArray | orderBy:'name' | filter: {type: 'miner-agent'} track by $index">
             <miner-manager entry="entry"></miner-manager>
         </div>
+        <div class="col-md-4 table-responsive masonry-brick" ng-repeat="(id2, entry) in group.devices | toArray | orderBy:'name' | filter: {type: 'storj'} track by $index">
+            <storj entry="entry"></storj>
+        </div>
     </span>
 </div>
 
