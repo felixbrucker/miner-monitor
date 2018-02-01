@@ -22,6 +22,10 @@
         <generic-wallet dashboards="statsVm.dashboards.wallets.generic"></generic-wallet>
     </div>
 
+    <div class="masonry-brick col-md-3" ng-if="statsVm.isDashboardTypeEnabled('bitbean-wallet')">
+        <bitbean-wallet dashboards="statsVm.dashboards.wallets.bitbean"></bitbean-wallet>
+    </div>
+
     <div class="masonry-brick col-md-3" ng-repeat="(id, dashboard) in statsVm.custom.dashboardApi track by $index">
         <dashboard-api dashboard="dashboard"></dashboard-api>
     </div>

@@ -36,6 +36,7 @@ var config = module.exports = {
       'node-cryptonote-pool',
       'snipa-nodejs-pool',
       'generic-wallet',
+      'bitbean-wallet',
     ]
   },
   getConfig: function () {

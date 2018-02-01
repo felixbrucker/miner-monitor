@@ -75,16 +75,17 @@ module.exports = class GenericWallet extends Dashboard {
       if (rate) {
         result.balanceFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * result.balance;
         result.totalFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * result.total;
-        if (result.unconfirmed) {
+        if (result.unconfirmed !== undefined) {
           result.unconfirmedFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * result.unconfirmed;
         }
-        if (result.staked) {
+        if (result.staked !== undefined) {
           result.stakedFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * result.staked;
         }
       }
       this.stats = result;
     } catch(err) {
       console.error(`[${this.dashboard.name} :: Generic-Wallet-API] => ${err.message}`);
+      this.stats = null;
     }
   }
 
