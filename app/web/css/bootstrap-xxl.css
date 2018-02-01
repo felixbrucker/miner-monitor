@@ -1,0 +1,153 @@
+@media (min-width: 1600px) and (max-width: 2099px) {
+    .hidden-xl {
+        display: none !important;
+    }
+}
+
+
+.visible-xxl-block,
+.visible-xxl-inline,
+.visible-xxl-inline-block,
+.visible-xxl{
+    display: none !important;
+}
+
+
+
+@media (min-width: 2100px) {
+    .container {
+        width: 2070px;
+    }
+
+    .col-xxl-1, .col-xxl-2, .col-xxl-3, .col-xxl-4, .col-xxl-5, .col-xxl-6, .col-xxl-7, .col-xxl-8, .col-xxl-9, .col-xxl-10, .col-xxl-11, .col-xxl-12, .col-xxl-13, .col-xxl-14, .col-xxl-15, .col-xxl-16, .col-xxl-17, .col-xxl-18, .col-xxl-19, .col-xxl-20, .col-xxl-21, .col-xxl-22, .col-xxl-23, .col-xxl-24 {
+        float: left;
+    }
+
+    .col-xxl-24 {
+        width: 100%;
+    }
+
+    .col-xxl-23 {
+        width: 95.83333333%;
+    }
+
+    .col-xxl-22 {
+        width: 91.66666667%;
+    }
+
+    .col-xxl-11 {
+        width: 87.5%;
+    }
+
+    .col-xxl-20 {
+        width: 83.33333333%;
+    }
+
+    .col-xxl-19 {
+        width: 79.16666666%;
+    }
+
+    .col-xxl-18 {
+        width: 75%;
+    }
+
+    .col-xxl-17 {
+        width: 70.83333333%;
+    }
+
+    .col-xxl-16 {
+        width: 66.66666667%;
+    }
+
+    .col-xxl-15 {
+        width: 62.5%;
+    }
+
+    .col-xxl-14 {
+        width: 58.33333333%;
+    }
+
+    .col-xxl-13 {
+        width: 54.16666666%;
+    }
+
+    .col-xxl-12 {
+        width: 50%;
+    }
+
+    .col-xxl-11 {
+        width: 45.83333333%;
+    }
+
+    .col-xxl-10 {
+        width: 41.66666667%;
+    }
+
+    .col-xxl-9 {
+        width: 37.5%;
+    }
+
+    .col-xxl-8 {
+        width: 33.33333333%;
+    }
+
+    .col-xxl-7 {
+        width: 29.16666666%;
+    }
+
+    .col-xxl-6 {
+        width: 25%;
+    }
+
+    .col-xxl-5 {
+        width: 20.83333333%;
+    }
+
+    .col-xxl-4 {
+        width: 16.66666667%;
+    }
+
+    .col-xxl-3 {
+        width: 12.5%;
+    }
+
+    .col-xxl-2 {
+        width: 8.33333333%;
+    }
+
+    .col-xxl-1 {
+        width: 4.16666666%;
+    }
+
+    .visible-xxl {
+        display: block !important;
+    }
+
+    table.visible-xxl {
+        display: table;
+    }
+
+    tr.visible-xxl {
+        display: table-row !important;
+    }
+
+    th.visible-xxl, td.visible-xxl {
+        display: table-cell !important;
+    }
+
+    .visible-xxl-block {
+        display: block !important;
+    }
+
+    .visible-xxl-inline {
+        display: inline !important;
+    }
+
+    .visible-xxl-inline-block {
+        display: inline-block !important;
+    }
+
+    .hidden-xxl {
+        display: none !important;
+    }
+}

@@ -1,36 +1,36 @@
 <div masonry>
-    <div class="col-md-2 masonry-brick" ng-if="statsVm.isDashboardTypeEnabled('bitcoinBalance')">
+    <div class="col-sm-4 col-md-4 col-lg-3 col-xl-2 col-xxl-3 masonry-brick" ng-if="statsVm.isDashboardTypeEnabled('bitcoinBalance')">
         <bitcoin-balance dashboards="statsVm.balances.bitcoin"></bitcoin-balance>
     </div>
-    <div class="col-md-2 masonry-brick" ng-if="statsVm.isDashboardTypeEnabled('cryptoidBalance')">
+    <div class="col-sm-4 col-md-4 col-lg-3 col-xl-2 col-xxl-3 masonry-brick" ng-if="statsVm.isDashboardTypeEnabled('cryptoidBalance')">
         <cryptoid-balance dashboards="statsVm.balances.cryptoid"></cryptoid-balance>
     </div>
-    <div class="col-md-2 masonry-brick" ng-if="statsVm.isDashboardTypeEnabled('counterpartyBalance')">
+    <div class="col-sm-4 col-md-4 col-lg-3 col-xl-2 col-xxl-3 masonry-brick" ng-if="statsVm.isDashboardTypeEnabled('counterpartyBalance')">
         <counterparty-balance dashboards="statsVm.balances.counterparty"></counterparty-balance>
     </div>
-    <div class="col-md-2 masonry-brick" ng-if="statsVm.isDashboardTypeEnabled('ethBalance')">
+    <div class="col-sm-4 col-md-4 col-lg-3 col-xl-2 col-xxl-3 masonry-brick" ng-if="statsVm.isDashboardTypeEnabled('ethBalance')">
         <ethereum-balance dashboards="statsVm.balances.ethereum"></ethereum-balance>
     </div>
-    <div class="col-md-2 masonry-brick" ng-if="statsVm.isDashboardTypeEnabled('burstBalance')">
+    <div class="col-sm-4 col-md-4 col-lg-3 col-xl-2 col-xxl-3 masonry-brick" ng-if="statsVm.isDashboardTypeEnabled('burstBalance')">
         <burst-balance dashboards="statsVm.balances.burst"></burst-balance>
     </div>
-    <div class="col-md-2 masonry-brick" ng-if="statsVm.isDashboardTypeEnabled('nicehashBalance')">
+    <div class="col-sm-4 col-md-4 col-lg-3 col-xl-2 col-xxl-3 masonry-brick" ng-if="statsVm.isDashboardTypeEnabled('nicehashBalance')">
         <nicehash-balance dashboards="statsVm.balances.nicehash"></nicehash-balance>
     </div>
 
-    <div class="masonry-brick col-md-3" ng-if="statsVm.isDashboardTypeEnabled('generic-wallet')">
+    <div class="masonry-brick col-sm-8 col-md-8 col-lg-4 col-xl-3 col-xxl-4" ng-if="statsVm.isDashboardTypeEnabled('generic-wallet')">
         <generic-wallet dashboards="statsVm.dashboards.wallets.generic"></generic-wallet>
     </div>
 
-    <div class="masonry-brick col-md-3" ng-if="statsVm.isDashboardTypeEnabled('bitbean-wallet')">
+    <div class="masonry-brick col-sm-8 col-md-8 col-lg-4 col-xl-3 col-xxl-4" ng-if="statsVm.isDashboardTypeEnabled('bitbean-wallet')">
         <bitbean-wallet dashboards="statsVm.dashboards.wallets.bitbean"></bitbean-wallet>
     </div>
 
-    <div class="masonry-brick col-md-3" ng-repeat="(id, dashboard) in statsVm.custom.dashboardApi track by $index">
+    <div class="masonry-brick col-sm-6 col-md-6 col-lg-4 col-xl-3 col-xxl-4" ng-repeat="(id, dashboard) in statsVm.custom.dashboardApi track by $index">
         <dashboard-api dashboard="dashboard"></dashboard-api>
     </div>
 
-    <div class="masonry-brick col-md-6" ng-repeat="(id, dashboard) in statsVm.current.dashboardData | nhOrMphOrMpos track by $index"
+    <div class="masonry-brick col-sm-12 col-md-8 col-lg-6 col-xl-6 col-xxl-7" ng-repeat="(id, dashboard) in statsVm.current.dashboardData | nhOrMphOrMpos track by $index"
          style="margin-bottom: 10px;">
         <div id="board{{id}}" ng-if="dashboard.type==='nicehash'">
             <nicehash dashboard="dashboard"></nicehash>
@@ -45,15 +45,15 @@
         </div>
     </div>
 
-    <div class="masonry-brick col-md-6" ng-if="statsVm.isDashboardTypeEnabled('node-cryptonote-pool') || statsVm.isDashboardTypeEnabled('snipa-nodejs-pool')">
+    <div class="masonry-brick col-sm-12 col-md-12 col-lg-8 col-xl-6 col-xxl-8" ng-if="statsVm.isDashboardTypeEnabled('node-cryptonote-pool') || statsVm.isDashboardTypeEnabled('snipa-nodejs-pool')">
         <node-cryptonote-pools dashboards="statsVm.dashboards.nodeCryptonotePools"></node-cryptonote-pools>
     </div>
 
     <span ng-repeat="(id, entry) in statsVm.devices track by $index">
-        <div class="col-md-4 table-responsive masonry-brick" ng-if="entry.type === 'miner-agent'">
+        <div class="masonry-brick col-sm-9 col-md-6 col-lg-6 col-xl-4 col-xxl-6" ng-if="entry.type === 'miner-agent'">
             <miner-manager entry="entry"></miner-manager>
         </div>
-        <div class="col-md-4 table-responsive masonry-brick" ng-if="entry.type === 'storj'">
+        <div class="masonry-brick col-sm-9 col-md-6 col-lg-6 col-xl-4 col-xxl-6" ng-if="entry.type === 'storj'">
             <storj entry="entry"></storj>
         </div>
     </span>
