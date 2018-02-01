@@ -1,4 +1,4 @@
-<div class="centerAlign">Bitbeans Wallets:</div>
+<div class="centerAlign">Bitbean Wallets:</div>
 <table class="table table-bordered table-condensed leftAlign">
     <thead>
     <tr>
@@ -6,7 +6,8 @@
         <th><span data-toggle="tooltip" title="Sprouting" data-placement="bottom">S</span></th>
         <th>Balance</th>
         <th>Unconfirmed</th>
-        <th>Staked</th>
+        <th>Sprouting</th>
+        <th>Total</th>
         <th><span data-toggle="tooltip" title="Connections" data-placement="bottom">Conn</span></th>
     </tr>
     </thead>
@@ -36,6 +37,11 @@
         <td class='ellipsis'>
             <span data-toggle="tooltip" title="{{(dashboard.data.stakedFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
                 {{dashboard.data.staked | number: (dashboard.data.staked > 100 || dashboard.data.staked === 0 ? 2 : 8)}} {{dashboard.ticker}}
+            </span>
+        </td>
+        <td class='ellipsis'>
+            <span data-toggle="tooltip" title="{{(dashboard.data.totalFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
+                {{dashboard.data.total | number: (dashboard.data.total > 100 || dashboard.data.total === 0 ? 2 : 8)}} {{dashboard.ticker}}
             </span>
         </td>
         <td>{{dashboard.data.connections}}</td>

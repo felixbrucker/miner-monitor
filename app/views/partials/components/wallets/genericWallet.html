@@ -5,7 +5,8 @@
         <th>Wallet</th>
         <th>Balance</th>
         <th>Unconfirmed</th>
-        <th>Staked</th>
+        <th>Staking</th>
+        <th>Total</th>
         <th><span data-toggle="tooltip" title="Connections" data-placement="bottom">Conn</span></th>
     </tr>
     </thead>
@@ -29,6 +30,11 @@
             </span>
         </td>
         <td ng-if="dashboard.data.staked === undefined">N/A</td>
+        <td class='ellipsis'>
+            <span data-toggle="tooltip" title="{{(dashboard.data.totalFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
+                {{dashboard.data.total | number: (dashboard.data.total > 100 || dashboard.data.total === 0 ? 2 : 8)}} {{dashboard.ticker}}
+            </span>
+        </td>
         <td>{{dashboard.data.connections}}</td>
     </tr>
     </tbody>
