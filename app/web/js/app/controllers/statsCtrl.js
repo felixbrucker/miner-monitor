@@ -39,6 +39,9 @@
       mpos: [],
       mph: [],
       nodeCryptonotePools: [],
+      wallets: {
+        generic: [],
+      }
     };
     vm.devices = [];
     vm.enabled={};
@@ -132,6 +135,7 @@
       vm.dashboards.mpos = getDashboardArrForTypes(['genericMPOS']);
       vm.dashboards.mph = getDashboardArrForTypes(['miningpoolhub']);
       vm.dashboards.nodeCryptonotePools = getDashboardArrForTypes(['node-cryptonote-pool', 'snipa-nodejs-pool']);
+      vm.dashboards.wallets.generic = getDashboardArrForTypes(['generic-wallet']);
       vm.devices = vm.current.entries
         .sort(sortByName)
         .map(group => Object.keys(group.devices)

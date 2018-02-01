@@ -100,10 +100,10 @@
           types.push('nicehash', 'bitcoinBalance', 'cryptoidBalance', 'counterpartyBalance', 'ethBalance', 'burstBalance', 'node-cryptonote-pool', 'snipa-nodejs-pool');
           break;
         case 'ticker':
-          types.push('cryptoidBalance', 'snipa-nodejs-pool');
+          types.push('cryptoidBalance', 'snipa-nodejs-pool', 'generic-wallet');
           break;
         case 'baseUrl':
-          types.push('genericMPOS', 'dashboard-api', 'node-cryptonote-pool', 'snipa-nodejs-pool');
+          types.push('genericMPOS', 'dashboard-api', 'node-cryptonote-pool', 'snipa-nodejs-pool', 'generic-wallet');
           break;
         case 'apiKey':
           types.push('genericMPOS', 'miningpoolhub', 'cryptoidBalance', 'nicehashBalance');

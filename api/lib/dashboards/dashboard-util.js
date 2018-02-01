@@ -10,6 +10,7 @@ const CounterpartyBalance = require('./balances/counterparty-balance');
 const EthereumBalance = require('./balances/ethereum-balance');
 const BurstBalance = require('./balances/burst-balance');
 const NicehashBalance = require('./balances/nicehash-balance');
+const GenericWallet = require('./wallets/generic-wallet');
 
 function getClassForDashboardType(type) {
   switch(type) {
@@ -37,6 +38,8 @@ function getClassForDashboardType(type) {
       return NodeCryptonotePool;
     case 'snipa-nodejs-pool':
       return SnipaNodejsPool;
+    case 'generic-wallet':
+      return GenericWallet;
     default:
       throw new Error(`No class matched '${type}'`);
   }

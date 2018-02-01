@@ -10,6 +10,11 @@ async function getUrl(url) {
   return result.data;
 }
 
+async function postUrl(url, data) {
+  const result = await axios.post(url, data, {httpsAgent: agent, timeout: 2 * 60 * 1000});
+  return result.data;
+}
+
 function getRateForTicker(rates, ticker) {
   return rates.find(rate => rate.symbol === ticker);
 }
@@ -54,6 +59,7 @@ function parseHashrate(hashrateString) {
 
 module.exports = {
   getUrl,
+  postUrl,
   getRateForTicker,
   getFiatForRate,
   sleep,

@@ -35,6 +35,7 @@ var config = module.exports = {
       'nicehashBalance',
       'node-cryptonote-pool',
       'snipa-nodejs-pool',
+      'generic-wallet',
     ]
   },
   getConfig: function () {

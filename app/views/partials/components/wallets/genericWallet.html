@@ -1,0 +1,35 @@
+<div class="centerAlign">Generic Wallets:</div>
+<table class="table table-bordered table-condensed leftAlign">
+    <thead>
+    <tr>
+        <th>Wallet</th>
+        <th>Balance</th>
+        <th>Unconfirmed</th>
+        <th>Staked</th>
+        <th><span data-toggle="tooltip" title="Connections" data-placement="bottom">Conn</span></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="(id, dashboard) in $ctrl.dashboards track by $index">
+        <td>{{dashboard.name}}</td>
+        <td class='ellipsis'>
+            <span data-toggle="tooltip" title="{{(dashboard.data.balanceFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
+                {{dashboard.data.balance | number:(dashboard.data.balance > 100 || dashboard.data.balance === 0 ? 2 : 8)}} {{dashboard.ticker}}
+            </span>
+        </td>
+        <td ng-if="dashboard.data.unconfirmed !== undefined" class='ellipsis'>
+            <span data-toggle="tooltip" title="{{(dashboard.data.unconfirmedFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
+                {{dashboard.data.unconfirmed | number:(dashboard.data.unconfirmed > 100 || dashboard.data.unconfirmed === 0 ? 2 : 8)}} {{dashboard.ticker}}
+            </span>
+        </td>
+        <td ng-if="dashboard.data.unconfirmed === undefined">N/A</td>
+        <td ng-if="dashboard.data.staked !== undefined" class='ellipsis'>
+            <span data-toggle="tooltip" title="{{(dashboard.data.stakedFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
+                {{dashboard.data.staked | number: (dashboard.data.staked > 100 || dashboard.data.staked === 0 ? 2 : 8)}} {{dashboard.ticker}}
+            </span>
+        </td>
+        <td ng-if="dashboard.data.staked === undefined">N/A</td>
+        <td>{{dashboard.data.connections}}</td>
+    </tr>
+    </tbody>
+</table>

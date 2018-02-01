@@ -18,6 +18,10 @@
         <nicehash-balance dashboards="statsVm.balances.nicehash"></nicehash-balance>
     </div>
 
+    <div class="masonry-brick col-md-3" ng-if="statsVm.isDashboardTypeEnabled('generic-wallet')">
+        <generic-wallet dashboards="statsVm.dashboards.wallets.generic"></generic-wallet>
+    </div>
+
     <div class="masonry-brick col-md-3" ng-repeat="(id, dashboard) in statsVm.custom.dashboardApi track by $index">
         <dashboard-api dashboard="dashboard"></dashboard-api>
     </div>
