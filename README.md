@@ -2,7 +2,7 @@
 
 miner monitoring software
 
-### Screens (outdated)
+### Screen
 
 ![Stats](/screens/stats.png?raw=true "Stats")
 
