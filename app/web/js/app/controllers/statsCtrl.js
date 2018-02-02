@@ -39,10 +39,7 @@
       mpos: [],
       mph: [],
       nodeCryptonotePools: [],
-      wallets: {
-        generic: [],
-        bitbean: [],
-      }
+      wallets: [],
     };
     vm.devices = [];
     vm.enabled={};
@@ -55,6 +52,7 @@
     vm.atLeastOneBalanceDashboard=atLeastOneBalanceDashboard;
     vm.secondsSince = secondsSince;
     vm.isDashboardTypeEnabled = isDashboardTypeEnabled;
+    vm.isDashboardTypesEnabled = isDashboardTypesEnabled;
 
     /**
      * @name init
@@ -104,6 +102,18 @@
       return false;
     }
 
+    function isDashboardTypesEnabled(types) {
+      if (vm.current.dashboardData) {
+        for (let dashboard of vm.current.dashboardData) {
+          if (dashboard.enabled && types.indexOf(dashboard.type) !== -1) {
+            return true;
+          }
+        }
+      }
+
+      return false;
+    }
+
     function getDashboardArrForTypes(types) {
       return vm.current.dashboardData ? vm.current.dashboardData
           .filter(dashboard => types.indexOf(dashboard.type) !== -1 && dashboard.enabled)
@@ -136,8 +146,7 @@
       vm.dashboards.mpos = getDashboardArrForTypes(['genericMPOS']);
       vm.dashboards.mph = getDashboardArrForTypes(['miningpoolhub']);
       vm.dashboards.nodeCryptonotePools = getDashboardArrForTypes(['node-cryptonote-pool', 'snipa-nodejs-pool']);
-      vm.dashboards.wallets.generic = getDashboardArrForTypes(['generic-wallet']);
-      vm.dashboards.wallets.bitbean = getDashboardArrForTypes(['bitbean-wallet']);
+      vm.dashboards.wallets = getDashboardArrForTypes(['generic-wallet', 'bitbean-wallet']);
       vm.devices = vm.current.entries
         .sort(sortByName)
         .map(group => Object.keys(group.devices)

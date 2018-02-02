@@ -1,8 +1,9 @@
-<div class="centerAlign">Generic Wallets:</div>
+<div class="centerAlign">Wallets:</div>
 <table class="table table-bordered table-condensed leftAlign">
     <thead>
     <tr>
         <th>Wallet</th>
+        <th><span data-toggle="tooltip" title="Status" data-placement="bottom">S</span></th>
         <th>Balance</th>
         <th>Unconfirmed</th>
         <th>Staking</th>
@@ -13,29 +14,66 @@
     <tbody>
     <tr ng-repeat="(id, dashboard) in $ctrl.dashboards track by $index">
         <td>{{dashboard.name}}</td>
-        <td class='ellipsis'>
+
+        <!-- generic wallet -->
+        <th ng-if="dashboard.type === 'generic-wallet' && dashboard.data" >
+            <span data-toggle="tooltip" title="online"><i
+                    class="fa fa-check-circle-o" aria-hidden="true" style="color:green"></i>
+            </span>
+        </th>
+        <th ng-if="dashboard.type === 'generic-wallet' && !dashboard.data">
+            <span data-toggle="tooltip" title="offline"><i
+                    class="fa fa-stop-circle-o" aria-hidden="true" style="color:red"></i>
+            </span>
+        </th>
+
+        <!-- bitbean wallet -->
+        <th ng-if="dashboard.type === 'bitbean-wallet' && dashboard.data && dashboard.data.sprouting" >
+            <span data-toggle="tooltip" title="online & sprouting, interval: {{dashboard.data.sproutingInterval}}"><i
+                    class="fa fa-check-circle-o" aria-hidden="true" style="color:green"></i>
+            </span>
+        </th>
+        <th ng-if="dashboard.type === 'bitbean-wallet' && !dashboard.data">
+            <span data-toggle="tooltip" title="offline"><i
+                    class="fa fa-stop-circle-o" aria-hidden="true" style="color:red"></i>
+            </span>
+        </th>
+        <th ng-if="dashboard.type === 'bitbean-wallet' && dashboard.data && !dashboard.data.sprouting">
+            <span data-toggle="tooltip" title="online but not sprouting"><i
+                    class="fa fa-stop-circle-o" aria-hidden="true" style="color:red"></i>
+            </span>
+        </th>
+
+        <td class='ellipsis' ng-if="dashboard.data">
             <span data-toggle="tooltip" title="{{(dashboard.data.balanceFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
                 {{dashboard.data.balance | number:(dashboard.data.balance > 100 || dashboard.data.balance === 0 ? 2 : 8)}} {{dashboard.ticker}}
             </span>
         </td>
+        <td ng-if="!dashboard.data">N/A</td>
+
         <td ng-if="dashboard.data.unconfirmed !== undefined" class='ellipsis'>
             <span data-toggle="tooltip" title="{{(dashboard.data.unconfirmedFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
                 {{dashboard.data.unconfirmed | number:(dashboard.data.unconfirmed > 100 || dashboard.data.unconfirmed === 0 ? 2 : 8)}} {{dashboard.ticker}}
             </span>
         </td>
         <td ng-if="dashboard.data.unconfirmed === undefined">N/A</td>
+
         <td ng-if="dashboard.data.staked !== undefined" class='ellipsis'>
             <span data-toggle="tooltip" title="{{(dashboard.data.stakedFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
                 {{dashboard.data.staked | number: (dashboard.data.staked > 100 || dashboard.data.staked === 0 ? 2 : 8)}} {{dashboard.ticker}}
             </span>
         </td>
         <td ng-if="dashboard.data.staked === undefined">N/A</td>
-        <td class='ellipsis'>
+
+        <td class='ellipsis' ng-if="dashboard.data">
             <span data-toggle="tooltip" title="{{(dashboard.data.totalFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
                 {{dashboard.data.total | number: (dashboard.data.total > 100 || dashboard.data.total === 0 ? 2 : 8)}} {{dashboard.ticker}}
             </span>
         </td>
-        <td>{{dashboard.data.connections}}</td>
+        <td ng-if="!dashboard.data">N/A</td>
+
+        <td ng-if="dashboard.data">{{dashboard.data.connections}}</td>
+        <td ng-if="!dashboard.data">N/A</td>
     </tr>
     </tbody>
 </table>
