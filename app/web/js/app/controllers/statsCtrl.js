@@ -30,6 +30,7 @@
       counterparty: [],
       ethereum: [],
       nicehash: [],
+      coinbase: [],
     };
     vm.custom = {
       dashboardApi: [],
@@ -141,6 +142,7 @@
       vm.balances.counterparty = getDashboardArrForTypes(['counterpartyBalance']);
       vm.balances.ethereum = getDashboardArrForTypes(['ethBalance']);
       vm.balances.nicehash = getDashboardArrForTypes(['nicehashBalance']);
+      vm.balances.coinbase = getDashboardArrForTypes(['coinbase']);
       vm.custom.dashboardApi = getDashboardArrForTypes(['dashboard-api']);
       vm.dashboards.nicehash = getDashboardArrForTypes(['nicehash']);
       vm.dashboards.mpos = getDashboardArrForTypes(['genericMPOS']);

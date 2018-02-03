@@ -10,6 +10,7 @@ const CounterpartyBalance = require('./balances/counterparty-balance');
 const EthereumBalance = require('./balances/ethereum-balance');
 const BurstBalance = require('./balances/burst-balance');
 const NicehashBalance = require('./balances/nicehash-balance');
+const CoinbaseBalance = require('./balances/coinbase-balance');
 const GenericWallet = require('./wallets/generic-wallet');
 const BitbeanWallet = require('./wallets/bitbean-wallet');
 
@@ -43,6 +44,8 @@ function getClassForDashboardType(type) {
       return GenericWallet;
     case 'bitbean-wallet':
       return BitbeanWallet;
+    case 'coinbase':
+      return CoinbaseBalance;
     default:
       throw new Error(`No class matched '${type}'`);
   }

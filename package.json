@@ -5,6 +5,7 @@
     "axios": "^0.16.1",
     "body-parser": "^1.18.2",
     "bytes": "^2.5.0",
+    "coinbase": "^2.0.7",
     "colors": "^1.1.2",
     "console-stamp": "^0.2.6",
     "cross-spawn": "^4.0.0",

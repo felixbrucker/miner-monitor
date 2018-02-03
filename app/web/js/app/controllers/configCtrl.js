@@ -106,7 +106,7 @@
           types.push('genericMPOS', 'dashboard-api', 'node-cryptonote-pool', 'snipa-nodejs-pool', 'generic-wallet', 'bitbean-wallet');
           break;
         case 'apiKey':
-          types.push('genericMPOS', 'miningpoolhub', 'cryptoidBalance', 'nicehashBalance');
+          types.push('genericMPOS', 'miningpoolhub', 'cryptoidBalance', 'nicehashBalance', 'coinbase');
           break;
         case 'userId':
           types.push('genericMPOS', 'miningpoolhub', 'nicehashBalance');

@@ -1,0 +1,26 @@
+<div class="centerAlign">Coinbase balances:</div>
+<table class="table table-bordered table-condensed leftAlign">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Balances</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="(id, dashboard) in $ctrl.dashboards track by $index">
+        <td>
+            {{dashboard.name}}
+        </td>
+        <td class='ellipsis'>
+            <span ng-repeat="(index, entry) in dashboard.data track by $index">
+                <span data-toggle="tooltip" title="{{(entry.balanceFiat || entry.balance) | number: 2}} €" data-placement="bottom">
+                    {{entry.balance | number: (entry.balance > 10 ? 2 : 6)}} {{entry.ticker}}
+                </span>
+                <span ng-if="index !== dashboard.data.length - 1">
+                    <br/>
+                </span>
+            </span>
+        </td>
+    </tr>
+    </tbody>
+</table>
