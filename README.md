@@ -1,8 +1,8 @@
 # miner-monitor
 
-miner monitoring software
+Miner, balance, wallet and pool monitoring software
 
-### Screens (outdated)
+### Screen
 
 ![Stats](/screens/stats.png?raw=true "Stats")
 
@@ -11,9 +11,7 @@ miner monitoring software
 
 miner-monitor requires nodejs >= 7.6.0, npm and optionally pm2 to run.
 
-for now you will need to remove the auth/session authorization in /var/www/f_status.php on all baikal miners you want to add.
-
-miners require the agent to be installed (agent currently referrers to the miner-manager)
+miners require the miner-manager to be installed
 
 ### Installation
 
@@ -43,7 +41,7 @@ pm2 save
 pm2 startup
 ```
 
-or just modify startTemplate.bat file to match your preferred compile and save as start.bat to not interfere with git updates
+If you are on Windows just modify startTemplate.bat file to match your preferred compile and save as start.bat to not interfere with git updates
 
 ### Update software
 
@@ -51,7 +49,6 @@ run ``` git pull ```
 
 ### Todos
 
- - Properly send responses to indicate the result to frontend
  - Write Tests
 
 
