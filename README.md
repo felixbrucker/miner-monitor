@@ -9,7 +9,7 @@ Miner, balance, wallet and pool monitoring software
 
 ### Prerequisites
 
-miner-monitor requires nodejs >= 7.6.0, npm and optionally pm2 to run.
+miner-monitor requires nodejs >= 8.9.0, npm and optionally pm2 to run.
 
 miners require the miner-manager to be installed
 
