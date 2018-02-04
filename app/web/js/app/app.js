@@ -191,10 +191,13 @@
     };
   });
   app.filter('customnumber', function ($filter) {
-    return function (number, precision = 2) {
+    return function (number, precision = 2, force = false) {
       if (isNaN(parseFloat(number)) || !isFinite(number)) return '';
       if (number === 0) {
         precision = 0;
+      }
+      if (force) {
+        return $filter('number')(number, precision);
       }
       if (number > 100) {
         precision = 2;
