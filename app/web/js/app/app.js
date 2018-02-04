@@ -190,6 +190,18 @@
       return arr.filter(obj => obj.enabled && (obj.type==='nicehash' || obj.type==='miningpoolhub' || obj.type==='genericMPOS'));
     };
   });
+  app.filter('customnumber', function ($filter) {
+    return function (number, precision = 2) {
+      if (isNaN(parseFloat(number)) || !isFinite(number)) return '';
+      if (number === 0) {
+        precision = 0;
+      }
+      if (number > 100) {
+        precision = 2;
+      }
+      return $filter('number')(parseFloat(number.toFixed(precision)), precision);
+    }
+  });
 
   function config($stateProvider, $urlRouterProvider, $locationProvider) {
 

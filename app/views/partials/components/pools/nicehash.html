@@ -26,26 +26,26 @@
             <td ng-if="data.data['1']!==0 && data.data['0'].a==undefined">0.00 {{data.suffix}}/s
             </td>
             <td ng-if="data.data['1']!==0 && data.data['0'].a!==undefined" class='ellipsis'><span
-                    data-highlighter="data.profitability">{{data.profitability * data.data['0'].a | number:4}}</span>
+                    data-highlighter="data.profitability">{{data.profitability * data.data['0'].a | customnumber:4}}</span>
                 BTC/Day
             </td>
             <td ng-if="data.data['1']!==0 && data.data['0'].a==undefined" class='ellipsis'>0.0000
                 BTC/Day
             </td>
             <td ng-if="data.data['1']!==0"><span data-highlighter="data.data['1']"
-                                                 class='ellipsis'>{{data.data['1']|number:8}}</span>
+                                                 class='ellipsis'>{{data.data['1']|customnumber:8}}</span>
                 BTC
             </td>
         </tr>
         </tbody>
         <tr ng-if="$ctrl.dashboard.data.sum!==undefined && $ctrl.dashboard.data.sum!==null">
             <td colspan="2" style="font-weight: bold;">Total</td>
-            <td style="font-weight: bold;">{{$ctrl.dashboard.data.sum.profitability | number:4}}
+            <td style="font-weight: bold;">{{$ctrl.dashboard.data.sum.profitability | customnumber:4}}
                 BTC/Day<br/>{{$ctrl.dashboard.data.sum.profitabilityFiat
-                | number:2}} EUR/Day
+                | customnumber:2}} EUR/Day
             </td>
-            <td style="font-weight: bold;">{{$ctrl.dashboard.data.sum.unpaidBalance | number:8}} BTC<br/>{{$ctrl.dashboard.data.sum.unpaidBalanceFiat
-                | number:2}} EUR
+            <td style="font-weight: bold;">{{$ctrl.dashboard.data.sum.unpaidBalance | customnumber:8}} BTC<br/>{{$ctrl.dashboard.data.sum.unpaidBalanceFiat
+                | customnumber:2}} EUR
             </td>
         </tr>
     </table>

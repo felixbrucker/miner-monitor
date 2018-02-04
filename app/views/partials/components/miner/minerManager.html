@@ -102,23 +102,23 @@
                 <td class='ellipsis'
                     ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='optiminer-zec'||d.type==='sgminer'"
                     ng-class="{danger:d.data.rejected/(d.data.accepted+d.data.rejected)>.1}">{{d.data.rejected}}
-                    [{{d.data.rejected/(d.data.accepted+d.data.rejected)*100|number:2}}%]
+                    [{{d.data.rejected/(d.data.accepted+d.data.rejected)*100|customnumber:2}}%]
                 </td>
                 <td class='ellipsis' ng-if="d.type==='claymore-eth'"
                     ng-class="{danger:d.data['eth-rejected']/(d.data['eth-accepted']+d.data['eth-rejected'])>.1}">
                     {{d.data['eth-rejected']}}
-                    [{{d.data['eth-rejected']/(d.data['eth-accepted']+d.data['eth-rejected'])*100|number:2}}%]<span
-                        ng-if="d.data['alt-hashrate']!==0"><br/>alt: {{d.data['alt-rejected']}} [{{d.data['alt-rejected']/(d.data['alt-accepted']+d.data['alt-rejected'])*100|number:2}}%]</span>
+                    [{{d.data['eth-rejected']/(d.data['eth-accepted']+d.data['eth-rejected'])*100|customnumber:2}}%]<span
+                        ng-if="d.data['alt-hashrate']!==0"><br/>alt: {{d.data['alt-rejected']}} [{{d.data['alt-rejected']/(d.data['alt-accepted']+d.data['alt-rejected'])*100|customnumber:2}}%]</span>
                 </td>
                 <td class='ellipsis' ng-if="d.type==='claymore-xmr'"
                     ng-class="{danger:d.data['xmr-rejected']/(d.data['xmr-accepted']+d.data['xmr-rejected'])>.1}">
                     {{d.data['xmr-rejected']}}
-                    [{{d.data['xmr-rejected']/(d.data['xmr-accepted']+d.data['xmr-rejected'])*100|number:2}}%]
+                    [{{d.data['xmr-rejected']/(d.data['xmr-accepted']+d.data['xmr-rejected'])*100|customnumber:2}}%]
                 </td>
                 <td class='ellipsis' ng-if="d.type==='claymore-zec'"
                     ng-class="{danger:d.data['zec-rejected']/(d.data['zec-accepted']+d.data['zec-rejected'])>.1}">
                     {{d.data['zec-rejected']}}
-                    [{{d.data['zec-rejected']/(d.data['zec-accepted']+d.data['zec-rejected'])*100|number:2}}%]
+                    [{{d.data['zec-rejected']/(d.data['zec-accepted']+d.data['zec-rejected'])*100|customnumber:2}}%]
                 </td>
                 <td class='ellipsis' ng-if="d.type==='other'||d.type==='nheqminer'">-</td>
 

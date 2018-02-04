@@ -20,18 +20,18 @@
         <tr ng-repeat="(id, dashboard) in $ctrl.dashboards | nodeCryptonightPool track by $index">
             <td class='ellipsis'>{{dashboard.data.hashrate | hashrate:null:0}}</td>
             <td class='ellipsis'>
-                                    <span data-toggle="tooltip" title="{{(dashboard.data.pendingFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
-                                        {{dashboard.data.pending | number: 8}} {{dashboard.data.symbol}}
+                                    <span data-toggle="tooltip" title="{{(dashboard.data.pendingFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                                        {{dashboard.data.pending | customnumber: 8}} {{dashboard.data.symbol}}
                                     </span>
             </td>
             <td class='ellipsis'>
-                                    <span data-toggle="tooltip" title="{{(dashboard.data.paidFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
-                                        {{dashboard.data.paid | number: 8}} {{dashboard.data.symbol}}
+                                    <span data-toggle="tooltip" title="{{(dashboard.data.paidFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                                        {{dashboard.data.paid | customnumber: 8}} {{dashboard.data.symbol}}
                                     </span>
             </td>
             <td class='ellipsis'>
-                                    <span data-toggle="tooltip" title="{{(dashboard.data.estimatedProfitFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
-                                        {{dashboard.data.estimatedProfit | number: 8}} {{dashboard.data.symbol}}
+                                    <span data-toggle="tooltip" title="{{(dashboard.data.estimatedProfitFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                                        {{dashboard.data.estimatedProfit | customnumber: 8}} {{dashboard.data.symbol}}
                                     </span>
             </td>
             <td class='ellipsis'>{{dashboard.data.lastShareSubmitted}}</td>
@@ -40,9 +40,9 @@
         </tr>
         <tr>
             <td><strong>Total</strong></td>
-            <td><strong>{{$ctrl.getNodeCryptonotePoolFiatTotal('pending') | number: 2}} €</strong></td>
-            <td><strong>{{$ctrl.getNodeCryptonotePoolFiatTotal('paid') | number: 2}} €</strong></td>
-            <td><strong>{{$ctrl.getNodeCryptonotePoolFiatTotal('estimatedProfit') | number: 2}} €</strong></td>
+            <td><strong>{{$ctrl.getNodeCryptonotePoolFiatTotal('pending') | customnumber: 2}} €</strong></td>
+            <td><strong>{{$ctrl.getNodeCryptonotePoolFiatTotal('paid') | customnumber: 2}} €</strong></td>
+            <td><strong>{{$ctrl.getNodeCryptonotePoolFiatTotal('estimatedProfit') | customnumber: 2}} €</strong></td>
             <td colspan="3"></td>
         </tr>
         </tbody>

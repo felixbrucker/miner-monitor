@@ -10,8 +10,8 @@
     <tr ng-repeat="(id, dashboard) in $ctrl.dashboards track by $index">
         <td>{{dashboard.name}}</td>
         <td class='ellipsis'>
-            <span data-toggle="tooltip" title="{{(dashboard.data.balanceFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
-                {{dashboard.data.balance | number: 0}} BURST
+            <span data-toggle="tooltip" title="{{(dashboard.data.balanceFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                {{dashboard.data.balance | customnumber: 0}} BURST
             </span>
         </td>
     </tr>

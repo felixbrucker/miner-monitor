@@ -29,49 +29,49 @@
             </td>
             <td class='ellipsis'
                 ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">
-                {{data.profitability * data.hashrate|number:4}} BTC/Day
+                {{data.profitability * data.hashrate|customnumber:4}} BTC/Day
             </td>
             <td class='ellipsis'
                 ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">
-                            <span data-toggle="tooltip" title="{{(data.balance.confirmedFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
-                                {{data.balance.confirmed}}
+                            <span data-toggle="tooltip" title="{{(data.balance.confirmedFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                                {{data.balance.confirmed | customnumber:8}}
                             </span>
-                <span data-toggle="tooltip" title="{{(data.balance.unconfirmedFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
-                                ({{data.balance.unconfirmed}})
+                <span data-toggle="tooltip" title="{{(data.balance.unconfirmedFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                                ({{data.balance.unconfirmed | customnumber:8}})
                             </span>
                 {{data.symbol}}
             </td>
             <td class='ellipsis'
                 ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">
-                            <span data-toggle="tooltip" title="{{(data.balance_ae.confirmedFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
-                                {{data.balance_ae.confirmed}}
+                            <span data-toggle="tooltip" title="{{(data.balance_ae.confirmedFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                                {{data.balance_ae.confirmed | customnumber:8}}
                             </span>
-                <span data-toggle="tooltip" title="{{(data.balance_ae.unconfirmedFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
-                                ({{data.balance_ae.unconfirmed}})
+                <span data-toggle="tooltip" title="{{(data.balance_ae.unconfirmedFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                                ({{data.balance_ae.unconfirmed | customnumber:8}})
                             </span>
                 {{data.symbol}}
             </td>
             <td class='ellipsis'
                 ng-if="data.balance.confirmed!==0||data.balance.unconfirmed!==0||data.balance_ae.confirmed!==0||data.balance_ae.unconfirmed!==0||(data.onExchange!==0&&data.onExchange!==null)">
-                            <span data-toggle="tooltip" title="{{(data.onExchangeFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
-                                {{data.onExchange}} {{data.symbol}}
+                            <span data-toggle="tooltip" title="{{(data.onExchangeFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                                {{data.onExchange | customnumber:8}} {{data.symbol}}
                             </span>
             </td>
         </tr>
         <tr ng-if="$ctrl.dashboard.data.profitabilitySum!==undefined && $ctrl.dashboard.data.profitabilitySum!==null">
             <td colspan="2" style="font-weight: bold;">Total</td>
-            <td style="font-weight: bold;">{{$ctrl.dashboard.data.profitabilitySum | number:4}}
-                BTC/Day<br/>{{$ctrl.dashboard.data.profitabilitySumFiat | number:2}} EUR/Day
+            <td style="font-weight: bold;">{{$ctrl.dashboard.data.profitabilitySum | customnumber:4}}
+                BTC/Day<br/>{{$ctrl.dashboard.data.profitabilitySumFiat | customnumber:2}} EUR/Day
             </td>
             <td style="font-weight: bold;">
-                {{$ctrl.dashboard.data.balanceSumFiat | number:2}} EUR<br/>
-                Total: {{$ctrl.dashboard.data.balanceTotalSumFiat | number:2}} EUR
+                {{$ctrl.dashboard.data.balanceSumFiat | customnumber:2}} EUR<br/>
+                Total: {{$ctrl.dashboard.data.balanceTotalSumFiat | customnumber:2}} EUR
             </td>
             <td style="font-weight: bold;">
-                {{$ctrl.dashboard.data.balanceAESumFiat | number:2}} EUR
+                {{$ctrl.dashboard.data.balanceAESumFiat | customnumber:2}} EUR
             </td>
             <td style="font-weight: bold;">
-                {{$ctrl.dashboard.data.balanceOnExchangeSumFiat | number:2}} EUR
+                {{$ctrl.dashboard.data.balanceOnExchangeSumFiat | customnumber:2}} EUR
             </td>
         </tr>
         </tbody>

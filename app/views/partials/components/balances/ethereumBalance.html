@@ -13,14 +13,14 @@
         </td>
         <td class='ellipsis'>
             <span ng-if="dashboard.data.eth.balance !== 0 || !dashboard.data.tokens">
-                <span data-toggle="tooltip" title="{{(dashboard.data.eth.balanceFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
-                    {{dashboard.data.eth.balance | number: 8}} ETH
+                <span data-toggle="tooltip" title="{{(dashboard.data.eth.balanceFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                    {{dashboard.data.eth.balance | customnumber: 8}} ETH
                 </span>
             </span>
             <span ng-if="dashboard.data.eth.balance !== 0"><br/></span>
             <span ng-repeat="(index, entry) in dashboard.data.tokens track by $index">
-                <span data-toggle="tooltip" title="{{(entry.balanceFiat | number: 2) || 'unknown'}} €" data-placement="bottom">
-                    {{entry.balance | number:6}} {{entry.tokenInfo.symbol}}
+                <span data-toggle="tooltip" title="{{(entry.balanceFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                    {{entry.balance | customnumber:6}} {{entry.tokenInfo.symbol}}
                 </span>
                 <span ng-if="index !== dashboard.data.tokens.length - 1">
                     <br/>
