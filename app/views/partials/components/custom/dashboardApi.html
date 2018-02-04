@@ -18,15 +18,15 @@
         <td>{{$ctrl.dashboard.data.removed}}</td>
         <td>{{$ctrl.dashboard.data.total}}</td>
         <td>
-                        <span ng-if="$ctrl.dashboard.data.totalEth > 0">
-                            <span data-toggle="tooltip" title="{{($ctrl.dashboard.data.totalEthFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
-                                {{$ctrl.dashboard.data.totalEth.toFixed(6)}} ETH
-                            </span>
-                            <br>
-                        </span>
+            <span ng-if="$ctrl.dashboard.data.totalEth > 0">
+                <span data-toggle="tooltip" title="{{($ctrl.dashboard.data.totalEthFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                    {{$ctrl.dashboard.data.totalEth | customnumber:6}} ETH
+                </span>
+                <br>
+            </span>
             <span data-toggle="tooltip" title="{{($ctrl.dashboard.data.totalStorjFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
-                            {{$ctrl.dashboard.data.totalStorj.toFixed(0)}} STORJ
-                        </span>
+                {{$ctrl.dashboard.data.totalStorj | customnumber:0:true}} STORJ
+            </span>
         </td>
     </tr>
     </tbody>
