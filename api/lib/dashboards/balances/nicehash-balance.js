@@ -22,7 +22,7 @@ module.exports = class NicehashBalance extends Dashboard {
     try {
       const balanceData = await util.getUrl(`https://api.nicehash.com/api?method=balance&id=${this.dashboard.user_id}&key=${this.dashboard.api_key}`);
       const result = {
-        balance: balanceData.result['balance_confirmed'],
+        balance: parseFloat(balanceData.result['balance_confirmed']),
       };
       const rate = util.getRateForTicker(this.coinmarketcap.getRates(), 'BTC');
       if (rate) {

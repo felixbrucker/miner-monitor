@@ -11,7 +11,7 @@
         <td>{{dashboard.name}}</td>
         <td class='ellipsis'>
             <span data-toggle="tooltip" title="{{(dashboard.data.balanceFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
-                {{dashboard.data.balance}} BTC
+                {{dashboard.data.balance | customnumber:8}} BTC
             </span>
         </td>
     </tr>
