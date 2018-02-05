@@ -58,6 +58,11 @@ module.exports = class GenericWallet extends Dashboard {
     });
     result.balance = walletData.result.balance;
     result.unconfirmed = walletData.result.unconfirmed_balance;
+    if (result.unconfirmed && walletData.result.immature_balance) {
+      result.unconfirmed += walletData.result.immature_balance;
+    } else if (walletData.result.immature_balance){
+      result.unconfirmed = walletData.result.immature_balance;
+    }
 
     result.total = result.balance;
     if (result.unconfirmed) {
