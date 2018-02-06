@@ -29,19 +29,14 @@
         <dashboard-api dashboard="dashboard"></dashboard-api>
     </div>
 
-    <div class="masonry-brick col-sm-12 col-md-8 col-lg-6 col-xl-6 col-xxl-7" ng-repeat="(id, dashboard) in statsVm.current.dashboardData | nhOrMphOrMpos track by $index"
-         style="margin-bottom: 10px;">
-        <div id="board{{id}}" ng-if="dashboard.type==='nicehash'">
-            <nicehash dashboard="dashboard"></nicehash>
-        </div>
-
-        <div id="board{{id}}" ng-if="dashboard.type==='miningpoolhub'">
-            <miningpoolhub dashboard="dashboard"></miningpoolhub>
-        </div>
-
-        <div id="board{{id}}" ng-if="dashboard.type==='genericMPOS'">
-            <mpos dashboard="dashboard"></mpos>
-        </div>
+    <div class="masonry-brick col-sm-12 col-md-8 col-lg-6 col-xl-6 col-xxl-7" ng-repeat="(id, dashboard) in statsVm.dashboards.nicehash track by $index">
+        <nicehash dashboard="dashboard"></nicehash>
+    </div>
+    <div class="masonry-brick col-sm-12 col-md-8 col-lg-6 col-xl-6 col-xxl-7" ng-repeat="(id, dashboard) in statsVm.dashboards.mpos track by $index">
+        <mpos dashboard="dashboard"></mpos>
+    </div>
+    <div class="masonry-brick col-sm-12 col-md-12 col-lg-8 col-xl-6 col-xxl-8" ng-repeat="(id, dashboard) in statsVm.dashboards.mph track by $index">
+        <miningpoolhub dashboard="dashboard"></miningpoolhub>
     </div>
 
     <div class="masonry-brick col-sm-12 col-md-12 col-lg-8 col-xl-6 col-xxl-8" ng-if="statsVm.isDashboardTypeEnabled('node-cryptonote-pool') || statsVm.isDashboardTypeEnabled('snipa-nodejs-pool')">
