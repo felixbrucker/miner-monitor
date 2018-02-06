@@ -25,17 +25,14 @@ module.exports = class Nicehash extends Dashboard {
       const current = poolData.result.current;
       const payments = poolData.result.payments;
       for (let algo of current) {
-        if (algo.data['1'] !== '0') {
-          unpaidBalance += parseFloat(algo.data['1']);
-          if (algo.data['0'].a !== undefined) {
-            profitability += parseFloat(algo.data['0'].a) * parseFloat(algo.profitability);
+        algo.data[1] = parseFloat(algo.data[1]);
+        if (algo.data[1] !== 0) {
+          unpaidBalance += algo.data[1];
+          if (algo.data[0].a !== undefined) {
+            profitability += parseFloat(algo.data[0].a) * parseFloat(algo.profitability);
             let workers = await util.getUrl(`https://api.nicehash.com/api?method=stats.provider.workers&addr=${this.dashboard.address}&algo=${algo.algo}`);
             workers = workers.result.workers;
-            workers.sort((a, b) => {
-              if (a[0] < b[0]) return -1;
-              if (a[0] > b[0]) return 1;
-              return 0;
-            });
+            workers.sort((a, b) => a[0] - b[0]);
             workers.filter((worker) => worker[0] !== '' && worker[1] !== {});
             algo.worker = workers;
           }
