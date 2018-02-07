@@ -91,6 +91,7 @@
     vm.addDashboard = addDashboard;
     vm.delDashboard = delDashboard;
     vm.getDashboardTypes = getDashboardTypes;
+    vm.restartShares = restartShares;
 
 
     function getDashboardTypes(column) {
@@ -454,6 +455,27 @@
         return $http({
           method: 'POST',
           url: 'api/config/rebootSystem',
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8'
+          },
+          data: {id: id}
+        }).then(function successCallback(response) {
+        }, function errorCallback(response) {
+          console.log(response);
+        });
+      }
+    }
+
+    /**
+     * @name restartShares
+     * @desc restarts all shares if confirmed
+     * @memberOf configCtrl
+     */
+    function restartShares(id) {
+      if (confirm('Are you sure you want to restart all shares of this system?')) {
+        return $http({
+          method: 'POST',
+          url: 'api/config/restartShares',
           headers: {
             'Content-Type': 'application/json;charset=UTF-8'
           },

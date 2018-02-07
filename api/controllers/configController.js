@@ -131,6 +131,31 @@ async function rebootSystem(req, res) {
   }
 }
 
+async function restartShares(req, res) {
+  const id = req.body.id;
+  const device = configModule.config.devices.find((device) => (device.id === id));
+  if (!device) {
+    res.setHeader('Content-Type', 'application/json');
+    return res.send(JSON.stringify({result: false}));
+  }
+  const agent = new https.Agent({
+    rejectUnauthorized: false
+  });
+  let response = null;
+  try {
+    response = await axios.get(url.resolve(device.hostname, '/restart?node=all'), {httpsAgent: agent});
+  } catch (error) {
+    console.log(colors.red("[" + device.name + "] Error: Unable to restart shares"));
+    console.log(error.message);
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({result: false}));
+  }
+  if (response !== null) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(response.data));
+  }
+}
+
 async function verifyTransport(req,res,next){
   const result = await mailService.verifyTransport();
   res.setHeader('Content-Type', 'application/json');
@@ -150,3 +175,4 @@ exports.updateMiner = updateMiner;
 exports.updateAgent = updateAgent;
 exports.verifyTransport = verifyTransport;
 exports.rebootSystem = rebootSystem;
+exports.restartShares = restartShares;

@@ -53,6 +53,9 @@
                   <button ng-if="entry.type==='miner-agent'" type="button" class="btn btn-danger" ng-click="configVm.rebootSystem(entry.id)">
                     <i class="fa fa-repeat" aria-hidden="true"></i>
                   </button>
+                  <button ng-if="entry.type==='storj'" type="button" class="btn btn-danger" ng-click="configVm.restartShares(entry.id)">
+                    <i class="fa fa-repeat" aria-hidden="true"></i>
+                  </button>
                   <button type="button" class="btn btn-warning" ng-click="configVm.delDevice(entry.id)">
                     <i class="fa fa-trash-o" aria-hidden="true"></i>
                     Remove
