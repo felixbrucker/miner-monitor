@@ -475,7 +475,7 @@
       if (confirm('Are you sure you want to restart all shares of this system?')) {
         return $http({
           method: 'POST',
-          url: 'api/config/restartShares',
+          url: 'api/config/restartShares?node=all',
           headers: {
             'Content-Type': 'application/json;charset=UTF-8'
           },

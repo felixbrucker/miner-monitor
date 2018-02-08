@@ -133,7 +133,7 @@ module.exports = class Storj extends Miner {
   }
 
   getStats() {
-    return Object.assign(super.getStats(), {stats: this.stats});
+    return Object.assign(super.getStats(), {stats: this.stats, id: this.device.id});
   }
 
   onInit() {

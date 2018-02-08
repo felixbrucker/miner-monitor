@@ -133,8 +133,9 @@ async function rebootSystem(req, res) {
 
 async function restartShares(req, res) {
   const id = req.body.id;
+  const node = req.query.node;
   const device = configModule.config.devices.find((device) => (device.id === id));
-  if (!device) {
+  if (!device || !node) {
     res.setHeader('Content-Type', 'application/json');
     return res.send(JSON.stringify({result: false}));
   }
@@ -143,7 +144,7 @@ async function restartShares(req, res) {
   });
   let response = null;
   try {
-    response = await axios.get(url.resolve(device.hostname, '/restart?node=all'), {httpsAgent: agent});
+    response = await axios.get(url.resolve(device.hostname, `/restart?node=${node}`), {httpsAgent: agent});
   } catch (error) {
     console.log(colors.red("[" + device.name + "] Error: Unable to restart shares"));
     console.log(error.message);

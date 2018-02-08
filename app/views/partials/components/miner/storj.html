@@ -30,8 +30,12 @@
             <tbody ng-hide="$ctrl.hidden">
             <tr ng-repeat="share in $ctrl.entry.stats.shares track by $index">
 
-                <td class='ellipsissmall'><i class="fa fa-hdd-o" aria-hidden="true"></i>
+                <td class='ellipsissmall'>
+                    <i class="fa fa-hdd-o" aria-hidden="true"></i>
                     <a href="https://api.storj.io/contacts/{{share.id}}" target="_blank">{{share.config.storagePath}}</a>
+                    <button type="button" class="btn btn-danger btn-xs" >
+                        <i class="fa fa-repeat" aria-hidden="true" ng-click="$ctrl.restartShare($ctrl.entry.id, share.id)"></i>
+                    </button>
                 </td>
 
                 <td>
