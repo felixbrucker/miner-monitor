@@ -1,6 +1,7 @@
 const https = require('https');
 const axios = require('axios');
 const bytes = require('bytes');
+const moment = require('moment');
 const Miner = require('./miner');
 const problemService = require('../services/problem-service');
 
@@ -9,7 +10,7 @@ module.exports = class Storj extends Miner {
   mergeStats(newShareStats) {
     const obj = Object.assign({}, this.stats);
     obj.totalSpaceUsed = 0;
-    obj.totalChange = 0;
+    obj.totalSpaceUsedBytes = 0;
     obj.totalPeers = 0;
     obj.totalRestarts = 0;
     obj.totalShardsReceived = 0;
@@ -22,32 +23,15 @@ module.exports = class Storj extends Miner {
         share = Object.assign(oldShareData, share);
       }
 
-      if (!share.lastSpaceUpdate) {
-        share.lastSpaceUpdate = Date.now();
-        share.meta.farmerState.lastSpaceUsed = share.meta.farmerState.spaceUsedBytes || 0;
-      }
-      if ((Date.now() - share.lastSpaceUpdate) / 1000 > 60 * 60 * 12) {
-        // we need to save the current space used
-        share.lastSpaceUpdate = Date.now();
-        share.meta.farmerState.lastSpaceUsed = share.meta.farmerState.spaceUsedBytes || 0;
-      }
-      // calculate diff
-      const change = (share.meta.farmerState.spaceUsedBytes || 0) - share.meta.farmerState.lastSpaceUsed;
-      if (change < 0) {
-        share.meta.farmerState.change = `- ${bytes(-1 * change)}`;
-      } else {
-        share.meta.farmerState.change = `+ ${bytes(change)}`;
-      }
       if (share.meta.farmerState.percentUsed === '...') {
         share.meta.farmerState.percentUsed = '0';
       }
       if (share.meta.farmerState.spaceUsed === '...') {
         share.meta.farmerState.spaceUsed = '0B';
       }
-      share.meta.farmerState.changeBytes = change;
 
-      obj.totalChange += share.meta.farmerState.changeBytes;
       obj.totalSpaceUsed += share.meta.farmerState.spaceUsedBytes || 0;
+      obj.totalSpaceUsedBytes += share.meta.farmerState.spaceUsedBytes || 0;
       obj.totalPeers += share.meta.farmerState.totalPeers;
       obj.totalRestarts += share.meta.numRestarts;
       obj.totalShardsReceived += share.meta.farmerState.dataReceivedCount;
@@ -56,11 +40,6 @@ module.exports = class Storj extends Miner {
     });
 
     obj.avgPeers = obj.totalPeers / obj.shares.length;
-    if (obj.totalChange < 0) {
-      obj.totalChange = `- ${bytes(-1 * obj.totalChange)}`;
-    } else {
-      obj.totalChange = `+ ${bytes(obj.totalChange)}`;
-    }
     obj.totalSpaceUsed = bytes(obj.totalSpaceUsed);
 
     return obj;
@@ -125,6 +104,7 @@ module.exports = class Storj extends Miner {
       const minerData = await axios.get(`${this.device.hostname}/status`, {httpsAgent: agent});
       await problemService.handleProblem(this.constructOnlineProblem());
       this.stats = this.mergeStats(minerData.data.data);
+      this.updateHistory();
     } catch(err) {
       this.stats = null;
       console.error(`[${this.device.name} :: Storj] => ${err.message}`);
@@ -132,11 +112,44 @@ module.exports = class Storj extends Miner {
     }
   }
 
+  updateHistory() {
+    const data = {
+      timestamp: moment(),
+      totalSpaceUsedBytes: this.stats.totalSpaceUsedBytes,
+      shares: this.stats.shares.map(share => share.meta.farmerState.spaceUsedBytes || 0),
+    };
+    this.history.push(data);
+    this.history = this.history.filter(data => data.timestamp.isAfter(moment().subtract(1, 'day')));
+    this.stats.historyFromNow = this.history[0].timestamp.fromNow(true);
+    let totalChange = this.stats.totalSpaceUsedBytes - this.history[0].totalSpaceUsedBytes;
+    if (totalChange < 0) {
+      totalChange = `- ${bytes(-1 * totalChange)}`;
+    } else {
+      totalChange = `+ ${bytes(totalChange)}`;
+    }
+    this.stats.totalChange = totalChange;
+    this.stats.shares.map((share, index) => {
+      const changeBytes = (share.meta.farmerState.spaceUsedBytes || 0) - this.history[0].shares[index];
+      share.meta.farmerState.changeBytes = changeBytes;
+      if (changeBytes < 0) {
+        share.meta.farmerState.change = `- ${bytes(-1 * changeBytes)}`;
+      } else {
+        share.meta.farmerState.change = `+ ${bytes(changeBytes)}`;
+      }
+    });
+  }
+
   getStats() {
-    return Object.assign(super.getStats(), {stats: this.stats, id: this.device.id});
+    return Object.assign(
+      super.getStats(),
+      {
+        stats: this.stats,
+        id: this.device.id,
+      });
   }
 
   onInit() {
+    this.history = [];
     super.onInit();
     this.bridgeStatsInterval = 2 * 60 * 1000;
     this.updateBridgeStats();

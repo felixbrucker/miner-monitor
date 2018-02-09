@@ -15,7 +15,7 @@
                 <th><span data-toggle="tooltip" title="Peers" data-placement="bottom">P</span></th>
                 <th><span data-toggle="tooltip" title="Shared space (% used)" data-placement="bottom">Shared</span>
                 </th>
-                <th><span data-toggle="tooltip" title="Change (since)" data-placement="bottom">CH ({{$ctrl.secondsSince($ctrl.entry.stats.shares[0].lastSpaceUpdate || 0) | secondsToHrMin}})</span>
+                <th><span data-toggle="tooltip" title="Change (last 24 hours)" data-placement="bottom">CH ({{$ctrl.entry.stats.historyFromNow}})</span>
                 </th>
                 <th><span data-toggle="tooltip" title="Shards received since launch"
                           data-placement="bottom">SR</span></th>
@@ -64,7 +64,7 @@
                 </td>
 
                 <td class='ellipsis'><span data-toggle="tooltip"
-                                           title="since {{$ctrl.secondsSince(share.lastSpaceUpdate) | secondsToHrMin}} ago"
+                                           title="since {{$ctrl.entry.stats.historyFromNow}} ago"
                                            data-placement="bottom">{{share.meta.farmerState.change}}</span>
                 </td>
 
