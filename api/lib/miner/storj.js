@@ -28,6 +28,7 @@ module.exports = class Storj extends Miner {
       }
       if (share.meta.farmerState.spaceUsed === '...') {
         share.meta.farmerState.spaceUsed = '0B';
+        share.meta.farmerState.spaceUsedBytes = 0;
       }
 
       obj.totalSpaceUsed += share.meta.farmerState.spaceUsedBytes || 0;
