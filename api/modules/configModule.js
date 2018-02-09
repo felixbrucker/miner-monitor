@@ -57,7 +57,7 @@ var config = module.exports = {
     console.log(colors.grey('writing config to file..'));
     fs.writeFile(configPath, JSON.stringify(config.config,null,2), function (err) {
       if (err) {
-        return console.log(err);
+        return console.error(err);
       }
     });
   },

@@ -85,7 +85,7 @@ module.exports = class Storj extends Miner {
         avgRp += bridgeStats.reputation || 0;
         counter3 += 1;
       } catch (error) {
-        console.log(`[${this.device.name} :: Storj-Bridge-API] => ${error.message}`);
+        console.error(`[${this.device.name} :: Storj-Bridge-API] => ${error.message}`);
       }
     }));
     avgRp = avgRp / (counter3 ? counter3 : 1);
