@@ -12,11 +12,11 @@
         <tbody>
         <tr ng-repeat="(id, dashboard) in $ctrl.dashboards track by $index">
             <td class='ellipsis'>
-                <span ng-click="$ctrl.toggleVisible(id)">{{dashboard.data.hashrate | hashrate}}</span>
+                <span ng-click="$ctrl.toggleVisible(id)">{{dashboard.data.hashrat | hashrate:null:0}}</span>
                 <span ng-if="dashboard.data.workers!==[] && $ctrl.isVisible(id)" style="font-size:small;">
                     <span ng-repeat="(key, miner) in dashboard.data.workers track by $index">
                         <br/>
-                        {{miner.type}}: {{miner.hashrate | hashrate}}<span
+                        {{miner.type}}: {{miner.hashrate | hashrate:null:0}}<span
                             class="nomobile"> (diff: {{miner.diff}})</span>
                     </span>
                 </span>
