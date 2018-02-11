@@ -16,8 +16,8 @@
                 <span ng-if="dashboard.data.workers!==[] && $ctrl.isVisible(id)" style="font-size:small;">
                     <span ng-repeat="(key, miner) in dashboard.data.workers track by $index">
                         <br/>
-                        {{miner.type}}: {{miner.hashrate | hashrate:null:0}}<span
-                            class="nomobile"> (diff: {{miner.diff}})</span>
+                        {{miner.password}}: {{miner.accepted | hashrate:null:0}}<span
+                            class="nomobile"> (diff: {{miner.difficulty}})</span>
                     </span>
                 </span>
             </td>
