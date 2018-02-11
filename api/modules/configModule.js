@@ -38,6 +38,7 @@ var config = module.exports = {
       'generic-wallet',
       'bitbean-wallet',
       'coinbase',
+      'yiimp'
     ]
   },
   getConfig: function () {

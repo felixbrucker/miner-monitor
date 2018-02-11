@@ -1,0 +1,43 @@
+<div class="col-md-12">
+    <div class="centerAlign">Yiimp Stats:</div>
+    <table class="table table-bordered table-condensed leftAlign">
+        <thead>
+        <tr>
+            <th>Hashrate</th>
+            <th>Balance</th>
+            <th>Unconfirmed</th>
+            <th>Homepage</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="(id, dashboard) in $ctrl.dashboards track by $index">
+            <td class='ellipsis'>
+                <span ng-click="$ctrl.toggleVisible(id)">{{dashboard.data.hashrate | hashrate}}</span>
+                <span ng-if="dashboard.data.workers!==[] && $ctrl.isVisible(id)" style="font-size:small;">
+                    <span ng-repeat="(key, miner) in dashboard.data.workers track by $index">
+                        <br/>
+                        {{miner.type}}: {{miner.hashrate | hashrate}}<span
+                            class="nomobile"> (diff: {{miner.diff}})</span>
+                    </span>
+                </span>
+            </td>
+            <td class='ellipsis'>
+                <span data-toggle="tooltip" title="{{(dashboard.data.balanceFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                    {{dashboard.data.balance | customnumber: 6}} {{dashboard.data.symbol}}
+                </span>
+            </td>
+            <td class='ellipsis'>
+                <span data-toggle="tooltip" title="{{(dashboard.data.unconfirmedFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                    {{dashboard.data.unconfirmed | customnumber: 6}} {{dashboard.data.symbol}}
+                </span>
+            </td>
+            <td>
+                <a href="{{dashboard.baseUrl}}/?address={{dashboard.address}}" target="_blank">Pool</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="col-md-12 centerAlign">
+
+</div>

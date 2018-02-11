@@ -41,6 +41,7 @@
       mph: [],
       nodeCryptonotePools: [],
       wallets: [],
+      yiimp: [],
     };
     vm.devices = [];
     vm.enabled={};
@@ -149,6 +150,7 @@
       vm.dashboards.mph = getDashboardArrForTypes(['miningpoolhub']);
       vm.dashboards.nodeCryptonotePools = getDashboardArrForTypes(['node-cryptonote-pool', 'snipa-nodejs-pool']);
       vm.dashboards.wallets = getDashboardArrForTypes(['generic-wallet', 'bitbean-wallet']);
+      vm.dashboards.yiimp = getDashboardArrForTypes('yiimp');
       vm.devices = vm.current.entries
         .sort(sortByName)
         .map(group => Object.keys(group.devices)
