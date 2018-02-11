@@ -6,6 +6,11 @@
             <th>Hashrate</th>
             <th>Balance</th>
             <th>Unconfirmed</th>
+            <th>
+                <span data-toggle="tooltip" title="Paid in the last 24h" data-placement="bottom">
+                    Paid 24h
+                </span>
+            </th>
             <th>Homepage</th>
         </tr>
         </thead>
@@ -29,6 +34,11 @@
             <td class='ellipsis'>
                 <span data-toggle="tooltip" title="{{(dashboard.data.unconfirmedFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
                     {{dashboard.data.unconfirmed | customnumber: 6}} {{dashboard.data.symbol}}
+                </span>
+            </td>
+            <td class='ellipsis'>
+                <span data-toggle="tooltip" title="{{(dashboard.data.paid24hFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                    {{dashboard.data.paid24h | customnumber: 6}} {{dashboard.data.symbol}}
                 </span>
             </td>
             <td>

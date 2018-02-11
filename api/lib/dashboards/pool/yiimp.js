@@ -30,7 +30,8 @@ module.exports = class Yiimp extends Dashboard {
         symbol: statsData.currency,
         workers: statsData.miners || [],
         balance: statsData.balance,
-        unconfirmed: statsData.unpaid,
+        unconfirmed: statsData.unsold,
+        paid24h: statsData.paid24h,
       };
       result.hashrate = result.workers.reduce((acc, right) => acc + right.accepted, 0);
 
@@ -38,6 +39,7 @@ module.exports = class Yiimp extends Dashboard {
       if (rate) {
         result.balanceFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * result.balance;
         result.unconfirmedFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * result.unconfirmed;
+        result.paid24hFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * result.paid24h;
       }
 
       this.stats = result;
