@@ -1,5 +1,5 @@
 <div class="col-md-12">
-    <div class="centerAlign">Stats ({{$ctrl.parseName($ctrl.dashboard.name)}}):</div>
+    <div class="centerAlign">MPOS Pools:</div>
     <table class="table table-bordered table-condensed leftAlign">
         <thead>
         <tr>
@@ -7,39 +7,40 @@
             <th>Confirmed</th>
             <th>Unconfirmed</th>
             <th>Estimated Round Earnings</th>
+            <th>Homepage</th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td class='ellipsis'>{{$ctrl.dashboard.data.hashrate|hashrate}}
-                <span ng-if="$ctrl.dashboard.data.workers!==[]" style="font-size:small;">
-                <span ng-repeat="(key, value) in $ctrl.dashboard.data.workers track by $index">
-                    <br/>
-                    {{value.username}}: {{value.hashrate|hashrate}}<span
-                        class="nomobile"> (diff: {{value.difficulty}})</span>
-                </span>
-            </span>
-            </td>
+        <tr ng-repeat="(id, dashboard) in $ctrl.dashboards track by $index">
             <td class='ellipsis'>
-                <span data-toggle="tooltip" title="{{($ctrl.dashboard.data.confirmedFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
-                    {{$ctrl.dashboard.data.confirmed | customnumber:6}} {{$ctrl.dashboard.data.symbol}}
+                <span ng-click="$ctrl.toggleHidden(id)">{{dashboard.data.hashrate | hashrate}}</span>
+                <span ng-if="dashboard.data.workers!==[] && !$ctrl.isHidden(id)" style="font-size:small;">
+                    <span ng-repeat="(key, value) in dashboard.data.workers track by $index">
+                        <br/>
+                        {{value.username}}: {{value.hashrate | hashrate}}<span
+                            class="nomobile"> (diff: {{value.difficulty}})</span>
+                    </span>
                 </span>
             </td>
             <td class='ellipsis'>
-                <span data-toggle="tooltip" title="{{($ctrl.dashboard.data.unconfirmedFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
-                    {{$ctrl.dashboard.data.unconfirmed | customnumber:6}} {{$ctrl.dashboard.data.symbol}}
+                <span data-toggle="tooltip" title="{{(dashboard.data.confirmedFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                    {{dashboard.data.confirmed | customnumber:6}} {{dashboard.data.symbol}}
                 </span>
             </td>
             <td class='ellipsis'>
-                <span data-toggle="tooltip" title="{{($ctrl.dashboard.data.estimatedFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
-                    {{$ctrl.dashboard.data.estimated | customnumber:6}} {{$ctrl.dashboard.data.symbol}}
+                <span data-toggle="tooltip" title="{{(dashboard.data.unconfirmedFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                    {{dashboard.data.unconfirmed | customnumber:6}} {{dashboard.data.symbol}}
                 </span>
+            </td>
+            <td class='ellipsis'>
+                <span data-toggle="tooltip" title="{{(dashboard.data.estimatedFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                    {{dashboard.data.estimated | customnumber:6}} {{dashboard.data.symbol}}
+                </span>
+            </td>
+            <td>
+                <a href="{{dashboard.baseUrl}}/index.php?page=statistics&action=pool" target="_blank">Pool</a>
             </td>
         </tr>
         </tbody>
     </table>
-</div>
-<div class="col-md-12 centerAlign">
-    <a href="{{$ctrl.dashboard.baseUrl}}/index.php?page=statistics&action=pool" target="_blank">Pool
-        Homepage</a>
 </div>
