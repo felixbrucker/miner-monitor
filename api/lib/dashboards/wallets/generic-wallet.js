@@ -76,7 +76,7 @@ module.exports = class GenericWallet extends Dashboard {
     const getDataForWallet = this.isOldWallet ? this.getDataForOldWallet.bind(this) : this.getDataForNewWallet.bind(this);
     try {
       const result = await getDataForWallet();
-      const rate = util.getRateForTicker(this.coinmarketcap.getRates(), this.dashboard.ticker);
+      const rate = util.getRateForTicker(this.coinmarketcap.getRates(), this.dashboard.ticker.toUpperCase());
       if (rate) {
         result.balanceFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * result.balance;
         result.totalFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * result.total;
