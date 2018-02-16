@@ -45,8 +45,8 @@ module.exports = class Mpos extends Dashboard {
         symbol: dashboardData.pool.info.currency,
         estimated: dashboardData.personal.estimates.payout,
         workers: workerData,
-        confirmed: balanceData.confirmed,
-        unconfirmed: balanceData.unconfirmed,
+        confirmed: parseFloat(balanceData.confirmed),
+        unconfirmed: parseFloat(balanceData.unconfirmed),
       };
 
       const rate = util.getRateForTicker(this.coinmarketcap.getRates(), result.symbol.toUpperCase());
