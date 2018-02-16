@@ -36,12 +36,12 @@ module.exports = class Mpos extends Dashboard {
         .map((worker) => {
           const arr = worker.username.split('.');
           worker.username = arr[(arr.length === 1 ? 0 : 1)];
-          worker.hashrate = worker.hashrate / hrModifier;
+          worker.hashrate = worker.hashrate / this.dashboard.hrModifier;
           return worker;
         });
 
       const result = {
-        hashrate: dashboardData.raw.personal.hashrate / hrModifier,
+        hashrate: dashboardData.raw.personal.hashrate / this.dashboard.hrModifier,
         symbol: dashboardData.pool.info.currency,
         estimated: dashboardData.personal.estimates.payout,
         workers: workerData,
