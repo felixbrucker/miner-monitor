@@ -59,7 +59,13 @@
                 <td class='ellipsis' ng-if="d.type==='other'">other</td>
 
                 <td class='ellipsis'
-                    ng-if="d.type==='cpuminer-opt'||d.type==='ccminer'||d.type==='sgminer'"
+                    ng-if="d.type==='cpuminer-opt'"
+                    ng-class="{danger: (d.data.hashrate==0 || d.data.hashrate < d.expectedHr)}">
+                                <span data-toggle="tooltip" title="E: {{d.expectedHr | hashrate:1:0}}" data-placement="bottom">{{d.data.hashrate
+                                    |hashrate:1:0}}</span>
+                </td>
+                <td class='ellipsis'
+                    ng-if="d.type==='ccminer'||d.type==='sgminer'"
                     ng-class="{danger: (d.data.hashrate==0 || d.data.hashrate * 1000 < d.expectedHr)}">
                                 <span data-toggle="tooltip" title="E: {{d.expectedHr | hashrate:1:0}}" data-placement="bottom">{{d.data.hashrate
                                     |hashrate}}</span>
