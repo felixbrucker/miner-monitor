@@ -16,9 +16,26 @@
         <td>{{dashboard.name}}</td>
 
         <!-- generic wallet -->
-        <th ng-if="dashboard.type === 'generic-wallet' && dashboard.data" >
-            <span data-toggle="tooltip" title="online"><i
+        <th ng-if="dashboard.type === 'generic-wallet' &&
+        dashboard.data &&
+        $ctrl.isSynced(dashboard.data)" >
+            <span data-toggle="tooltip" title="online & synced"><i
                     class="fa fa-check-circle-o" aria-hidden="true" style="color:green"></i>
+            </span>
+        </th>
+        <th ng-if="dashboard.type === 'generic-wallet' &&
+        dashboard.data &&
+        $ctrl.isSyncing(dashboard.data)" >
+            <span data-toggle="tooltip" title="online & syncing: {{dashboard.data.syncProgress * 100 | number:2}}%"><i
+                    class="fa fa-refresh fa-spin" aria-hidden="true" style="color:orange"></i>
+            </span>
+        </th>
+        <th ng-if="dashboard.type === 'generic-wallet' &&
+        dashboard.data &&
+        !($ctrl.isSyncing(dashboard.data)) &&
+        $ctrl.isOutdated(dashboard.data)" >
+            <span data-toggle="tooltip" title="online, last block {{$ctrl.getLastBlockAgo(dashboard.data)}}"><i
+                    class="fa fa-exclamation-triangle " aria-hidden="true" style="color:orange"></i>
             </span>
         </th>
         <th ng-if="dashboard.type === 'generic-wallet' && !dashboard.data">
@@ -28,18 +45,35 @@
         </th>
 
         <!-- bitbean wallet -->
-        <th ng-if="dashboard.type === 'bitbean-wallet' && dashboard.data && dashboard.data.sprouting" >
-            <span data-toggle="tooltip" title="online & sprouting, interval: {{dashboard.data.sproutingInterval}}"><i
+        <th ng-if="dashboard.type === 'bitbean-wallet' && dashboard.data && dashboard.data.sprouting && $ctrl.isSynced(dashboard.data)" >
+            <span data-toggle="tooltip" title="online, synced & sprouting, interval: {{dashboard.data.sproutingInterval}}"><i
                     class="fa fa-check-circle-o" aria-hidden="true" style="color:green"></i>
             </span>
         </th>
-        <th ng-if="dashboard.type === 'bitbean-wallet' && !dashboard.data">
-            <span data-toggle="tooltip" title="offline"><i
-                    class="fa fa-stop-circle-o" aria-hidden="true" style="color:red"></i>
+        <th ng-if="dashboard.type === 'bitbean-wallet' &&
+        dashboard.data &&
+        dashboard.data.sprouting &&
+        $ctrl.isSyncing(dashboard.data)" >
+            <span data-toggle="tooltip" title="online, sprouting & syncing: {{dashboard.data.syncProgress * 100 | number:2}}%"><i
+                    class="fa fa-refresh fa-spin" aria-hidden="true" style="color:orange"></i>
+            </span>
+        </th>
+        <th ng-if="dashboard.type === 'bitbean-wallet' &&
+        dashboard.data &&
+        dashboard.data.sprouting &&
+        !($ctrl.isSyncing(dashboard.data)) &&
+        $ctrl.isOutdated(dashboard.data)" >
+            <span data-toggle="tooltip" title="online & sprouting but last block {{$ctrl.getLastBlockAgo(dashboard.data)}}"><i
+                    class="fa fa-exclamation-triangle " aria-hidden="true" style="color:orange"></i>
             </span>
         </th>
         <th ng-if="dashboard.type === 'bitbean-wallet' && dashboard.data && !dashboard.data.sprouting">
             <span data-toggle="tooltip" title="online but not sprouting"><i
+                    class="fa fa-stop-circle-o" aria-hidden="true" style="color:red"></i>
+            </span>
+        </th>
+        <th ng-if="dashboard.type === 'bitbean-wallet' && !dashboard.data">
+            <span data-toggle="tooltip" title="offline"><i
                     class="fa fa-stop-circle-o" aria-hidden="true" style="color:red"></i>
             </span>
         </th>

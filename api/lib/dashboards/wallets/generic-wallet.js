@@ -36,6 +36,22 @@ module.exports = class GenericWallet extends Dashboard {
       result.total += result.staked;
     }
 
+    const bestBockHashData = await util.postUrl(this.dashboard.baseUrl, {
+      jsonrpc: '1.0',
+      id: 0,
+      method: 'getbestblockhash',
+      params: [],
+    });
+    const latestBlockData = await util.postUrl(this.dashboard.baseUrl, {
+      jsonrpc: '1.0',
+      id: 0,
+      method: 'getblock',
+      params: [
+        bestBockHashData.result,
+      ],
+    });
+    result.lastBlockReceived = latestBlockData.result.time;
+
     return result;
   }
 
@@ -63,11 +79,28 @@ module.exports = class GenericWallet extends Dashboard {
     } else if (walletData.result.immature_balance){
       result.unconfirmed = walletData.result.immature_balance;
     }
-
     result.total = result.balance;
     if (result.unconfirmed) {
       result.total += result.unconfirmed;
     }
+
+    const blockchainData = await util.postUrl(this.dashboard.baseUrl, {
+      jsonrpc: '1.0',
+      id: 0,
+      method: 'getblockchaininfo',
+      params: [],
+    });
+    result.syncProgress = blockchainData.result.verificationprogress;
+
+    const latestBlockData = await util.postUrl(this.dashboard.baseUrl, {
+      jsonrpc: '1.0',
+      id: 0,
+      method: 'getblock',
+      params: [
+        blockchainData.result.bestblockhash,
+      ],
+    });
+    result.lastBlockReceived = latestBlockData.result.time;
 
     return result;
   }
