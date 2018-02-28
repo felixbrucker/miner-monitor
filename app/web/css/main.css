@@ -8,6 +8,17 @@ body {
     margin-bottom: 2em;
 }
 
+.sync-progress {
+    width: 16px;
+    height: 10px;
+    -webkit-transform: rotate(-90deg); /* Chrome, Safari, Opera */
+    transform: rotate(-90deg);
+    margin-bottom: 0;
+    display: inline-block;
+    overflow: visible;
+    border-radius: 0;
+}
+
 /* Index / Shorten wide values in tables and show them on hover */
 .ellipsissmall{
     overflow: hidden;

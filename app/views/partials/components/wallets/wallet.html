@@ -16,49 +16,55 @@
         <td>{{dashboard.name}}</td>
 
         <!-- generic wallet -->
-        <th ng-if="dashboard.type === 'generic-wallet' &&
+        <td ng-if="dashboard.type === 'generic-wallet' &&
         dashboard.data &&
         $ctrl.isSynced(dashboard.data)" >
             <span data-toggle="tooltip" title="online & synced"><i
                     class="fa fa-check-circle-o" aria-hidden="true" style="color:green"></i>
             </span>
-        </th>
-        <th ng-if="dashboard.type === 'generic-wallet' &&
+        </td>
+        <td style="min-width: 43px;" ng-if="dashboard.type === 'generic-wallet' &&
         dashboard.data &&
         $ctrl.isSyncing(dashboard.data)" >
-            <span data-toggle="tooltip" title="online & syncing: {{dashboard.data.syncProgress * 100 | number:2}}%"><i
-                    class="fa fa-refresh fa-spin" aria-hidden="true" style="color:orange"></i>
+            <span data-toggle="tooltip" title="online & syncing: {{dashboard.data.syncProgress * 100 | number:2}}%">
+                <i class="fa fa-refresh fa-spin" aria-hidden="true" style="color:orange"></i>
+                <div class="progress sync-progress">
+                    <div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="{{dashboard.data.syncProgress * 100}}" aria-valuemin="0" aria-valuemax="100" style="width: {{dashboard.data.syncProgress * 100}}%;"></div>
+                </div>
             </span>
-        </th>
-        <th ng-if="dashboard.type === 'generic-wallet' &&
+        </td>
+        <td ng-if="dashboard.type === 'generic-wallet' &&
         dashboard.data &&
         !($ctrl.isSyncing(dashboard.data)) &&
         $ctrl.isOutdated(dashboard.data)" >
             <span data-toggle="tooltip" title="online, last block {{$ctrl.getLastBlockAgo(dashboard.data)}}"><i
                     class="fa fa-exclamation-triangle " aria-hidden="true" style="color:orange"></i>
             </span>
-        </th>
-        <th ng-if="dashboard.type === 'generic-wallet' && !dashboard.data">
+        </td>
+        <td ng-if="dashboard.type === 'generic-wallet' && !dashboard.data">
             <span data-toggle="tooltip" title="offline"><i
                     class="fa fa-stop-circle-o" aria-hidden="true" style="color:red"></i>
             </span>
-        </th>
+        </td>
 
         <!-- bitbean wallet -->
-        <th ng-if="dashboard.type === 'bitbean-wallet' && dashboard.data && dashboard.data.sprouting && $ctrl.isSynced(dashboard.data)" >
+        <td ng-if="dashboard.type === 'bitbean-wallet' && dashboard.data && dashboard.data.sprouting && $ctrl.isSynced(dashboard.data)" >
             <span data-toggle="tooltip" title="online, synced & sprouting, interval: {{dashboard.data.sproutingInterval}}"><i
                     class="fa fa-check-circle-o" aria-hidden="true" style="color:green"></i>
             </span>
-        </th>
-        <th ng-if="dashboard.type === 'bitbean-wallet' &&
+        </td>
+        <td style="min-width: 43px;" ng-if="dashboard.type === 'bitbean-wallet' &&
         dashboard.data &&
         dashboard.data.sprouting &&
         $ctrl.isSyncing(dashboard.data)" >
-            <span data-toggle="tooltip" title="online, sprouting & syncing: {{dashboard.data.syncProgress * 100 | number:2}}%"><i
-                    class="fa fa-refresh fa-spin" aria-hidden="true" style="color:orange"></i>
+            <span data-toggle="tooltip" title="online, sprouting & syncing: {{dashboard.data.syncProgress * 100 | number:2}}%">
+                <i class="fa fa-refresh fa-spin" aria-hidden="true" style="color:orange"></i>
+                <div class="progress sync-progress">
+                    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="{{dashboard.data.syncProgress * 100}}" aria-valuemin="0" aria-valuemax="100" style="width: {{dashboard.data.syncProgress * 100}}%;"></div>
+                </div>
             </span>
-        </th>
-        <th ng-if="dashboard.type === 'bitbean-wallet' &&
+        </td>
+        <td ng-if="dashboard.type === 'bitbean-wallet' &&
         dashboard.data &&
         dashboard.data.sprouting &&
         !($ctrl.isSyncing(dashboard.data)) &&
@@ -66,17 +72,17 @@
             <span data-toggle="tooltip" title="online & sprouting but last block {{$ctrl.getLastBlockAgo(dashboard.data)}}"><i
                     class="fa fa-exclamation-triangle " aria-hidden="true" style="color:orange"></i>
             </span>
-        </th>
-        <th ng-if="dashboard.type === 'bitbean-wallet' && dashboard.data && !dashboard.data.sprouting">
+        </td>
+        <td ng-if="dashboard.type === 'bitbean-wallet' && dashboard.data && !dashboard.data.sprouting">
             <span data-toggle="tooltip" title="online but not sprouting"><i
                     class="fa fa-stop-circle-o" aria-hidden="true" style="color:red"></i>
             </span>
-        </th>
-        <th ng-if="dashboard.type === 'bitbean-wallet' && !dashboard.data">
+        </td>
+        <td ng-if="dashboard.type === 'bitbean-wallet' && !dashboard.data">
             <span data-toggle="tooltip" title="offline"><i
                     class="fa fa-stop-circle-o" aria-hidden="true" style="color:red"></i>
             </span>
-        </th>
+        </td>
 
         <td class='ellipsis' ng-if="dashboard.data">
             <span data-toggle="tooltip" title="{{(dashboard.data.balanceFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
