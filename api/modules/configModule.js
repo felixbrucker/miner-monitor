@@ -37,6 +37,7 @@ var config = module.exports = {
       'snipa-nodejs-pool',
       'generic-wallet',
       'bitbean-wallet',
+      'hexxcoin-wallet',
       'coinbase',
       'yiimp'
     ]

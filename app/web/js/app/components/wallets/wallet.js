@@ -16,6 +16,10 @@ function WalletController() {
   ctrl.getLastBlockAgo = (data) => {
     return moment.unix(data.lastBlockReceived).fromNow();
   };
+
+  ctrl.getNonEnabledNodes = (data) => {
+    return data.nodes.filter(node => node.status !== 'ENABLED');
+  };
 }
 
 angular.module('app').component('wallet', {

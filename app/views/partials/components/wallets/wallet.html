@@ -84,6 +84,52 @@
             </span>
         </td>
 
+        <!-- hexxcoin wallet -->
+        <td ng-if="dashboard.type === 'hexxcoin-wallet' &&
+        dashboard.data &&
+        $ctrl.isSynced(dashboard.data) && dashboard.data.nodes.length === 0" >
+            <span data-toggle="tooltip" title="online & synced"><i
+                    class="fa fa-check-circle-o" aria-hidden="true" style="color:green"></i>
+            </span>
+        </td>
+        <td ng-if="dashboard.type === 'hexxcoin-wallet' &&
+        dashboard.data &&
+        $ctrl.isSynced(dashboard.data) && dashboard.data.nodes.length > 0 && $ctrl.getNonEnabledNodes(dashboard.data).length === 0" >
+            <span data-toggle="tooltip" title="online & synced & all xnodes running"><i
+                    class="fa fa-check-circle-o" aria-hidden="true" style="color:green"></i>
+            </span>
+        </td>
+        <td ng-if="dashboard.type === 'hexxcoin-wallet' &&
+        dashboard.data &&
+        $ctrl.isSynced(dashboard.data) && dashboard.data.nodes.length > 0 && $ctrl.getNonEnabledNodes(dashboard.data).length > 0" >
+            <span data-toggle="tooltip" title="online & synced, but {{$ctrl.getNonEnabledNodes(dashboard.data).length}} xnodes not enabled"><i
+                    class="fa fa-exclamation-triangle " aria-hidden="true" style="color:orange"></i>
+            </span>
+        </td>
+        <td style="min-width: 43px;" ng-if="dashboard.type === 'hexxcoin-wallet' &&
+        dashboard.data &&
+        $ctrl.isSyncing(dashboard.data)" >
+            <span data-toggle="tooltip" title="online & syncing: {{dashboard.data.syncProgress * 100 | number:2}}%">
+                <i class="fa fa-refresh fa-spin" aria-hidden="true" style="color:orange"></i>
+                <div class="progress sync-progress">
+                    <div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="{{dashboard.data.syncProgress * 100}}" aria-valuemin="0" aria-valuemax="100" style="width: {{dashboard.data.syncProgress * 100}}%;"></div>
+                </div>
+            </span>
+        </td>
+        <td ng-if="dashboard.type === 'hexxcoin-wallet' &&
+        dashboard.data &&
+        !($ctrl.isSyncing(dashboard.data)) &&
+        $ctrl.isOutdated(dashboard.data)" >
+            <span data-toggle="tooltip" title="online, last block {{$ctrl.getLastBlockAgo(dashboard.data)}}"><i
+                    class="fa fa-exclamation-triangle " aria-hidden="true" style="color:orange"></i>
+            </span>
+        </td>
+        <td ng-if="dashboard.type === 'hexxcoin-wallet' && !dashboard.data">
+            <span data-toggle="tooltip" title="offline"><i
+                    class="fa fa-stop-circle-o" aria-hidden="true" style="color:red"></i>
+            </span>
+        </td>
+
         <td class='ellipsis' ng-if="dashboard.data">
             <span data-toggle="tooltip" title="{{(dashboard.data.balanceFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
                 {{dashboard.data.balance | customnumber:8}} {{dashboard.ticker}}
