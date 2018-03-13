@@ -16,14 +16,14 @@
         <td>{{dashboard.name}}</td>
 
         <!-- generic wallet -->
-        <td ng-if="dashboard.type === 'generic-wallet' &&
+        <td ng-if="(dashboard.type === 'generic-wallet' || dashboard.type === 'cryptonight-wallet') &&
         dashboard.data &&
         $ctrl.isSynced(dashboard.data)" >
             <span data-toggle="tooltip" title="online & synced"><i
                     class="fa fa-check-circle-o" aria-hidden="true" style="color:green"></i>
             </span>
         </td>
-        <td style="min-width: 43px;" ng-if="dashboard.type === 'generic-wallet' &&
+        <td style="min-width: 43px;" ng-if="(dashboard.type === 'generic-wallet' || dashboard.type === 'cryptonight-wallet') &&
         dashboard.data &&
         $ctrl.isSyncing(dashboard.data)" >
             <span data-toggle="tooltip" title="online & syncing: {{dashboard.data.syncProgress * 100 | number:2}}%">
@@ -33,7 +33,7 @@
                 </div>
             </span>
         </td>
-        <td ng-if="dashboard.type === 'generic-wallet' &&
+        <td ng-if="(dashboard.type === 'generic-wallet' || dashboard.type === 'cryptonight-wallet') &&
         dashboard.data &&
         !($ctrl.isSyncing(dashboard.data)) &&
         $ctrl.isOutdated(dashboard.data)" >
@@ -41,7 +41,7 @@
                     class="fa fa-exclamation-triangle " aria-hidden="true" style="color:orange"></i>
             </span>
         </td>
-        <td ng-if="dashboard.type === 'generic-wallet' && !dashboard.data">
+        <td ng-if="(dashboard.type === 'generic-wallet' || dashboard.type === 'cryptonight-wallet') && !dashboard.data">
             <span data-toggle="tooltip" title="offline"><i
                     class="fa fa-stop-circle-o" aria-hidden="true" style="color:red"></i>
             </span>

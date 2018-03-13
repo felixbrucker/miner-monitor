@@ -15,6 +15,7 @@ const CoinbaseBalance = require('./balances/coinbase-balance');
 const GenericWallet = require('./wallets/generic-wallet');
 const BitbeanWallet = require('./wallets/bitbean-wallet');
 const HexxcoinWallet = require('./wallets/hexxcoin-wallet');
+const WalletAgent = require('./wallets/wallet-agent');
 
 function getClassForDashboardType(type) {
   switch(type) {
@@ -52,6 +53,8 @@ function getClassForDashboardType(type) {
       return HexxcoinWallet;
     case 'coinbase':
       return CoinbaseBalance;
+    case 'wallet-agent':
+      return WalletAgent;
     default:
       throw new Error(`No class matched '${type}'`);
   }

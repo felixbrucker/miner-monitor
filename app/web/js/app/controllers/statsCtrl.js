@@ -150,6 +150,10 @@
       vm.dashboards.mph = getDashboardArrForTypes(['miningpoolhub']);
       vm.dashboards.nodeCryptonotePools = getDashboardArrForTypes(['node-cryptonote-pool', 'snipa-nodejs-pool']);
       vm.dashboards.wallets = getDashboardArrForTypes(['generic-wallet', 'bitbean-wallet', 'hexxcoin-wallet']);
+      var walletAgents = getDashboardArrForTypes(['wallet-agent']);
+      walletAgents.map(walletAgent => {
+        vm.dashboards.wallets = vm.dashboards.wallets.concat(walletAgent.data);
+      });
       vm.dashboards.yiimp = getDashboardArrForTypes('yiimp');
       vm.devices = vm.current.entries
         .sort(sortByName)

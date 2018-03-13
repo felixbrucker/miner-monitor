@@ -104,7 +104,7 @@
           types.push('cryptoidBalance', 'snipa-nodejs-pool', 'generic-wallet');
           break;
         case 'baseUrl':
-          types.push('genericMPOS', 'dashboard-api', 'node-cryptonote-pool', 'snipa-nodejs-pool', 'generic-wallet', 'bitbean-wallet', 'hexxcoin-wallet', 'yiimp');
+          types.push('genericMPOS', 'dashboard-api', 'node-cryptonote-pool', 'snipa-nodejs-pool', 'generic-wallet', 'bitbean-wallet', 'hexxcoin-wallet', 'yiimp', 'wallet-agent');
           break;
         case 'apiKey':
           types.push('genericMPOS', 'miningpoolhub', 'cryptoidBalance', 'nicehashBalance', 'coinbase');
