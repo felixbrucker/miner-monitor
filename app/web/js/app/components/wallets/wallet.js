@@ -20,6 +20,13 @@ function WalletController() {
   ctrl.getNonEnabledNodes = (data) => {
     return data.nodes.filter(node => node.status !== 'ENABLED');
   };
+
+  ctrl.getFiatTotal = (key) => {
+    return ctrl.dashboards
+      .filter(dashboard => dashboard.data)
+      .map(dashboard => dashboard.data[key + 'Fiat'] ? dashboard.data[key + 'Fiat'] : 0)
+      .reduce((acc, right) => acc + right, 0);
+  };
 }
 
 angular.module('app').component('wallet', {

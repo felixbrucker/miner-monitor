@@ -161,5 +161,12 @@
         <td ng-if="dashboard.data">{{dashboard.data.connections}}</td>
         <td ng-if="!dashboard.data">N/A</td>
     </tr>
+    <tr>
+        <td colspan="2"><strong>Total</strong></td>
+        <td><strong>{{$ctrl.getFiatTotal('balance') | customnumber: 2}} €</strong></td>
+        <td><strong>{{$ctrl.getFiatTotal('unconfirmed') | customnumber: 2}} €</strong></td>
+        <td><strong>{{$ctrl.getFiatTotal('staked') | customnumber: 2}} €</strong></td>
+        <td colspan="2"><strong>{{$ctrl.getFiatTotal('total') | customnumber: 2}} €</strong></td>
+    </tr>
     </tbody>
 </table>
