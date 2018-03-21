@@ -49,10 +49,10 @@ module.exports = class SnipaNodejsPool extends Dashboard {
       const result = {
         hashrate: dashboardData.hash || 0,
         symbol: this.dashboard.ticker.toUpperCase(),
-        pending: dashboardData.amtDue ? (dashboardData.amtDue / Math.pow(10, 8)) : 0,
-        paid: dashboardData.amtPaid ? (dashboardData.amtPaid / Math.pow(10, 8)) : 0,
+        pending: (dashboardData.amtDue ? (dashboardData.amtDue / Math.pow(10, 8)) : 0) * (this.dashboard.hrModifier || 1),
+        paid: (dashboardData.amtPaid ? (dashboardData.amtPaid / Math.pow(10, 8)) : 0) * (this.dashboard.hrModifier || 1),
         lastShareSubmitted: moment.unix(dashboardData.lastHash).fromNow(),
-        estimatedProfit: estimatedDailyProfit,
+        estimatedProfit: estimatedDailyProfit * (this.dashboard.hrModifier || 1),
         lastBlockFound: moment.unix(poolStats.pool_statistics.lastBlockFoundTime).fromNow(),
       };
 

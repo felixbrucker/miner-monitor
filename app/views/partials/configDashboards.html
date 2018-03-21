@@ -33,8 +33,8 @@
           <td ng-if="!(configVm.getDashboardTypes('apiKey') | contains: entry.type)"><input type="text" name="address-{{entry.name}}" ng-model="entry.api_key" placeholder="" size="26" disabled></td>
           <td ng-if="configVm.getDashboardTypes('userId') | contains: entry.type"><input type="text" name="user_id-{{entry.name}}" ng-model="entry.user_id" placeholder="" size="7" required></td>
           <td ng-if="!(configVm.getDashboardTypes('userId') | contains: entry.type)"><input type="text" name="user_id-{{entry.name}}" ng-model="entry.user_id" placeholder="" size="7" disabled></td>
-          <td ng-if="configVm.getDashboardTypes('hashrateModifier') | contains: entry.type"><input type="number" name="hrModifier-{{entry.name}}" ng-model="entry.hrModifier" placeholder="1" required></td>
-          <td ng-if="!(configVm.getDashboardTypes('hashrateModifier') | contains: entry.type)"><input type="number" name="hrModifier-{{entry.name}}" ng-model="entry.hrModifier" placeholder="" disabled></td>
+          <td ng-if="configVm.getDashboardTypes('hashrateModifier') | contains: entry.type"><input type="number" step="0.0001" name="hrModifier-{{entry.name}}" ng-model="entry.hrModifier" placeholder="1" required></td>
+          <td ng-if="!(configVm.getDashboardTypes('hashrateModifier') | contains: entry.type)"><input type="number" step="0.0001" name="hrModifier-{{entry.name}}" ng-model="entry.hrModifier" placeholder="" disabled></td>
           <td>
             <button type="button" class="btn btn-warning" ng-click="configVm.delDashboard(entry.id)">
               <i class="fa fa-trash-o" aria-hidden="true"></i>
@@ -56,8 +56,8 @@
           <td ng-if="!(configVm.getDashboardTypes('apiKey') | contains: configVm.newDashboard.type)"><input type="text" name="address-{{configVm.newDashboard.name}}" ng-model="configVm.newDashboard.api_key" placeholder="" size="26" disabled></td>
           <td ng-if="configVm.getDashboardTypes('userId') | contains: configVm.newDashboard.type"><input type="text" name="user_id-{{configVm.newDashboard.name}}" ng-model="configVm.newDashboard.user_id" placeholder="" size="7"></td>
           <td ng-if="!(configVm.getDashboardTypes('userId') | contains: configVm.newDashboard.type)"><input type="text" name="user_id-{{configVm.newDashboard.name}}" ng-model="configVm.newDashboard.user_id" placeholder="" size="7" disabled></td>
-          <td ng-if="configVm.getDashboardTypes('hashrateModifier') | contains: configVm.newDashboard.type"><input type="number" name="hrModifier-{{configVm.newDashboard.name}}" ng-model="configVm.newDashboard.hrModifier" placeholder="1"></td>
-          <td ng-if="!(configVm.getDashboardTypes('hashrateModifier') | contains: configVm.newDashboard.type)"><input type="number" name="hrModifier-{{configVm.newDashboard.name}}" ng-model="configVm.newDashboard.hrModifier" placeholder="" disabled></td>
+          <td ng-if="configVm.getDashboardTypes('hashrateModifier') | contains: configVm.newDashboard.type"><input type="number" step="0.0001" name="hrModifier-{{configVm.newDashboard.name}}" ng-model="configVm.newDashboard.hrModifier" placeholder="1"></td>
+          <td ng-if="!(configVm.getDashboardTypes('hashrateModifier') | contains: configVm.newDashboard.type)"><input type="number" step="0.0001" name="hrModifier-{{configVm.newDashboard.name}}" ng-model="configVm.newDashboard.hrModifier" placeholder="" disabled></td>
           <td>
             <button type="button" class="btn btn-success" ng-click="configVm.addDashboard()">
               <i class="fa fa-plus-square" aria-hidden="true"></i>

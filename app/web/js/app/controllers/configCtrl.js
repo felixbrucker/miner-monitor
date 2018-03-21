@@ -113,7 +113,7 @@
           types.push('genericMPOS', 'miningpoolhub', 'nicehashBalance');
           break;
         case 'hashrateModifier':
-          types.push('genericMPOS');
+          types.push('genericMPOS', 'snipa-nodejs-pool');
           break;
       }
       return types;
