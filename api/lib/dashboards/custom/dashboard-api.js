@@ -22,23 +22,17 @@ module.exports = class DashboardApi extends Dashboard {
         rejectUnauthorized: false
       });
       const minerData = await axios.get(`${this.dashboard.baseUrl}/`, {httpsAgent: agent});
-      const nodes = minerData.data.data;
-      const trainingCount = nodes.filter(node => node.state === 'training').length;
-      const keepaliveCount = nodes.filter(node => node.state === 'keepalive').length;
-      const graveyardCount = nodes.filter(node => node.state === 'graveyard').length;
-      const removedCount = nodes.filter(node => node.state === 'removed').length;
-      const balances = nodes.map(node => node.balances || {});
-      const totalEth = balances.reduce((acc, obj) => obj.eth === undefined ? acc : acc + obj.eth, 0);
-      const totalStorj = balances.reduce((acc, obj) => obj.storj === undefined ? acc : acc + obj.storj, 0);
+      const stats = minerData.data.data;
+      const total = stats.trainingCount + stats.keepaliveCount + stats.graveyardCount + stats.removedCount;
 
       const result = {
-        training: trainingCount,
-        keepalive: keepaliveCount,
-        graveyard: graveyardCount,
-        removed: removedCount,
-        total: nodes.length,
-        totalEth,
-        totalStorj,
+        training: stats.trainingCount,
+        keepalive: stats.keepaliveCount,
+        graveyard: stats.graveyardCount,
+        removed: stats.removedCount,
+        total,
+        totalEth: stats.totalEth,
+        totalStorj: stats.totalStorj,
       };
 
       const ethRate = util.getRateForTicker(this.coinmarketcap.getRates(), 'ETH');
