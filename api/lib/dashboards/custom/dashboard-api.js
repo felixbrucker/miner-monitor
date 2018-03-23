@@ -21,7 +21,7 @@ module.exports = class DashboardApi extends Dashboard {
       const agent = new https.Agent({
         rejectUnauthorized: false
       });
-      const minerData = await axios.get(`${this.dashboard.baseUrl}/`, {httpsAgent: agent});
+      const minerData = await axios.get(`${this.dashboard.baseUrl}/stats`, {httpsAgent: agent});
       const stats = minerData.data.data;
       const total = stats.trainingCount + stats.keepaliveCount + stats.graveyardCount + stats.removedCount;
 
