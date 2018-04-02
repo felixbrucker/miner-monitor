@@ -21,6 +21,10 @@ function WalletController() {
     return data.nodes.filter(node => node.status !== 'ENABLED');
   };
 
+  ctrl.isEmpty = (obj) => {
+    return Object.keys(obj).length === 0;
+  };
+
   ctrl.getFiatTotal = (key) => {
     return ctrl.dashboards
       .filter(dashboard => dashboard.data)
