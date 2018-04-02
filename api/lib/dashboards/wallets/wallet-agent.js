@@ -18,6 +18,9 @@ module.exports = class WalletAgent extends Dashboard {
     try {
       const statsData = await util.getUrl(`${this.dashboard.baseUrl}/stats`);
       statsData.map(wallet => {
+        if (!wallet.data || Object.keys(wallet.data).length === 0) {
+          return;
+        }
         const rate = util.getRateForTicker(this.coinmarketcap.getRates(), wallet.ticker);
         if (rate) {
           wallet.data.balanceFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * (wallet.data.balance || 0);
