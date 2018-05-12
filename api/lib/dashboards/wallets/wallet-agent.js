@@ -16,22 +16,23 @@ module.exports = class WalletAgent extends Dashboard {
 
   async updateStats() {
     try {
-      const statsData = await util.getUrl(`${this.dashboard.baseUrl}/stats`);
-      statsData.map(wallet => {
-        if (!wallet.data || Object.keys(wallet.data).length === 0) {
-          return;
-        }
-        const rate = util.getRateForTicker(this.coinmarketcap.getRates(), wallet.ticker);
-        if (rate) {
-          wallet.data.balanceFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * (wallet.data.balance || 0);
-          wallet.data.unconfirmedFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * (wallet.data.unconfirmed || 0);
-          wallet.data.totalFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * (wallet.data.total || 0);
-        }
-      });
-
-      this.stats = statsData;
+      this.stats = await util.getUrl(`${this.dashboard.baseUrl}/stats`);
     } catch(err) {
       console.error(`[${this.dashboard.name} :: Wallet-Agent-API] => ${err.message}`);
     }
+    if (!this.stats) {
+      return;
+    }
+    this.stats.map(wallet => {
+      if (!wallet.data || Object.keys(wallet.data).length === 0) {
+        return;
+      }
+      const rate = util.getRateForTicker(this.coinmarketcap.getRates(), wallet.ticker);
+      if (rate) {
+        wallet.data.balanceFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * (wallet.data.balance || 0);
+        wallet.data.unconfirmedFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * (wallet.data.unconfirmed || 0);
+        wallet.data.totalFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * (wallet.data.total || 0);
+      }
+    });
   }
 };
