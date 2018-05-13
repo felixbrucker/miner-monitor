@@ -1,5 +1,9 @@
 function DashboardApiController() {
   var ctrl = this;
+
+  ctrl.getFiatTotal = () => {
+    return ctrl.dashboard.data.totalEthFiat + ctrl.dashboard.data.totalStorjFiat;
+  };
 }
 
 angular.module('app').component('dashboardApi', {

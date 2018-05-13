@@ -7,7 +7,7 @@
         <th><span data-toggle="tooltip" title="Graveyard" data-placement="bottom">G</span></th>
         <th><span data-toggle="tooltip" title="Removed" data-placement="bottom">R</span></th>
         <th>Total</th>
-        <th>Balances</th>
+        <th colspan="2">Balances</th>
     </tr>
     </thead>
     <tbody>
@@ -28,6 +28,7 @@
                 {{$ctrl.dashboard.data.totalStorj | customnumber:0:true}} STORJ
             </span>
         </td>
+        <td><strong>{{$ctrl.getFiatTotal() | customnumber: 2}} €</strong></td>
     </tr>
     </tbody>
 </table>

@@ -27,7 +27,7 @@ function WalletController() {
 
   ctrl.getFiatTotal = (key) => {
     return ctrl.dashboards
-      .filter(dashboard => dashboard.data)
+      .filter(dashboard => dashboard && dashboard.data)
       .map(dashboard => dashboard.data[key + 'Fiat'] ? dashboard.data[key + 'Fiat'] : 0)
       .reduce((acc, right) => acc + right, 0);
   };

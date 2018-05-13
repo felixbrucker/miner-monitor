@@ -12,6 +12,7 @@ module.exports = class WalletAgent extends Dashboard {
   constructor(options = {}, coinmarketcap) {
     options = Object.assign(WalletAgent.getDefaults(), options);
     super(options, coinmarketcap);
+    this.stats = null;
   }
 
   async updateStats() {

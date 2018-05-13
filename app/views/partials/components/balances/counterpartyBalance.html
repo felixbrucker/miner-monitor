@@ -23,5 +23,9 @@
             <span ng-repeat="entry in dashboard.data">{{entry.asset}}<br/></span>
         </td>
     </tr>
+    <tr>
+        <td><strong>Total</strong></td>
+        <td><strong>{{$ctrl.getFiatTotal() | customnumber: 2}} €</strong></td>
+    </tr>
     </tbody>
 </table>
