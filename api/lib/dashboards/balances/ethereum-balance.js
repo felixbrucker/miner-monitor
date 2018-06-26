@@ -30,15 +30,22 @@ module.exports = class EthereumBalance extends Dashboard {
       if (rate) {
         result.eth.balanceFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * result.eth.balance;
       }
-      result.tokens.forEach((token) => {
-        token.balance = token.balance / (Math.pow(10, parseInt(token.tokenInfo.decimals)));
-        const rate = util.getRateForTicker(this.coinmarketcap.getRates(), token.tokenInfo.symbol.toUpperCase());
-        if (rate) {
-          token.balanceFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * token.balance;
-        }
-      });
+      if (result.tokens) {
+        result.tokens.forEach((token) => {
+          token.balance = token.balance / (Math.pow(10, parseInt(token.tokenInfo.decimals)));
+          const rate = util.getRateForTicker(this.coinmarketcap.getRates(), token.tokenInfo.symbol.toUpperCase());
+          if (rate) {
+            token.balanceFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * token.balance;
+          }
+        });
+      }
+
       this.stats = result;
     } catch(err) {
+      if (err.message === 'Request failed with status code 429') {
+        await util.sleep(3);
+        return this.updateStats();
+      }
       console.error(`[${this.dashboard.name} :: Ethereum-Balance-API] => ${err.message}`);
     }
   }
