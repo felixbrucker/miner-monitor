@@ -12,7 +12,6 @@
                 <th><span ng-click="$ctrl.toggleHidden()">Location</span></th>
                 <th><span data-toggle="tooltip" title="Status" data-placement="bottom">S</span>
                 <th><span data-toggle="tooltip" title="Restarts" data-placement="bottom">R</span></th>
-                <th><span data-toggle="tooltip" title="Peers" data-placement="bottom">P</span></th>
                 <th><span data-toggle="tooltip" title="Shared space (% used)" data-placement="bottom">Shared</span>
                 </th>
                 <th><span data-toggle="tooltip" title="Change (last 24 hours)" data-placement="bottom">CH ({{$ctrl.entry.stats.historyFromNow}})</span>
@@ -33,9 +32,6 @@
                 <td class='ellipsissmall'>
                     <i class="fa fa-hdd-o" aria-hidden="true"></i>
                     <a href="https://api.storj.io/contacts/{{share.id}}" target="_blank">{{share.config.storagePath}}</a>
-                    <button type="button" class="btn btn-danger btn-xs" ng-click="$ctrl.restartShare($ctrl.entry.id, share.id)">
-                        <i class="fa fa-repeat" aria-hidden="true"></i>
-                    </button>
                 </td>
 
                 <td>
@@ -54,8 +50,6 @@
                 </td>
 
                 <td ng-class="{danger: (share.meta.numRestarts || 0) > 10 }">{{share.meta.numRestarts || 0}}</td>
-
-                <td ng-class="{danger: (share.meta.farmerState.totalPeers || 0) < 100 }">{{share.meta.farmerState.totalPeers || 0}}</td>
 
                 <td class='ellipsis'>
                     <span data-toggle="tooltip" title="{{share.meta.farmerState.percentUsed}}%" data-placement="bottom">
