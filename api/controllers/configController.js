@@ -31,7 +31,7 @@ function setConfig(req, res) {
 
 function update(req, res, next) {
   const spawn = require('cross-spawn');
-  var isWin = /^win/.test(process.platform);
+  const isWin = /^win/.test(process.platform);
   if (isWin){
     const child = spawn('helpers\\update.bat', [], {
       detached: true,

@@ -1,14 +1,14 @@
 'use strict';
 
-var colors = require('colors/safe');
-var fs = require('fs');
+const colors = require('colors/safe');
+const fs = require('fs');
 
-var configPath='data/settings.json';
+const configPath='data/settings.json';
 
 if (!fs.existsSync('data')){
   fs.mkdirSync('data');
 }
-var config = module.exports = {
+const config = module.exports = {
   config: {
     interval:null,
     devices:[],

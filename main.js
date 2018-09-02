@@ -1,11 +1,14 @@
 'use strict';
 global.__basedir = __dirname + '/';
 process.title = "miner-monitor";
-var express = require('express');
-var bodyParser = require('body-parser');
-var colors = require('colors/safe');
+const express = require('express');
+const bodyParser = require('body-parser');
+const compression = require('compression');
+const colors = require('colors/safe');
 require('console-stamp')(console, {pattern:'yyyy-mm-dd HH:MM:ss',label:false});
-var app = express();
+const app = express();
+
+app.use(compression());
 
 app.use(bodyParser.urlencoded({
   extended: true,
