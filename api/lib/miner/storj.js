@@ -152,7 +152,7 @@ module.exports = class Storj extends Miner {
   onInit() {
     this.history = [];
     super.onInit();
-    this.bridgeStatsInterval = 2 * 60 * 1000;
+    this.bridgeStatsInterval = 10 * 60 * 1000;
     this.updateBridgeStats();
     this.runningBridgeStatsInterval = setInterval(this.updateBridgeStats.bind(this), this.bridgeStatsInterval);
   }
