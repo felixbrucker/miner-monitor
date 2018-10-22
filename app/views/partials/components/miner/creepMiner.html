@@ -1,0 +1,31 @@
+<div class="row">
+    <div class="col-md-12">
+        <div style="float: left;font-size:120%;">CreepMiner</div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-bordered table-condensed">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Block #</th>
+                <th>Elapsed</th>
+                <th>Best DL</th>
+                <th>Blocks won</th>
+                <th>Plot size</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="entry in $ctrl.entries track by $index">
+                <td>{{entry.name}}</td>
+                <td>{{entry.stats.block}}</td>
+                <td>{{$ctrl.getTimeElapsedSinceLastBlock(entry.stats.blockStart)}}</td>
+                <td>{{$ctrl.getBestDeadlineString(entry.stats.bestDL)}}</td>
+                <td>{{entry.stats.blocksWon}} / {{entry.stats.roundsSubmitted}} ({{(entry.stats.blocksWon/entry.stats.roundsSubmitted).toFixed(2)}}%)</td>
+                <td>{{entry.stats.totalPlotSize || 0}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -15,7 +15,9 @@
     "moment": "^2.22.2",
     "net": "^1.0.2",
     "nodemailer": "^2.7.0",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "ws": "^6.1.0",
+    "reconnecting-websocket": "^4.1.10"
   },
   "scripts": {
     "start": "node main.js"

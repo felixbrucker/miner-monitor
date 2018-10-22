@@ -47,6 +47,10 @@
         <yiimp dashboards="statsVm.dashboards.yiimp"></yiimp>
     </div>
 
+    <div class="masonry-brick col-sm-9 col-md-6 col-lg-6 col-xl-4 col-xxl-6" ng-if="statsVm.isDeviceTypeEnabled('creep-miner')">
+      <creep-miner entries="statsVm.creepMiner"></creep-miner>
+    </div>
+
     <span ng-repeat="(id, entry) in statsVm.devices track by $index">
         <div class="masonry-brick col-sm-9 col-md-6 col-lg-6 col-xl-4 col-xxl-6" ng-if="entry.type === 'miner-agent'">
             <miner-manager entry="entry"></miner-manager>

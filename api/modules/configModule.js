@@ -20,6 +20,7 @@ const config = module.exports = {
   configNonPersistent:{
     types:[
       'miner-agent',
+      'creep-miner',
       'storj',
     ],
     dashboardTypes:[

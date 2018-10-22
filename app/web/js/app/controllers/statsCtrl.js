@@ -44,6 +44,7 @@
       yiimp: [],
     };
     vm.devices = [];
+    vm.creepMiner = [];
     vm.enabled={};
     vm.hidden={};
 
@@ -55,6 +56,7 @@
     vm.secondsSince = secondsSince;
     vm.isDashboardTypeEnabled = isDashboardTypeEnabled;
     vm.isDashboardTypesEnabled = isDashboardTypesEnabled;
+    vm.isDeviceTypeEnabled = isDeviceTypeEnabled;
 
     /**
      * @name init
@@ -116,9 +118,22 @@
       return false;
     }
 
+    function isDeviceTypeEnabled(type) {
+      if (!vm.devices) {
+        return false;
+      }
+      return vm.devices.some(device => device.type === type);
+    }
+
     function getDashboardArrForTypes(types) {
       return vm.current.dashboardData ? vm.current.dashboardData
           .filter(dashboard => types.indexOf(dashboard.type) !== -1 && dashboard.enabled)
+        : [];
+    }
+
+    function getDeviceArrForTypes(types) {
+      return vm.devices ? vm.devices
+          .filter(device => types.indexOf(device.type) !== -1)
         : [];
     }
 
@@ -162,6 +177,7 @@
             .sort(sortByName)
         )
         .reduce((acc, curr) => acc.concat(curr), []);
+      vm.creepMiner = getDeviceArrForTypes(['creep-miner']);
     }
 
     /**
