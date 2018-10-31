@@ -22,7 +22,7 @@
                 <td>{{entry.stats.block}}</td>
                 <td>{{$ctrl.getTimeElapsedSinceLastBlock(entry.stats.blockStart)}}</td>
                 <td>{{$ctrl.getBestDeadlineString(entry.stats.bestDL)}}</td>
-                <td>{{entry.stats.roundsSubmitted}} / {{entry.stats.numHistoricals}} ({{(entry.stats.roundsSubmitted/entry.stats.numHistoricals).toFixed(2)}}%)</td>
+                <td>{{entry.stats.roundsSubmitted}} / {{entry.stats.numHistoricals}} ({{((entry.stats.roundsSubmitted/entry.stats.numHistoricals) * 100).toFixed(2)}}%)</td>
                 <td>{{entry.stats.totalPlotSize || 0}}</td>
             </tr>
             </tbody>
