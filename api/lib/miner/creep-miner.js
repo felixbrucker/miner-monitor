@@ -35,6 +35,7 @@ module.exports = class CreepMiner extends Miner {
         this.stats.blockStart = parseInt(res.startTime, 10);
         this.stats.blocksWon = parseInt(res.blocksWon, 10);
         this.stats.roundsSubmitted = parseInt(res.nRoundsSubmitted, 10);
+        this.stats.numHistoricals = parseInt(res.numHistoricals, 10);
         this.stats.bestDL = null;
         break;
       case 'nonce found':

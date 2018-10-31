@@ -12,7 +12,7 @@
                 <th>Block #</th>
                 <th>Elapsed</th>
                 <th>Best DL</th>
-                <th>Blocks won</th>
+                <th>DL's submitted</th>
                 <th>Plot size</th>
             </tr>
             </thead>
@@ -22,7 +22,7 @@
                 <td>{{entry.stats.block}}</td>
                 <td>{{$ctrl.getTimeElapsedSinceLastBlock(entry.stats.blockStart)}}</td>
                 <td>{{$ctrl.getBestDeadlineString(entry.stats.bestDL)}}</td>
-                <td>{{entry.stats.blocksWon}} / {{entry.stats.roundsSubmitted}} ({{(entry.stats.blocksWon/entry.stats.roundsSubmitted).toFixed(2)}}%)</td>
+                <td>{{entry.stats.roundsSubmitted}} / {{entry.stats.numHistoricals}} ({{(entry.stats.roundsSubmitted/entry.stats.numHistoricals).toFixed(2)}}%)</td>
                 <td>{{entry.stats.totalPlotSize || 0}}</td>
             </tr>
             </tbody>
