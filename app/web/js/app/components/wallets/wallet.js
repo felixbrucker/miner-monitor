@@ -21,6 +21,10 @@ function WalletController() {
     return data.nodes.filter(node => node.status !== 'ENABLED');
   };
 
+  ctrl.isPledgeSufficient = (data) => {
+    return data.balance >= data.pledgeAmount;
+  };
+
   ctrl.isEmpty = (obj) => {
     return Object.keys(obj).length === 0;
   };
