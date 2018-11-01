@@ -9,7 +9,7 @@ function CreepMinerController() {
 
     ctrl.getBestDeadlineString = (bestDL) => {
       if (!bestDL) {
-        return '';
+        return 'N/A';
       }
       const duration = moment.duration(bestDL, 'seconds');
       if (duration.months() > 0) {
