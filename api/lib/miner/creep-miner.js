@@ -38,7 +38,7 @@ module.exports = class CreepMiner extends Miner {
         this.stats.roundsSubmitted = parseInt(res.nRoundsSubmitted, 10);
         this.stats.numHistoricals = parseInt(res.numHistoricals, 10);
         this.stats.bestDL = null;
-        this.stats.dlBelowTenMinutes = res.bestDeadlines.filter(dl => parseInt(dl[1], 10) < 900).length;
+        this.stats.dlBelowTenMinutes = res.bestDeadlines.filter(dl => parseInt(dl[1], 10) < 600).length;
         break;
       case 'nonce found':
       case 'nonce found (too high)':
