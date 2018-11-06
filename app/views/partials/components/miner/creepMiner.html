@@ -19,10 +19,17 @@
             <tbody>
             <tr ng-repeat="entry in $ctrl.entries track by $index">
                 <td>{{entry.name}}</td>
-                <td>{{entry.stats.block}}</td>
+                <td><span data-toggle="tooltip" title="difficulty: {{entry.stats.difficulty}}" data-placement="bottom">{{entry.stats.block}}</span></td>
                 <td>{{$ctrl.getTimeElapsedSinceLastBlock(entry.stats.blockStart)}}</td>
                 <td>{{$ctrl.getBestDeadlineString(entry.stats.bestDL)}}</td>
-                <td>{{entry.stats.roundsSubmitted}} / {{entry.stats.numHistoricals}} ({{((entry.stats.roundsSubmitted/entry.stats.numHistoricals) * 100).toFixed(2)}}%)</td>
+                <td>
+                  <span data-toggle="tooltip" title="DL's below 10 minutes / DL's submitted / total historical DL count" data-placement="bottom">
+                    {{entry.stats.dlBelowTenMinutes}} / {{entry.stats.roundsSubmitted}} / {{entry.stats.numHistoricals}}
+                  </span>
+                  <span data-toggle="tooltip" title="DL's submitted in percent" data-placement="bottom">
+                    ({{((entry.stats.roundsSubmitted/entry.stats.numHistoricals) * 100).toFixed(2)}}%)
+                  </span>
+                </td>
                 <td>{{entry.stats.totalPlotSize || 0}}</td>
             </tr>
             </tbody>
