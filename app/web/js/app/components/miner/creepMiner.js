@@ -20,6 +20,10 @@ function CreepMinerController() {
 
       return `${duration.hours().toString().padStart(2, '0')}:${duration.minutes().toString().padStart(2, '0')}:${duration.seconds().toString().padStart(2, '0')}`;
     };
+
+    ctrl.getTimeTillFoundBlock = (timeToFindBlockInSeconds) => {
+      return moment.duration(timeToFindBlockInSeconds, 'seconds').humanize().replace('a ', '');
+    };
 }
 
 angular.module('app').component('creepMiner', {

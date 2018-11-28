@@ -30,7 +30,7 @@
                     ({{((entry.stats.roundsSubmitted/entry.stats.numHistoricals) * 100).toFixed(2)}}%)
                   </span>
                 </td>
-                <td>{{entry.stats.totalPlotSize || 0}}</td>
+                <td><span data-toggle="tooltip" title="Block found every {{$ctrl.getTimeTillFoundBlock(entry.stats.timeToFindBlockInSeconds)}}" data-placement="bottom">{{entry.stats.totalPlotSize || 0}}</span></td>
             </tr>
             </tbody>
         </table>
