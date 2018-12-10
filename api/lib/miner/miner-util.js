@@ -1,5 +1,6 @@
 const MinerManager = require('./miner-manager');
 const CreepMiner = require('./creep-miner');
+const BurstProxy = require('./burst-proxy');
 const Storj = require('./storj');
 
 function getClassForMinerType(type) {
@@ -10,6 +11,8 @@ function getClassForMinerType(type) {
       return Storj;
     case 'creep-miner':
       return CreepMiner;
+    case 'burst-proxy':
+      return BurstProxy;
     default:
       throw new Error(`No class matched '${type}'`);
   }

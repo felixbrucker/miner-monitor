@@ -17,7 +17,8 @@
     "nodemailer": "^2.7.0",
     "path": "^0.12.7",
     "ws": "^6.1.0",
-    "reconnecting-websocket": "^4.1.10"
+    "reconnecting-websocket": "^4.1.10",
+    "socket.io-client": "^2.2.0"
   },
   "scripts": {
     "start": "node main.js"

@@ -21,6 +21,7 @@ const config = module.exports = {
     types:[
       'miner-agent',
       'creep-miner',
+      'burst-proxy',
       'storj',
     ],
     dashboardTypes:[
