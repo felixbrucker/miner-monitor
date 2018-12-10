@@ -12,6 +12,7 @@
                 <th>Block #</th>
                 <th>Elapsed</th>
                 <th>Best DL</th>
+                <th>Rounds</th>
                 <th>Plot size</th>
             </tr>
             </thead>
@@ -21,6 +22,14 @@
                 <td><span data-toggle="tooltip" title="difficulty: {{upstream.netDiff.toFixed(0)}}" data-placement="bottom">{{upstream.blockNumber}}</span></td>
                 <td>{{$ctrl.getTimeElapsedSinceLastBlock(upstream.roundStart)}}</td>
                 <td>{{$ctrl.getBestDeadlineString(upstream.bestDL)}}</td>
+                <td>
+                    <span data-toggle="tooltip" title="Rounds won / DL's submitted / total historical DL count" data-placement="bottom">
+                      {{upstream.roundsWon}} / {{upstream.roundsWithDLs}} / {{upstream.totalRounds}}
+                    </span>
+                  <span data-toggle="tooltip" title="DL's submitted in percent" data-placement="bottom">
+                      ({{((upstream.roundsWithDLs/upstream.totalRounds) * 100).toFixed(2)}}%)
+                    </span>
+                </td>
                 <td><span data-toggle="tooltip" title="Block found every {{$ctrl.getTimeTillFoundBlock(upstream.timeToFindBlockInSeconds)}}" data-placement="bottom">{{upstream.totalCapacityString}}</span></td>
             </tr>
             </tbody>
