@@ -24,10 +24,10 @@
                 <td>{{$ctrl.getBestDeadlineString(upstream.bestDL)}}</td>
                 <td>
                     <span data-toggle="tooltip" title="Rounds won / DL's submitted / total historical DL count" data-placement="bottom">
-                      {{upstream.roundsWon}} / {{upstream.roundsWithDLs}} / {{upstream.totalRounds}}
+                      {{upstream.roundsWon}} / {{upstream.roundsSubmitted}} / {{upstream.totalRounds}}
                     </span>
                   <span data-toggle="tooltip" title="DL's submitted in percent" data-placement="bottom">
-                      ({{((upstream.roundsWithDLs/upstream.totalRounds) * 100).toFixed(2)}}%)
+                      ({{((upstream.roundsSubmitted/upstream.totalRounds) * 100).toFixed(2)}}%)
                     </span>
                 </td>
                 <td><span data-toggle="tooltip" title="Block found every {{$ctrl.getTimeTillFoundBlock(upstream.timeToFindBlockInSeconds)}}" data-placement="bottom">{{upstream.totalCapacityString}}</span></td>
