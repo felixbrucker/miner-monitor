@@ -30,7 +30,7 @@
                       ({{((upstream.roundsSubmitted/upstream.totalRounds) * 100).toFixed(2)}}%)
                     </span>
                 </td>
-                <td><span data-toggle="tooltip" title="Block found every {{$ctrl.getTimeTillFoundBlock(upstream.timeToFindBlockInSeconds)}}" data-placement="bottom">{{upstream.totalCapacityString}}</span></td>
+                <td><span data-toggle="tooltip" title="Block found every {{$ctrl.getTimeTillFoundBlock(upstream.timeToFindBlockInSeconds)}} | {{$ctrl.getRewardsPerDayString(upstream)}}" data-placement="bottom">{{upstream.totalCapacityString}}</span></td>
             </tr>
             </tbody>
         </table>

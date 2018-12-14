@@ -24,6 +24,13 @@ function BurstProxyController() {
     ctrl.getTimeTillFoundBlock = (timeToFindBlockInSeconds) => {
       return moment.duration(timeToFindBlockInSeconds, 'seconds').humanize().replace('a ', '');
     };
+
+    ctrl.getRewardsPerDayString = (upstream) => {
+      let result = upstream.rewardsPerDay === undefined ? 'N/A' : `~ ${upstream.rewardsPerDay.toFixed(2)}`;
+      result += ` ${upstream.isBHD ? 'BHD' : 'Burst'} per day`;
+
+      return result;
+    }
 }
 
 angular.module('app').component('burstProxy', {
