@@ -1,9 +1,6 @@
 // Group
 const Group = require('../lib/miner/group');
 
-// Rates
-const Coinmarketcap = require('../lib/rates/coinmarketcap');
-
 // Util
 const util = require('../lib/util');
 const dashboardUtil = require('../lib/dashboards/dashboard-util');
@@ -12,7 +9,6 @@ const configModule = require(__basedir + 'api/modules/configModule');
 module.exports = class Stats {
 
   constructor() {
-    this.coinmarketcap = new Coinmarketcap();
     this.instances = {
       dashboard: [],
       group: [],
@@ -29,13 +25,13 @@ module.exports = class Stats {
     this.instances.dashboard = [];
     for (const dashboard of nonNicehashDashboards) {
       const Class = dashboardUtil.getClassForDashboardType(dashboard.type);
-      this.instances.dashboard.push(new Class({ dashboard }, this.coinmarketcap));
+      this.instances.dashboard.push(new Class({ dashboard }));
       // await util.sleep(1);
     }
     // start nicehash dashboards with 31 sec delays to workaround nicehash api limits
     for (const dashboard of nicehashDashboards) {
       const Class = dashboardUtil.getClassForDashboardType(dashboard.type);
-      this.instances.dashboard.push(new Class({ dashboard }, this.coinmarketcap));
+      this.instances.dashboard.push(new Class({ dashboard }));
       await util.sleep(31);
     }
     console.log(`initialized all dashboards`);
@@ -79,7 +75,6 @@ module.exports = class Stats {
       dashboard: [],
       group: [],
     };
-    this.coinmarketcap = null;
   }
 
   async onInit() {

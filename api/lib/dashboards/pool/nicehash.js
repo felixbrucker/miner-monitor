@@ -1,5 +1,6 @@
 const util = require('../../util');
 const Dashboard = require('../dashboard');
+const coinGecko = require('../../rates/coingecko');
 
 module.exports = class Nicehash extends Dashboard {
 
@@ -9,9 +10,9 @@ module.exports = class Nicehash extends Dashboard {
     };
   }
 
-  constructor(options = {}, coinmarketcap) {
+  constructor(options = {}) {
     options = Object.assign(Nicehash.getDefaults(), options);
-    super(options, coinmarketcap);
+    super(options);
   }
 
   async updateStats() {
@@ -51,10 +52,11 @@ module.exports = class Nicehash extends Dashboard {
         payments: payments,
         address: this.dashboard.address,
       };
-      const rate = util.getRateForTicker(this.coinmarketcap.getRates(), 'BTC');
+      const rates = coinGecko.getRates('BTC');
+      const rate = rates.length > 0 ? rates[0] : null;
       if (rate) {
-        result.sum.profitabilityFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * result.sum.profitability;
-        result.sum.unpaidBalanceFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * result.sum.unpaidBalance;
+        result.sum.profitabilityFiat = parseFloat(rate.current_price) * result.sum.profitability;
+        result.sum.unpaidBalanceFiat = parseFloat(rate.current_price) * result.sum.unpaidBalance;
       }
       this.stats = result;
     } catch(err) {

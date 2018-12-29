@@ -1,5 +1,6 @@
 const util = require('../../util');
 const Dashboard = require('../dashboard');
+const coinGecko = require('../../rates/coingecko');
 
 module.exports = class Mpos extends Dashboard {
 
@@ -9,9 +10,9 @@ module.exports = class Mpos extends Dashboard {
     };
   }
 
-  constructor(options = {}, coinmarketcap) {
+  constructor(options = {}) {
     options = Object.assign(Mpos.getDefaults(), options);
-    super(options, coinmarketcap);
+    super(options);
   }
 
   getStats() {
@@ -49,11 +50,12 @@ module.exports = class Mpos extends Dashboard {
         unconfirmed: parseFloat(balanceData.unconfirmed),
       };
 
-      const rate = util.getRateForTicker(this.coinmarketcap.getRates(), result.symbol.toUpperCase());
+      const rates = coinGecko.getRates(result.symbol);
+      const rate = rates.length > 0 ? rates[0] : null;
       if (rate) {
-        result.confirmedFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * result.confirmed;
-        result.unconfirmedFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * result.unconfirmed;
-        result.estimatedFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * result.estimated;
+        result.confirmedFiat = parseFloat(rate.current_price) * result.confirmed;
+        result.unconfirmedFiat = parseFloat(rate.current_price) * result.unconfirmed;
+        result.estimatedFiat = parseFloat(rate.current_price) * result.estimated;
       }
 
       this.stats = result;

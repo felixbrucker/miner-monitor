@@ -6,12 +6,11 @@ module.exports = class Dashboard {
     };
   }
 
-  constructor(options = {}, coinmarketcap = null) {
+  constructor(options = {}) {
     this.stats = {};
     options = Object.assign(Dashboard.getDefaults(), options);
     this.dashboard = options.dashboard;
     this.interval = options.interval;
-    this.coinmarketcap = coinmarketcap;
     this.onInit();
   }
 

@@ -1,5 +1,6 @@
 const util = require('../../util');
 const Dashboard = require('../dashboard');
+const coinGecko = require('../../rates/coingecko');
 
 module.exports = class WalletAgent extends Dashboard {
 
@@ -9,9 +10,9 @@ module.exports = class WalletAgent extends Dashboard {
     };
   }
 
-  constructor(options = {}, coinmarketcap) {
+  constructor(options = {}) {
     options = Object.assign(WalletAgent.getDefaults(), options);
-    super(options, coinmarketcap);
+    super(options);
     this.stats = null;
   }
 
@@ -28,11 +29,17 @@ module.exports = class WalletAgent extends Dashboard {
       if (!wallet.data || Object.keys(wallet.data).length === 0) {
         return;
       }
-      const rate = util.getRateForTicker(this.coinmarketcap.getRates(), wallet.ticker);
+
+      const rates = coinGecko.getRates(wallet.ticker);
+      let rate = rates.length > 0 ? rates[0] : null;
+      if (wallet.ticker.toUpperCase() === 'BHD') { // BHD is last
+        rate = rates.find(rate => rate.id === 'bitcoin-hd');
+      }
+
       if (rate) {
-        wallet.data.balanceFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * (wallet.data.balance || 0);
-        wallet.data.unconfirmedFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * (wallet.data.unconfirmed || 0);
-        wallet.data.totalFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * (wallet.data.total || 0);
+        wallet.data.balanceFiat = parseFloat(rate.current_price) * (wallet.data.balance || 0);
+        wallet.data.unconfirmedFiat = parseFloat(rate.current_price) * (wallet.data.unconfirmed || 0);
+        wallet.data.totalFiat = parseFloat(rate.current_price) * (wallet.data.total || 0);
       }
     });
   }

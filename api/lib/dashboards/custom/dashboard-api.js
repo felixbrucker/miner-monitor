@@ -2,6 +2,7 @@ const https = require('https');
 const axios = require('axios');
 const util = require('../../util');
 const Dashboard = require('../dashboard');
+const coinGecko = require('../../rates/coingecko');
 
 module.exports = class DashboardApi extends Dashboard {
 
@@ -11,9 +12,9 @@ module.exports = class DashboardApi extends Dashboard {
     };
   }
 
-  constructor(options = {}, coinmarketcap) {
+  constructor(options = {}) {
     options = Object.assign(DashboardApi.getDefaults(), options);
-    super(options, coinmarketcap);
+    super(options);
   }
 
   async updateStats() {
@@ -35,13 +36,15 @@ module.exports = class DashboardApi extends Dashboard {
         totalStorj: stats.totalStorj,
       };
 
-      const ethRate = util.getRateForTicker(this.coinmarketcap.getRates(), 'ETH');
-      const storjRate = util.getRateForTicker(this.coinmarketcap.getRates(), 'STORJ');
+      let rates = coinGecko.getRates('ETH');
+      const ethRate = rates.length > 0 ? rates[0] : null;
+      rates = coinGecko.getRates('STORJ');
+      const storjRate = rates.length > 0 ? rates[0] : null;
       if (ethRate) {
-        result.totalEthFiat = parseFloat(util.getFiatForRate(ethRate, this.coinmarketcap.getCurrency())) * result.totalEth;
+        result.totalEthFiat = parseFloat(ethRate.current_price) * result.totalEth;
       }
       if (storjRate) {
-        result.totalStorjFiat = parseFloat(util.getFiatForRate(storjRate, this.coinmarketcap.getCurrency())) * result.totalStorj;
+        result.totalStorjFiat = parseFloat(storjRate.current_price) * result.totalStorj;
       }
 
       this.stats = result;
