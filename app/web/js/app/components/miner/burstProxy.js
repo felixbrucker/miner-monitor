@@ -11,7 +11,7 @@ function BurstProxyController() {
       if (!bestDL) {
         return 'N/A';
       }
-      const duration = moment.duration(bestDL, 'seconds');
+      const duration = moment.duration(parseInt(bestDL, 10), 'seconds');
       if (duration.months() > 0) {
         return `${duration.months()}m ${duration.days()}d ${duration.hours().toString().padStart(2, '0')}:${duration.minutes().toString().padStart(2, '0')}:${duration.seconds().toString().padStart(2, '0')}`;
       } else if (duration.days() > 0) {
