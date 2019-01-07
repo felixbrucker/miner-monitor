@@ -1,5 +1,6 @@
 const util = require('../../util');
 const Mpos = require('./mpos');
+const coinGecko = require('../../rates/coingecko');
 
 module.exports = class Miningpoolhub extends Mpos {
 
@@ -37,13 +38,14 @@ module.exports = class Miningpoolhub extends Mpos {
               });
           }
         } catch (err) {} // discard worker retrieval errors
-        const rate = util.getRateForTicker(this.coinmarketcap.getRates(), coinStats.symbol.toUpperCase());
+        const rates = coinGecko.getRates(coinStats.symbol);
+        const rate = rates.length > 0 ? rates[0] : null;
         if (rate) {
-          coinStats.balance.confirmedFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * coinStats.balance.confirmed;
-          coinStats.balance.unconfirmedFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * coinStats.balance.unconfirmed;
-          coinStats.balance_ae.confirmedFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * coinStats.balance_ae.confirmed;
-          coinStats.balance_ae.unconfirmedFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * coinStats.balance_ae.unconfirmed;
-          coinStats.onExchangeFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * coinStats.onExchange;
+          coinStats.balance.confirmedFiat = parseFloat(rate.current_price) * coinStats.balance.confirmed;
+          coinStats.balance.unconfirmedFiat = parseFloat(rate.current_price) * coinStats.balance.unconfirmed;
+          coinStats.balance_ae.confirmedFiat = parseFloat(rate.current_price) * coinStats.balance_ae.confirmed;
+          coinStats.balance_ae.unconfirmedFiat = parseFloat(rate.current_price) * coinStats.balance_ae.unconfirmed;
+          coinStats.onExchangeFiat = parseFloat(rate.current_price) * coinStats.onExchange;
           const balanceFiat = coinStats.balance.confirmedFiat + coinStats.balance.unconfirmedFiat;
           const balanceAEFiat = coinStats.balance_ae.confirmedFiat + coinStats.balance_ae.unconfirmedFiat;
           balanceSumFiat += balanceFiat;
@@ -62,9 +64,10 @@ module.exports = class Miningpoolhub extends Mpos {
         balanceOnExchangeSumFiat,
         balanceTotalSumFiat,
       };
-      const rate = util.getRateForTicker(this.coinmarketcap.getRates(), 'BTC');
+      const rates = coinGecko.getRates('BTC');
+      const rate = rates.length > 0 ? rates[0] : null;
       if (rate) {
-        result.profitabilitySumFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * result.profitabilitySum;
+        result.profitabilitySumFiat = parseFloat(rate.current_price) * result.profitabilitySum;
       }
 
       this.stats = result;

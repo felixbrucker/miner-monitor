@@ -1,5 +1,6 @@
 const util = require('../../util');
 const Dashboard = require('../dashboard');
+const coinGecko = require('../../rates/coingecko');
 
 module.exports = class CounterpartyBalance extends Dashboard {
 
@@ -9,9 +10,9 @@ module.exports = class CounterpartyBalance extends Dashboard {
     };
   }
 
-  constructor(options = {}, coinmarketcap) {
+  constructor(options = {}) {
     options = Object.assign(CounterpartyBalance.getDefaults(), options);
-    super(options, coinmarketcap);
+    super(options);
   }
 
   getStats() {
@@ -24,9 +25,11 @@ module.exports = class CounterpartyBalance extends Dashboard {
       balanceData.data.forEach((asset) => {
         asset.balance = parseFloat(asset.quantity);
         delete asset.quantity;
-        const rate = util.getRateForTicker(this.coinmarketcap.getRates(), asset.asset.toUpperCase());
+
+        const rates = coinGecko.getRates(asset.asset);
+        const rate = rates.length > 0 ? rates[0] : null;
         if (rate) {
-          asset.balanceFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * asset.balance;
+          asset.balanceFiat = parseFloat(rate.current_price) * asset.balance;
         }
       });
       this.stats = balanceData.data;

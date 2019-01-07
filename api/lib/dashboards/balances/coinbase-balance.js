@@ -1,7 +1,7 @@
 const nodeutil = require('util');
 const coinbaseClient = require('coinbase').Client;
-const util = require('../../util');
 const Dashboard = require('../dashboard');
+const coinGecko = require('../../rates/coingecko');
 
 module.exports = class CoinbaseBalance extends Dashboard {
 
@@ -11,9 +11,9 @@ module.exports = class CoinbaseBalance extends Dashboard {
     };
   }
 
-  constructor(options = {}, coinmarketcap) {
+  constructor(options = {}) {
     options = Object.assign(CoinbaseBalance.getDefaults(), options);
-    super(options, coinmarketcap);
+    super(options);
   }
 
   async updateStats() {
@@ -28,9 +28,10 @@ module.exports = class CoinbaseBalance extends Dashboard {
         }))
         .filter(account => account.balance > 0)
         .map(account => {
-          const rate = util.getRateForTicker(this.coinmarketcap.getRates(), account.ticker);
+          const rates = coinGecko.getRates(account.ticker);
+          const rate = rates.length > 0 ? rates[0] : null;
           if (rate) {
-            account.balanceFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * account.balance;
+            account.balanceFiat = parseFloat(rate.current_price) * account.balance;
           }
           return account;
         });

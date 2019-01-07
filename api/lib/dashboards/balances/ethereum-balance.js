@@ -1,5 +1,6 @@
 const util = require('../../util');
 const Dashboard = require('../dashboard');
+const coinGecko = require('../../rates/coingecko');
 
 module.exports = class EthereumBalance extends Dashboard {
 
@@ -9,9 +10,9 @@ module.exports = class EthereumBalance extends Dashboard {
     };
   }
 
-  constructor(options = {}, coinmarketcap) {
+  constructor(options = {}) {
     options = Object.assign(EthereumBalance.getDefaults(), options);
-    super(options, coinmarketcap);
+    super(options);
   }
 
   getStats() {
@@ -26,15 +27,19 @@ module.exports = class EthereumBalance extends Dashboard {
         tokens: balanceData.tokens || [],
       };
       result.eth.balance = result.eth.balance || 0;
-      const rate = util.getRateForTicker(this.coinmarketcap.getRates(), 'ETH');
+
+      const rates = coinGecko.getRates('ETH');
+      const rate = rates.length > 0 ? rates[0] : null;
       if (rate) {
-        result.eth.balanceFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * result.eth.balance;
+        result.eth.balanceFiat = parseFloat(rate.current_price) * result.eth.balance;
       }
       result.tokens.forEach((token) => {
         token.balance = token.balance / (Math.pow(10, parseInt(token.tokenInfo.decimals)));
-        const rate = util.getRateForTicker(this.coinmarketcap.getRates(), token.tokenInfo.symbol.toUpperCase());
+
+        const rates = coinGecko.getRates(token.tokenInfo.symbol);
+        const rate = rates.length > 0 ? rates[0] : null;
         if (rate) {
-          token.balanceFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * token.balance;
+          token.balanceFiat = parseFloat(rate.current_price) * token.balance;
         }
       });
 

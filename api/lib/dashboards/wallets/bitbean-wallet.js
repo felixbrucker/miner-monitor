@@ -1,12 +1,13 @@
 const moment = require('moment');
 const util = require('../../util');
 const GenericWallet = require('./generic-wallet');
+const coinGecko = require('../../rates/coingecko');
 
 module.exports = class BitbeanWallet extends GenericWallet {
 
-  constructor(options = {}, coinmarketcap) {
+  constructor(options = {}) {
     options.dashboard.ticker = 'BITB';
-    super(options, coinmarketcap);
+    super(options);
   }
 
   async getDataForOldWallet() {
@@ -28,12 +29,13 @@ module.exports = class BitbeanWallet extends GenericWallet {
   async updateStats() {
     try {
       const result = await this.getDataForOldWallet();
-      const rate = util.getRateForTicker(this.coinmarketcap.getRates(), this.dashboard.ticker);
+      const rates = coinGecko.getRates(this.dashboard.ticker);
+      const rate = rates.length > 0 ? rates[0] : null;
       if (rate) {
-        result.balanceFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * result.balance;
-        result.totalFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * result.total;
-        result.unconfirmedFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * result.unconfirmed;
-        result.stakedFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * result.staked;
+        result.balanceFiat = parseFloat(rate.current_price) * result.balance;
+        result.totalFiat = parseFloat(rate.current_price) * result.total;
+        result.unconfirmedFiat = parseFloat(rate.current_price) * result.unconfirmed;
+        result.stakedFiat = parseFloat(rate.current_price) * result.staked;
       }
       this.stats = result;
     } catch(err) {

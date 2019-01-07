@@ -1,6 +1,7 @@
 const moment = require('moment');
 const util = require('../../util');
 const Dashboard = require('../dashboard');
+const coinGecko = require('../../rates/coingecko');
 
 module.exports = class SnipaNodejsPool extends Dashboard {
 
@@ -10,9 +11,9 @@ module.exports = class SnipaNodejsPool extends Dashboard {
     };
   }
 
-  constructor(options = {}, coinmarketcap) {
+  constructor(options = {}) {
     options = Object.assign(SnipaNodejsPool.getDefaults(), options);
-    super(options, coinmarketcap);
+    super(options);
   }
 
   getStats() {
@@ -56,11 +57,12 @@ module.exports = class SnipaNodejsPool extends Dashboard {
         lastBlockFound: moment.unix(poolStats.pool_statistics.lastBlockFoundTime).fromNow(),
       };
 
-      const rate = util.getRateForTicker(this.coinmarketcap.getRates(), result.symbol);
+      const rates = coinGecko.getRates(result.symbol);
+      const rate = rates.length > 0 ? rates[0] : null;
       if (rate) {
-        result.pendingFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * result.pending;
-        result.paidFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * result.paid;
-        result.estimatedProfitFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * result.estimatedProfit;
+        result.pendingFiat = parseFloat(rate.current_price) * result.pending;
+        result.paidFiat = parseFloat(rate.current_price) * result.paid;
+        result.estimatedProfitFiat = parseFloat(rate.current_price) * result.estimatedProfit;
     }
 
       this.stats = result;

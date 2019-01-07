@@ -1,7 +1,7 @@
 const https = require('https');
 const axios = require('axios');
-const util = require('../../util');
 const Dashboard = require('../dashboard');
+const coinGecko = require('../../rates/coingecko');
 
 module.exports = class BurstBalance extends Dashboard {
 
@@ -11,9 +11,9 @@ module.exports = class BurstBalance extends Dashboard {
     };
   }
 
-  constructor(options = {}, coinmarketcap) {
+  constructor(options = {}) {
     options = Object.assign(BurstBalance.getDefaults(), options);
-    super(options, coinmarketcap);
+    super(options);
   }
 
   getStats() {
@@ -25,13 +25,15 @@ module.exports = class BurstBalance extends Dashboard {
       const agent = new https.Agent({
         rejectUnauthorized: false
       });
-      const balanceData = await axios.get(`https://wallet.burst.cryptoguru.org:8125/burst?requestType=getAccount&account=${this.dashboard.address}`, {httpsAgent: agent});
+      const balanceData = await axios.get(`https://wallet1.burst-team.us:2083/burst?requestType=getAccount&account=${this.dashboard.address}`, {httpsAgent: agent});
       const result = {
         balance: balanceData.data.effectiveBalanceNXT / 100000000,
       };
-      const rate = util.getRateForTicker(this.coinmarketcap.getRates(), 'BURST');
+
+      const rates = coinGecko.getRates('BURST');
+      const rate = rates.length > 0 ? rates[0] : null;
       if (rate) {
-        result.balanceFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * result.balance;
+        result.balanceFiat = parseFloat(rate.current_price) * result.balance;
       }
       this.stats = result;
     } catch(err) {

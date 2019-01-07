@@ -1,5 +1,6 @@
 const util = require('../../util');
 const Dashboard = require('../dashboard');
+const coinGecko = require('../../rates/coingecko');
 
 module.exports = class Yiimp extends Dashboard {
 
@@ -9,9 +10,9 @@ module.exports = class Yiimp extends Dashboard {
     };
   }
 
-  constructor(options = {}, coinmarketcap) {
+  constructor(options = {}) {
     options = Object.assign(Yiimp.getDefaults(), options);
-    super(options, coinmarketcap);
+    super(options);
   }
 
   getStats() {
@@ -35,11 +36,12 @@ module.exports = class Yiimp extends Dashboard {
       };
       result.hashrate = result.workers.reduce((acc, right) => acc + right.accepted, 0);
 
-      const rate = util.getRateForTicker(this.coinmarketcap.getRates(), result.symbol.toUpperCase());
+      const rates = coinGecko.getRates(result.symbol);
+      const rate = rates.length > 0 ? rates[0] : null;
       if (rate) {
-        result.balanceFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * result.balance;
-        result.unconfirmedFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * result.unconfirmed;
-        result.paid24hFiat = parseFloat(util.getFiatForRate(rate, this.coinmarketcap.getCurrency())) * result.paid24h;
+        result.balanceFiat = parseFloat(rate.current_price) * result.balance;
+        result.unconfirmedFiat = parseFloat(rate.current_price) * result.unconfirmed;
+        result.paid24hFiat = parseFloat(rate.current_price) * result.paid24h;
       }
 
       this.stats = result;
