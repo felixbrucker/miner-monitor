@@ -2,7 +2,7 @@ const superagent = require('superagent');
 
 class CoinGecko {
   constructor() {
-    this.interval = 10 * 60 * 1000;
+    this.interval = 20 * 60 * 1000;
     this.currency = 'EUR';
     this.baseUrl = 'https://api.coingecko.com/api/v3';
     this.rates = [];
@@ -20,8 +20,17 @@ class CoinGecko {
       return;
     }
     this.running = true;
+    let page = 1; // what the hell coingecko? page 0 and 1 are the same
+    const limit = 100;
     try {
-      this.rates = await this.doApiCall('coins/markets', {vs_currency: this.currency.toLowerCase()});
+      let allRates = [];
+      let rates = [];
+      do {
+        rates = await this.doApiCall('coins/markets', {vs_currency: this.currency.toLowerCase(), per_page: limit, page});
+        allRates = allRates.concat(rates);
+        page += 1;
+      } while (rates.length === limit);
+      this.rates = allRates;
     } catch (err) {
       console.error(`[CoinGecko] => ${err.message}`);
     }
