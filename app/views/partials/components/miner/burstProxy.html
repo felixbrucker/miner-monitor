@@ -13,6 +13,7 @@
                 <th>Elapsed</th>
                 <th>Best DL</th>
                 <th>Rounds</th>
+                <th><span data-toggle="tooltip" title="Estimated capacity (Performance)" data-placement="bottom">EC</span></th>
                 <th>Plot size</th>
             </tr>
             </thead>
@@ -26,10 +27,8 @@
                     <span data-toggle="tooltip" title="Rounds won / DL's submitted / total historical DL count" data-placement="bottom">
                       {{upstream.roundsWon}} / {{upstream.roundsSubmitted}} / {{upstream.totalRounds}}
                     </span>
-                  <span data-toggle="tooltip" title="DL's submitted in percent" data-placement="bottom">
-                      ({{((upstream.roundsSubmitted/upstream.totalRounds) * 100).toFixed(2)}}%)
-                    </span>
                 </td>
+                <td>{{upstream.performanceString}}</td>
                 <td><span data-toggle="tooltip" title="Block found every {{$ctrl.getTimeTillFoundBlock(upstream.timeToFindBlockInSeconds)}} | {{$ctrl.getRewardsPerDayString(upstream)}}" data-placement="bottom">{{upstream.totalCapacityString}}</span></td>
             </tr>
             </tbody>

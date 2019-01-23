@@ -9,7 +9,7 @@ module.exports = class BurstProxy extends Miner {
   }
 
   static getBHDBlockReward() {
-    return 23.75;
+    return 23.75; // simplified
   }
 
   getStats() {
@@ -24,7 +24,6 @@ module.exports = class BurstProxy extends Miner {
 
   onStats(upstreams) {
     upstreams.forEach(upstream => {
-      upstream.isBHD = upstream.name.toLowerCase().indexOf('bhd') !== -1;
       upstream.blockTime = upstream.isBHD ? 300 : 240;
 
       const blockReward = upstream.isBHD ? BurstProxy.getBHDBlockReward() : BurstProxy.getBurstBlockReward(upstream.blockNumber);
@@ -37,6 +36,7 @@ module.exports = class BurstProxy extends Miner {
         const timeToFindBlockInDays = upstream.timeToFindBlockInSeconds / (60 * 60 * 24);
         upstream.rewardsPerDay = blockReward / timeToFindBlockInDays;
       }
+      upstream.performanceString = bytes(upstream.estimatedCapacityInTB * Math.pow(1000, 4));
     });
     this.stats = upstreams;
   }
