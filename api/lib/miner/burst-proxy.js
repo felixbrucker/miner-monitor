@@ -22,22 +22,29 @@ module.exports = class BurstProxy extends Miner {
     this.client.on('stats', this.onStats.bind(this));
   }
 
-  onStats(upstreams) {
-    upstreams.forEach(upstream => {
-      upstream.blockTime = upstream.isBHD ? 300 : 240;
+  onStats(proxies) {
+    proxies.forEach(proxy => {
+      proxy.totalCapacityString = bytes(proxy.totalCapacity);
+      proxy.upstreamStats.forEach(upstreamStat => {
+        upstreamStat.blockTime = upstreamStat.isBHD ? 300 : 240;
 
-      const blockReward = upstream.isBHD ? BurstProxy.getBHDBlockReward() : BurstProxy.getBurstBlockReward(upstream.blockNumber);
+        const blockReward = upstreamStat.isBHD ? BurstProxy.getBHDBlockReward() : BurstProxy.getBurstBlockReward(upstreamStat.blockNumber);
 
-      upstream.totalCapacityString = bytes(upstream.totalCapacity);
-      const capacityInTB = upstream.totalCapacity / Math.pow(1000, 4);
-      const probabilityToFindBlock = capacityInTB / upstream.netDiff;
-      if (probabilityToFindBlock !== 0) {
-        upstream.timeToFindBlockInSeconds = 1 / probabilityToFindBlock * upstream.blockTime;
-        const timeToFindBlockInDays = upstream.timeToFindBlockInSeconds / (60 * 60 * 24);
-        upstream.rewardsPerDay = blockReward / timeToFindBlockInDays;
-      }
-      upstream.performanceString = bytes(upstream.estimatedCapacityInTB * Math.pow(1000, 4));
+        const capacityInTB = proxy.totalCapacity / Math.pow(1000, 4);
+        const probabilityToFindBlock = capacityInTB / upstreamStat.netDiff;
+        if (probabilityToFindBlock !== 0) {
+          upstreamStat.timeToFindBlockInSeconds = 1 / probabilityToFindBlock * upstreamStat.blockTime;
+          const timeToFindBlockInDays = upstreamStat.timeToFindBlockInSeconds / (60 * 60 * 24);
+          upstreamStat.rewardsPerDay = blockReward / timeToFindBlockInDays;
+        }
+        upstreamStat.performanceString = bytes(upstreamStat.estimatedCapacityInTB * Math.pow(1000, 4));
+
+        upstreamStat.totalCapacity = proxy.totalCapacity;
+        upstreamStat.totalCapacityString = proxy.totalCapacityString;
+        upstreamStat.miner = proxy.miner;
+      });
     });
-    this.stats = upstreams;
+
+    this.stats = proxies.reduce((upstreamStats , proxy) => upstreamStats.concat(proxy.upstreamStats), []);
   }
 };
