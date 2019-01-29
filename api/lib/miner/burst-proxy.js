@@ -30,14 +30,14 @@ module.exports = class BurstProxy extends Miner {
 
         const blockReward = upstreamStat.isBHD ? BurstProxy.getBHDBlockReward() : BurstProxy.getBurstBlockReward(upstreamStat.blockNumber);
 
-        const capacityInTB = proxy.totalCapacity / Math.pow(1000, 4);
+        const capacityInTB = proxy.totalCapacity / Math.pow(1024, 4);
         const probabilityToFindBlock = capacityInTB / upstreamStat.netDiff;
         if (probabilityToFindBlock !== 0) {
           upstreamStat.timeToFindBlockInSeconds = 1 / probabilityToFindBlock * upstreamStat.blockTime;
           const timeToFindBlockInDays = upstreamStat.timeToFindBlockInSeconds / (60 * 60 * 24);
           upstreamStat.rewardsPerDay = blockReward / timeToFindBlockInDays;
         }
-        upstreamStat.performanceString = bytes(upstreamStat.estimatedCapacityInTB * Math.pow(1000, 4));
+        upstreamStat.performanceString = bytes(upstreamStat.estimatedCapacityInTB * Math.pow(1024, 4));
 
         upstreamStat.totalCapacity = proxy.totalCapacity;
         upstreamStat.totalCapacityString = proxy.totalCapacityString;
