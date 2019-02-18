@@ -179,7 +179,8 @@
         .reduce((acc, curr) => acc.concat(curr), []);
       vm.creepMiner = getDeviceArrForTypes(['creep-miner']);
       vm.burstProxies = getDeviceArrForTypes(['burst-proxy']).reduce((acc, curr) => {
-        return acc.concat(...curr.stats);
+        const stats = curr.stats.reduce((upstreamStats , proxy) => upstreamStats.concat(proxy.upstreamStats), []);
+        return acc.concat(...stats);
       }, []);
     }
 
