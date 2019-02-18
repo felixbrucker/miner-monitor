@@ -17,6 +17,7 @@ module.exports = class BurstProxy extends Miner {
   }
 
   onInit() {
+    this.stats = [];
     this.client = IO(this.device.hostname);
 
     this.client.on('stats/proxy', this.onNewProxyStats.bind(this));
