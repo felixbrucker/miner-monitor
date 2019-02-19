@@ -14,7 +14,7 @@ const NicehashBalance = require('./balances/nicehash-balance');
 const CoinbaseBalance = require('./balances/coinbase-balance');
 const GenericWallet = require('./wallets/generic-wallet');
 const BitbeanWallet = require('./wallets/bitbean-wallet');
-const HexxcoinWallet = require('./wallets/hexxcoin-wallet');
+const BHDWallet = require('./wallets/bhd-wallet');
 const WalletAgent = require('./wallets/wallet-agent');
 
 function getClassForDashboardType(type) {
@@ -49,8 +49,8 @@ function getClassForDashboardType(type) {
       return GenericWallet;
     case 'bitbean-wallet':
       return BitbeanWallet;
-    case 'hexxcoin-wallet':
-      return HexxcoinWallet;
+    case 'bhd-wallet':
+      return BHDWallet;
     case 'coinbase':
       return CoinbaseBalance;
     case 'wallet-agent':
