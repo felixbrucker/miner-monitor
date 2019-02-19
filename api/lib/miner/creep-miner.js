@@ -23,6 +23,11 @@ module.exports = class CreepMiner extends Miner {
     setInterval(() => this.client.reconnect(), reconnectInterval);
   }
 
+  cleanup() {
+    this.client.close();
+    super.cleanup();
+  }
+
   onMessage(message) {
     const data = message.data;
     if (!data) {

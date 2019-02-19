@@ -93,4 +93,9 @@ module.exports = class BurstProxy extends Miner {
     });
     this.populateUpstreamStats(upstream);
   }
+
+  cleanup() {
+    this.client.disconnect();
+    super.cleanup();
+  }
 };
