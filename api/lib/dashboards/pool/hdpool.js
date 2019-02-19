@@ -50,6 +50,7 @@ module.exports = class HDPool extends Dashboard {
       case 'apid.best_mining_info':
         break;
       case 'logind.get_uinfo':
+        this.stats.lastPayedTs = msg.para.wallet.update_ts;
         this.stats.balance = msg.para.wallet.balance / Math.pow(10, 8);
         rate = coinGecko.getRates('BHD').find(rate => rate.id === 'bitcoin-hd');
         if (rate) {
@@ -83,7 +84,7 @@ module.exports = class HDPool extends Dashboard {
         });
         break;
       case 'apid.get_expected_profit':
-        this.stats.expectedProfit = msg.para.data.reduce((acc, curr) => acc + (curr.curamt / Math.pow(10, 8)), 0);
+        this.stats.expectedProfit = msg.para.data.filter(round => round.create_ts > this.stats.lastPayedTs).reduce((acc, curr) => acc + (curr.curamt / Math.pow(10, 8)), 0);
         rate = coinGecko.getRates('BHD').find(rate => rate.id === 'bitcoin-hd');
         if (rate) {
           this.stats.expectedProfitFiat = parseFloat(rate.current_price) * this.stats.expectedProfit;
