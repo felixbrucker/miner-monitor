@@ -32,6 +32,7 @@ const config = module.exports = {
       'dashboard-api',
       'ethBalance',
       'genericMPOS',
+      'hdpool',
       'miningpoolhub',
       'nicehash',
       'nicehashBalance',

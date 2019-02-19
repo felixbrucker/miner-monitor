@@ -1,0 +1,56 @@
+<div>
+    <div class="centerAlign">HDPool Stats:</div>
+    <table class="table table-bordered table-condensed leftAlign">
+        <thead>
+        <tr>
+            <th>Miner</th>
+            <th>Balance</th>
+            <th>
+              <span data-toggle="tooltip" title="Current unconfirmed balance for the day" data-placement="bottom">
+                Unconfirmed
+              </span>
+            </th>
+            <th>
+              <span data-toggle="tooltip" title="Paid in the last 24h" data-placement="bottom">
+                Paid 24h
+              </span>
+            </th>
+            <th>Total Paid</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="(id, dashboard) in $ctrl.dashboards track by $index">
+            <td class='ellipsis'>
+                <span ng-click="$ctrl.toggleVisible(id)">{{dashboard.data.onlineCapacityString}}</span>
+                <div ng-if="dashboard.data.miners !== [] && $ctrl.isVisible(id)" style="font-size:small; margin-left: 4px; margin-top: -16px">
+                    <span ng-repeat="(key, miner) in dashboard.data.miners track by $index">
+                      <br/>
+                      <span class="dot" ng-class="{positive: miner.online, negative: !miner.online}"></span>
+                      {{miner.name}}: {{miner.capacityString}}
+                    </span>
+                </div>
+            </td>
+            <td class='ellipsis'>
+                <span data-toggle="tooltip" title="{{(dashboard.data.balanceFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                    {{dashboard.data.balance | customnumber: 6}} {{dashboard.symbol}}
+                </span>
+            </td>
+            <td class='ellipsis'>
+                <span data-toggle="tooltip" title="{{(dashboard.data.expectedProfitFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                    {{dashboard.data.expectedProfit | customnumber: 6}} {{dashboard.symbol}}
+                </span>
+            </td>
+            <td class='ellipsis'>
+                <span data-toggle="tooltip" title="{{(dashboard.data.incomeLastDayFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                    {{dashboard.data.incomeLastDay | customnumber: 6}} {{dashboard.symbol}}
+                </span>
+            </td>
+          <td class='ellipsis'>
+                <span data-toggle="tooltip" title="{{(dashboard.data.totalIncomeFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                    {{dashboard.data.totalIncome | customnumber: 6}} {{dashboard.symbol}}
+                </span>
+          </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

@@ -42,6 +42,7 @@
       nodeCryptonotePools: [],
       wallets: [],
       yiimp: [],
+      hdpool: [],
     };
     vm.devices = [];
     vm.creepMiner = [];
@@ -170,6 +171,7 @@
         vm.dashboards.wallets = vm.dashboards.wallets.concat(walletAgent.data);
       });
       vm.dashboards.yiimp = getDashboardArrForTypes('yiimp');
+      vm.dashboards.hdpool = getDashboardArrForTypes('hdpool');
       vm.devices = vm.current.entries
         .sort(sortByName)
         .map(group => Object.keys(group.devices)
