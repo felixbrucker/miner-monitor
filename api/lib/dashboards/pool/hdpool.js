@@ -50,7 +50,9 @@ module.exports = class HDPool extends Dashboard {
       case 'apid.best_mining_info':
         break;
       case 'logind.get_uinfo':
-        this.stats.lastPayedTs = msg.para.wallet.update_ts;
+        if (!this.stats.lastPayedTs) {
+          this.stats.lastPayedTs = msg.para.wallet.update_ts;
+        }
         this.stats.balance = msg.para.wallet.balance / Math.pow(10, 8);
         rate = coinGecko.getRates('BHD').find(rate => rate.id === 'bitcoin-hd');
         if (rate) {
@@ -90,6 +92,13 @@ module.exports = class HDPool extends Dashboard {
           this.stats.expectedProfitFiat = parseFloat(rate.current_price) * this.stats.expectedProfit;
         }
         break;
+      case 'apid.get_award_list':
+        const awardList = msg.para.data;
+        if (awardList.length === 0) {
+          break;
+        }
+        this.stats.lastPayedTs = awardList[0].create_ts;
+        break;
       default:
         console.log(`[${this.dashboard.name} :: HDPool-API] => Unknown cmd received: ${msg.cmd}. The following data was sent: ${JSON.stringify(msg)}`);
     }
@@ -99,6 +108,7 @@ module.exports = class HDPool extends Dashboard {
     this.requestUserInfo();
     this.requestGeneralStats();
     this.requestMiners();
+    this.requestAwardList();
     this.requestExpectedProfit();
   }
 
@@ -148,6 +158,19 @@ module.exports = class HDPool extends Dashboard {
         type: 'bhd',
         offset: 0,
         count: 200,
+      },
+    }));
+  }
+
+  requestAwardList() {
+    this.client.send(JSON.stringify({
+      chk: new Date().getTime(),
+      cmd: 'apid.get_award_list',
+      para: {
+        uid: this.dashboard.user_id,
+        type: 'bhd',
+        offset: 0,
+        count: 10,
       },
     }));
   }
