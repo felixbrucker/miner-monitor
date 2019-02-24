@@ -4,18 +4,17 @@
         <thead>
         <tr>
             <th>Miner</th>
+            <th>
+                <span data-toggle="tooltip" title="Current unconfirmed balance for the day" data-placement="bottom">
+                  Unconfirmed
+                </span>
+            </th>
             <th>Balance</th>
             <th>
-              <span data-toggle="tooltip" title="Current unconfirmed balance for the day" data-placement="bottom">
-                Unconfirmed
+              <span data-toggle="tooltip" title="Credited in the last 24h" data-placement="bottom">
+                Credited 24h
               </span>
             </th>
-            <th>
-              <span data-toggle="tooltip" title="Paid in the last 24h" data-placement="bottom">
-                Paid 24h
-              </span>
-            </th>
-            <th>Total Paid</th>
         </tr>
         </thead>
         <tbody>
@@ -31,25 +30,20 @@
                 </div>
             </td>
             <td class='ellipsis'>
-                <span data-toggle="tooltip" title="{{(dashboard.data.balanceFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
-                    {{dashboard.data.balance | customnumber: 6}} {{dashboard.symbol}}
+                <span data-toggle="tooltip" title="{{(dashboard.data.expectedProfitFiat | customnumber: 2) || 'unknown'}} € | round ends in about {{$ctrl.timeTillRoundFinished(dashboard.data.lastPayedTs)}}" data-placement="bottom">
+                    {{dashboard.data.expectedProfit | customnumber: 6}} {{dashboard.symbol}} ({{$ctrl.timeTillRoundFinishedInHours(dashboard.data.lastPayedTs)}}h)
                 </span>
             </td>
             <td class='ellipsis'>
-                <span data-toggle="tooltip" title="{{(dashboard.data.expectedProfitFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
-                    {{dashboard.data.expectedProfit | customnumber: 6}} {{dashboard.symbol}}
-                </span>
+                  <span data-toggle="tooltip" title="{{(dashboard.data.balanceFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                      {{dashboard.data.balance | customnumber: 6}} {{dashboard.symbol}}
+                  </span>
             </td>
             <td class='ellipsis'>
                 <span data-toggle="tooltip" title="{{(dashboard.data.incomeLastDayFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
                     {{dashboard.data.incomeLastDay | customnumber: 6}} {{dashboard.symbol}}
                 </span>
             </td>
-          <td class='ellipsis'>
-                <span data-toggle="tooltip" title="{{(dashboard.data.totalIncomeFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
-                    {{dashboard.data.totalIncome | customnumber: 6}} {{dashboard.symbol}}
-                </span>
-          </td>
         </tr>
         </tbody>
     </table>
