@@ -30,8 +30,8 @@
                 </div>
             </td>
             <td class='ellipsis'>
-                <span data-toggle="tooltip" title="{{(dashboard.data.expectedProfitFiat | customnumber: 2) || 'unknown'}} € | round ends in about {{$ctrl.timeTillRoundFinished(dashboard.data.lastPayedTs)}}" data-placement="bottom">
-                    {{dashboard.data.expectedProfit | customnumber: 6}} {{dashboard.symbol}} ({{$ctrl.timeTillRoundFinishedInHours(dashboard.data.lastPayedTs)}}h)
+                <span data-toggle="tooltip" title="{{((dashboard.data.expectedProfitFiat || 0) | customnumber: 2) || 'unknown'}} € | round ends in about {{$ctrl.timeTillRoundFinished(dashboard.data.lastPayedTs)}}" data-placement="bottom">
+                    {{(dashboard.data.expectedProfit || 0) | customnumber: 6}} {{dashboard.symbol}} ({{$ctrl.timeTillRoundFinishedInHours(dashboard.data.lastPayedTs)}}h)
                 </span>
             </td>
             <td class='ellipsis'>
