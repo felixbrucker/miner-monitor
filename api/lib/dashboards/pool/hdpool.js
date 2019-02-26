@@ -60,13 +60,13 @@ module.exports = class HDPool extends Dashboard {
       }
       return 0;
     });
-    if (expectedEarningsHistory.data) {
-      this.stats.expectedProfit = expectedEarningsHistory.data
+    if (earningsHistory.length > 0) {
+      this.stats.lastPayedTs = earningsHistory[0].create_ts;
+    }
+    if (expectedEarningsHistory.length > 0) {
+      this.stats.expectedProfit = expectedEarningsHistory
         .filter(round => round.create_ts > this.stats.lastPayedTs)
         .reduce((acc, curr) => acc + (curr.curamt / Math.pow(10, 8)), 0);
-    }
-    if (earningsHistory.data && earningsHistory.data.length !== 0) {
-      this.stats.lastPayedTs = earningsHistory.data[0].create_ts;
     }
 
     const rate = coinGecko.getRates('BHD').find(rate => rate.id === 'bitcoin-hd');
