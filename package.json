@@ -12,7 +12,7 @@
     "cross-spawn": "^4.0.0",
     "dnode": "^1.2.2",
     "express": "^4.16.2",
-    "hdpool-api": "^1.1.0",
+    "hdpool-api": "^1.1.1",
     "moment": "^2.22.2",
     "net": "^1.0.2",
     "nodemailer": "^2.7.0",
