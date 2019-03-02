@@ -11,11 +11,11 @@ function HDPoolController() {
   };
 
   ctrl.timeTillRoundFinished = function(lastPayedTs) {
-    return moment().to(moment(lastPayedTs).add(24, 'hours'), true);
+    return moment().to(moment(lastPayedTs).add(1, 'day'), true);
   };
 
   ctrl.timeTillRoundFinishedInHours = function(lastPayedTs) {
-    return moment(lastPayedTs).add(24, 'hours').diff(moment(), 'hours');
+    return moment(lastPayedTs).add(1, 'day').diff(moment(), 'hours');
   };
 }
 

@@ -63,10 +63,26 @@ module.exports = class HDPool extends Dashboard {
     if (earningsHistory.length > 0) {
       this.stats.lastPayedTs = earningsHistory[0].create_ts;
     }
+
     if (expectedEarningsHistory.length > 0) {
-      this.stats.expectedProfit = expectedEarningsHistory
-        .filter(round => round.create_ts > this.stats.lastPayedTs)
-        .reduce((acc, curr) => acc + (curr.curamt / Math.pow(10, 8)), 0);
+      const roundStart = moment(this.stats.lastPayedTs).utcOffset(8).startOf('day').utcOffset(-8);
+      this.stats.roundStart = roundStart.toISOString();
+      const roundEnd = roundStart.clone().add(1, 'day');
+      if (roundEnd.isAfter(moment())) {
+        this.stats.expectedProfitLastRound = null;
+        this.stats.expectedProfit = expectedEarningsHistory
+          .filter(round => round.create_ts > roundStart.toISOString())
+          .filter(round => round.create_ts < roundEnd.toISOString())
+          .reduce((acc, curr) => acc + (curr.curamt / Math.pow(10, 8)), 0);
+      } else {
+        this.stats.expectedProfitLastRound = expectedEarningsHistory
+          .filter(round => round.create_ts > roundStart.toISOString())
+          .filter(round => round.create_ts < roundEnd.toISOString())
+          .reduce((acc, curr) => acc + (curr.curamt / Math.pow(10, 8)), 0);
+        this.stats.expectedProfit = expectedEarningsHistory
+          .filter(round => round.create_ts > roundEnd.toISOString())
+          .reduce((acc, curr) => acc + (curr.curamt / Math.pow(10, 8)), 0);
+      }
     }
 
     const rate = coinGecko.getRates('BHD').find(rate => rate.id === 'bitcoin-hd');
@@ -77,6 +93,9 @@ module.exports = class HDPool extends Dashboard {
     this.stats.incomeLastDayFiat = parseFloat(rate.current_price) * this.stats.incomeLastDay;
     this.stats.totalIncomeFiat = parseFloat(rate.current_price) * this.stats.totalIncome;
     this.stats.expectedProfitFiat = parseFloat(rate.current_price) * this.stats.expectedProfit;
+    if (this.stats.expectedProfitLastRound) {
+      this.stats.expectedProfitLastRoundFiat = parseFloat(rate.current_price) * this.stats.expectedProfitLastRound;
+    }
   }
 
   cleanup() {
