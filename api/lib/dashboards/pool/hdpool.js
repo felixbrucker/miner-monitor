@@ -95,6 +95,8 @@ module.exports = class HDPool extends Dashboard {
     this.stats.expectedProfitFiat = parseFloat(rate.current_price) * this.stats.expectedProfit;
     if (this.stats.expectedProfitLastRound) {
       this.stats.expectedProfitLastRoundFiat = parseFloat(rate.current_price) * this.stats.expectedProfitLastRound;
+    } else {
+      this.stats.expectedProfitLastRoundFiat = null;
     }
   }
 
