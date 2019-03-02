@@ -68,14 +68,14 @@ module.exports = class HDPool extends Dashboard {
       const roundStart = moment(this.stats.lastPayedTs).utcOffset(8).startOf('day').utcOffset(-8);
       const roundEnd = roundStart.clone().add(1, 'day');
       if (roundEnd.isAfter(moment())) {
-        this.stats.roundStart = roundEnd.toISOString();
+        this.stats.roundStart = roundStart.toISOString();
         this.stats.expectedProfitLastRound = null;
         this.stats.expectedProfit = expectedEarningsHistory
           .filter(round => round.create_ts > roundStart.toISOString())
           .filter(round => round.create_ts < roundEnd.toISOString())
           .reduce((acc, curr) => acc + (curr.curamt / Math.pow(10, 8)), 0);
       } else {
-        this.stats.roundStart = roundStart.toISOString();
+        this.stats.roundStart = roundEnd.toISOString();
         this.stats.expectedProfitLastRound = expectedEarningsHistory
           .filter(round => round.create_ts > roundStart.toISOString())
           .filter(round => round.create_ts < roundEnd.toISOString())
