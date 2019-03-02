@@ -66,7 +66,6 @@ module.exports = class HDPool extends Dashboard {
 
     if (expectedEarningsHistory.length > 0) {
       const roundStart = moment(this.stats.lastPayedTs).utcOffset(8).startOf('day').utcOffset(-8);
-      this.stats.roundStart = roundStart.toISOString();
       const roundEnd = roundStart.clone().add(1, 'day');
       if (roundEnd.isAfter(moment())) {
         this.stats.roundStart = roundEnd.toISOString();
