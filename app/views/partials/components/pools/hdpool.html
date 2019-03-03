@@ -37,7 +37,7 @@
             <td class='ellipsis'>
                   <span data-toggle="tooltip" title="{{(dashboard.data.balanceFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
                       {{dashboard.data.balance | customnumber: 6}} {{dashboard.symbol}}
-                      <span ng-if="dashboard.data.expectedProfitLastRound" style="font-size: small" data-toggle="tooltip" title="{{((dashboard.data.expectedProfitLastRoundFiat || 0) | customnumber: 2) || 'unknown'}} € | balance updated in {{$ctrl.timeTillRoundFinished(dashboard.data.lastPayedTs)}}" data-placement="bottom">
+                      <span ng-if="dashboard.data.expectedProfitLastRound" style="font-size: small" data-toggle="tooltip" title="{{((dashboard.data.expectedProfitLastRoundFiat || 0) | customnumber: 2) || 'unknown'}} € | balance updates in {{$ctrl.timeTillRoundFinished(dashboard.data.lastPayedTs)}}" data-placement="bottom">
                         <br>
                         + {{dashboard.data.expectedProfitLastRound | customnumber: 6}} {{dashboard.symbol}}
                       </span>
