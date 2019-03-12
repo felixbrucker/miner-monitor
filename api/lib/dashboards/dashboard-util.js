@@ -10,6 +10,7 @@ const BitcoinBalance = require('./balances/bitcoin-balance');
 const CryptoidBalance = require('./balances/cryptoid-balance');
 const CounterpartyBalance = require('./balances/counterparty-balance');
 const EthereumBalance = require('./balances/ethereum-balance');
+const BitmartBalance = require('./balances/bitmart-balance');
 const BurstBalance = require('./balances/burst-balance');
 const NicehashBalance = require('./balances/nicehash-balance');
 const CoinbaseBalance = require('./balances/coinbase-balance');
@@ -38,6 +39,8 @@ function getClassForDashboardType(type) {
       return CounterpartyBalance;
     case 'ethBalance':
       return EthereumBalance;
+    case 'bitmart-balance':
+      return BitmartBalance;
     case 'burstBalance':
       return BurstBalance;
     case 'nicehashBalance':

@@ -1,0 +1,36 @@
+<div class="centerAlign">Bitmart balances:</div>
+<table class="table table-bordered table-condensed leftAlign">
+    <thead>
+    <tr>
+        <th>Account</th>
+        <th>Amount</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="(id, dashboard) in $ctrl.dashboards track by $index">
+        <td>
+          {{dashboard.name}}
+        </td>
+        <td class='ellipsis'>
+            <span ng-repeat="(index, balance) in dashboard.data track by $index">
+                <span data-toggle="tooltip" title="Available: {{(balance.availableFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                    {{balance.available | customnumber:6}} {{balance.id}}
+                </span>
+                <span ng-if="balance.frozen !== 0">
+                  <br>
+                  <span data-toggle="tooltip" title="Locked: {{(balance.frozenFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                      {{balance.frozen | customnumber:6}} {{balance.id}} (L)
+                  </span>
+                </span>
+                <span ng-if="index !== dashboard.data.length - 1">
+                    <br>
+                </span>
+            </span>
+        </td>
+    </tr>
+    <tr>
+        <td><strong>Total</strong></td>
+        <td><strong>{{$ctrl.getFiatTotal() | customnumber: 2}} €</strong></td>
+    </tr>
+    </tbody>
+</table>

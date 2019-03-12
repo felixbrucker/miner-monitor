@@ -26,6 +26,7 @@ const config = module.exports = {
     ],
     dashboardTypes:[
       'bitcoinBalance',
+      'bitmart-balance',
       'burstBalance',
       'counterpartyBalance',
       'cryptoidBalance',
