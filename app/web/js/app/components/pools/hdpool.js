@@ -17,6 +17,13 @@ function HDPoolController() {
   ctrl.timeTillRoundFinishedInHours = function(lastPayedTs) {
     return moment(lastPayedTs).add(1, 'day').diff(moment(), 'hours');
   };
+
+  ctrl.getTotal = (key) => {
+    return ctrl.dashboards
+      .filter(dashboard => dashboard.data)
+      .map(dashboard => dashboard.data[key] ? dashboard.data[key] : 0)
+      .reduce((acc, right) => acc + right, 0);
+  };
 }
 
 angular.module('app').component('hdpool', {

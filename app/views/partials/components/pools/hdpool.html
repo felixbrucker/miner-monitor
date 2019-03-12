@@ -49,6 +49,21 @@
                 </span>
             </td>
         </tr>
+        <tr>
+          <td>
+            <div style="display: flex; justify-content: space-between">
+              <span>
+                <strong>Total</strong>
+              </span>
+              <span style="margin-right: 4px">
+                <strong>{{$ctrl.getTotal('onlineCapacity') | bytes}}</strong>
+              </span>
+            </div>
+          </td>
+          <td><strong>{{$ctrl.getTotal('expectedProfit') | customnumber: 6}} BHD<br>{{$ctrl.getTotal('expectedProfitFiat') | customnumber: 2}} €</strong></td>
+          <td><strong>{{($ctrl.getTotal('balance') + $ctrl.getTotal('expectedProfitLastRound')) | customnumber: 6}} BHD<br>{{($ctrl.getTotal('balanceFiat') + $ctrl.getTotal('expectedProfitLastRoundFiat')) | customnumber: 2}} €</strong></td>
+          <td><strong>{{$ctrl.getTotal('incomeLastDay') | customnumber: 6}} BHD<br>{{$ctrl.getTotal('incomeLastDayFiat') | customnumber: 2}} €</strong></td>
+        </tr>
         </tbody>
     </table>
 </div>

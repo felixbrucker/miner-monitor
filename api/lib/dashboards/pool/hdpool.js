@@ -45,7 +45,8 @@ module.exports = class HDPool extends Dashboard {
     this.stats.balance = userInfo.wallet.balance / Math.pow(10, 8);
     this.stats.incomeLastDay = generalStats.last24_income / Math.pow(10, 8);
     this.stats.totalIncome = generalStats.total_income / Math.pow(10, 8);
-    this.stats.onlineCapacityString = bytes(bytes(`${generalStats.online_capacity}GB`));
+    this.stats.onlineCapacity = bytes(`${generalStats.online_capacity}GB`);
+    this.stats.onlineCapacityString = bytes(this.stats.onlineCapacity);
     this.stats.miners = miners.map(miner => ({
       name: miner.name,
       capacityString: bytes(bytes(`${miner.capacity}GB`)),
