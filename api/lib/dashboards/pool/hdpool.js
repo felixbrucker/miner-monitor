@@ -4,8 +4,6 @@ const bytes = require('bytes');
 const Dashboard = require('../dashboard');
 const coinGecko = require('../../rates/coingecko');
 
-const baseUrl = 'wss://hdpool.com';
-
 module.exports = class HDPool extends Dashboard {
 
   static getDefaults() {

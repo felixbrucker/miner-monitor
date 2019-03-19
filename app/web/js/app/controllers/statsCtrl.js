@@ -173,6 +173,7 @@
       });
       vm.dashboards.yiimp = getDashboardArrForTypes('yiimp');
       vm.dashboards.hdpool = getDashboardArrForTypes('hdpool');
+      vm.dashboards.hpool = getDashboardArrForTypes('hpool');
       vm.devices = vm.current.entries
         .sort(sortByName)
         .map(group => Object.keys(group.devices)

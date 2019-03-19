@@ -5,6 +5,7 @@ const NodeCryptonotePool = require('./pool/node-cryptonote-pool');
 const SnipaNodejsPool = require('./pool/snipa-nodejs-pool');
 const Yiimp = require('./pool/yiimp');
 const HDPool = require('./pool/hdpool');
+const HPool = require('./pool/hpool');
 const DashboardApi = require('./custom/dashboard-api');
 const BitcoinBalance = require('./balances/bitcoin-balance');
 const CryptoidBalance = require('./balances/cryptoid-balance');
@@ -29,6 +30,8 @@ function getClassForDashboardType(type) {
       return Mpos;
     case 'hdpool':
       return HDPool;
+    case 'hpool':
+      return HPool;
     case 'dashboard-api':
       return DashboardApi;
     case 'bitcoinBalance':

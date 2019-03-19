@@ -1,0 +1,65 @@
+<div>
+    <div class="centerAlign">HPool Stats:</div>
+    <table class="table table-bordered table-condensed leftAlign">
+        <thead>
+        <tr>
+            <th>Miner</th>
+            <th>
+                <span data-toggle="tooltip" title="Current unconfirmed balance for the day" data-placement="bottom">
+                  Unconfirmed
+                </span>
+            </th>
+            <th>Balance</th>
+            <th>
+              <span data-toggle="tooltip" title="Credited in the last 24h" data-placement="bottom">
+                Credited 24h
+              </span>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="(id, dashboard) in $ctrl.dashboards track by $index">
+            <td class='ellipsis'>
+                <span ng-click="$ctrl.toggleVisible(id)">{{dashboard.data.onlineCapacityString}}</span>
+                <div ng-if="dashboard.data.miners !== [] && $ctrl.isVisible(id)" style="font-size:small; margin-left: 4px; margin-top: -16px">
+                    <span ng-repeat="(key, miner) in dashboard.data.miners track by $index">
+                      <br/>
+                      <span class="dot" ng-class="{positive: miner.online, negative: !miner.online}"></span>
+                      {{miner.name}}: {{miner.capacityString}}
+                    </span>
+                </div>
+            </td>
+            <td class='ellipsis'>
+                <span data-toggle="tooltip" title="{{((dashboard.data.unconfirmedFiat || 0) | customnumber: 2) || 'unknown'}} € | round ends in about {{$ctrl.timeTillRoundFinished(dashboard.data.lastPayedTs)}}" data-placement="bottom">
+                    {{(dashboard.data.unconfirmed || 0) | customnumber: 6}} {{dashboard.symbol}} ({{$ctrl.timeTillRoundFinishedInHours(dashboard.data.lastPayedTs)}}h)
+                </span>
+            </td>
+            <td class='ellipsis'>
+                  <span data-toggle="tooltip" title="{{(dashboard.data.balanceFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                      {{dashboard.data.balance | customnumber: 6}} {{dashboard.symbol}}
+                  </span>
+            </td>
+            <td class='ellipsis'>
+                <span data-toggle="tooltip" title="{{(dashboard.data.incomeLastDayFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                    {{dashboard.data.incomeLastDay | customnumber: 6}} {{dashboard.symbol}}
+                </span>
+            </td>
+        </tr>
+        <tr>
+          <td>
+            <div style="display: flex; justify-content: space-between">
+              <span>
+                <strong>Total</strong>
+              </span>
+              <span style="margin-right: 4px">
+                <strong>{{$ctrl.getTotal('onlineCapacity') | bytes:2}}</strong>
+              </span>
+            </div>
+          </td>
+          <td><strong>{{$ctrl.getTotal('unconfirmed') | customnumber: 6}} BHD<br>{{$ctrl.getTotal('unconfirmedFiat') | customnumber: 2}} €</strong></td>
+          <td><strong>{{$ctrl.getTotal('balance') | customnumber: 6}} BHD<br>{{$ctrl.getTotal('balanceFiat') | customnumber: 2}} €</strong></td>
+          <td><strong>{{$ctrl.getTotal('incomeLastDay') | customnumber: 6}} BHD<br>{{$ctrl.getTotal('incomeLastDayFiat') | customnumber: 2}} €</strong></td>
+        </tr>
+        </tbody>
+    </table>
+</div>

@@ -34,6 +34,7 @@ const config = module.exports = {
       'ethBalance',
       'genericMPOS',
       'hdpool',
+      'hpool',
       'miningpoolhub',
       'nicehash',
       'nicehashBalance',

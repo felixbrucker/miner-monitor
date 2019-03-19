@@ -54,6 +54,10 @@
       <hdpool dashboards="statsVm.dashboards.hdpool"></hdpool>
     </div>
 
+    <div class="masonry-brick col-sm-9 col-md-6 col-lg-6 col-xl-4 col-xxl-6" ng-if="statsVm.isDashboardTypeEnabled('hpool')">
+      <hpool dashboards="statsVm.dashboards.hpool"></hpool>
+    </div>
+
     <div class="masonry-brick col-sm-9 col-md-6 col-lg-6 col-xl-4 col-xxl-6" ng-if="statsVm.isDeviceTypeEnabled('creep-miner')">
       <creep-miner entries="statsVm.creepMiner"></creep-miner>
     </div>

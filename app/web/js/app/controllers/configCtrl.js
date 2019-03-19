@@ -107,10 +107,10 @@
           types.push('genericMPOS', 'dashboard-api', 'node-cryptonote-pool', 'snipa-nodejs-pool', 'generic-wallet', 'bitbean-wallet', 'bhd-wallet', 'yiimp', 'wallet-agent');
           break;
         case 'apiKey':
-          types.push('genericMPOS', 'miningpoolhub', 'cryptoidBalance', 'nicehashBalance', 'coinbase', 'hdpool', 'bitmart-balance');
+          types.push('genericMPOS', 'miningpoolhub', 'cryptoidBalance', 'nicehashBalance', 'coinbase', 'hdpool', 'bitmart-balance', 'hpool');
           break;
         case 'userId':
-          types.push('genericMPOS', 'miningpoolhub', 'nicehashBalance', 'hdpool');
+          types.push('genericMPOS', 'miningpoolhub', 'nicehashBalance', 'hdpool', 'hpool');
           break;
         case 'hashrateModifier':
           types.push('genericMPOS', 'snipa-nodejs-pool');
