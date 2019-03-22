@@ -10,12 +10,12 @@ function HDPoolController() {
     return !ctrl.hidden[id];
   };
 
-  ctrl.timeTillRoundFinished = function(lastPayedTs) {
-    return moment().to(moment(lastPayedTs).add(1, 'day'), true);
+  ctrl.timeTillRoundFinished = function(currentRoundEndDate) {
+    return moment().to(currentRoundEndDate, true);
   };
 
-  ctrl.timeTillRoundFinishedInHours = function(lastPayedTs) {
-    return moment(lastPayedTs).add(1, 'day').diff(moment(), 'hours');
+  ctrl.timeTillRoundFinishedInHours = function(currentRoundEndDate) {
+    return moment(currentRoundEndDate).diff(moment(), 'hours');
   };
 
   ctrl.getTotal = (key) => {

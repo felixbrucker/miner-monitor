@@ -37,6 +37,9 @@ module.exports = class HDPool extends Dashboard {
     const expectedEarningsHistory = await this.client.getExpectedEarningsHistory();
     const earningsHistory = await this.client.getEarningsHistory();
 
+    this.stats.currentRoundEndDate = HDPoolAccountApi.getCurrentRoundEndDate();
+    this.stats.nextBalanceUpdateDate = HDPoolAccountApi.getNextBalanceUpdateDate();
+
     if (!this.stats.lastPayedTs) {
       this.stats.lastPayedTs = userInfo.wallet.update_ts;
     }
@@ -63,26 +66,18 @@ module.exports = class HDPool extends Dashboard {
       this.stats.lastPayedTs = earningsHistory[0].create_ts;
     }
 
+    const roundStart = moment(this.stats.currentRoundEndDate).subtract(1, 'day');
+    const roundEnd = moment(this.stats.currentRoundEndDate);
+    const lastRoundStart = roundStart.clone().subtract(1, 'day');
     if (expectedEarningsHistory.length > 0) {
-      const roundStart = moment(this.stats.lastPayedTs).utcOffset(8).startOf('day').utcOffset(-8);
-      const roundEnd = roundStart.clone().add(1, 'day');
-      if (roundEnd.isAfter(moment())) {
-        this.stats.roundStart = roundStart.toISOString();
-        this.stats.expectedProfitLastRound = null;
-        this.stats.expectedProfit = expectedEarningsHistory
-          .filter(round => round.create_ts > roundStart.toISOString())
-          .filter(round => round.create_ts < roundEnd.toISOString())
-          .reduce((acc, curr) => acc + (curr.curamt / Math.pow(10, 8)), 0);
-      } else {
-        this.stats.roundStart = roundEnd.toISOString();
-        this.stats.expectedProfitLastRound = expectedEarningsHistory
-          .filter(round => round.create_ts > roundStart.toISOString())
-          .filter(round => round.create_ts < roundEnd.toISOString())
-          .reduce((acc, curr) => acc + (curr.curamt / Math.pow(10, 8)), 0);
-        this.stats.expectedProfit = expectedEarningsHistory
-          .filter(round => round.create_ts > roundEnd.toISOString())
-          .reduce((acc, curr) => acc + (curr.curamt / Math.pow(10, 8)), 0);
-      }
+      this.stats.expectedProfit = expectedEarningsHistory
+        .filter(round => round.create_ts > roundStart.toISOString())
+        .filter(round => round.create_ts < roundEnd.toISOString())
+        .reduce((acc, curr) => acc + (curr.curamt / Math.pow(10, 8)), 0);
+      this.stats.expectedProfitLastRound = expectedEarningsHistory
+        .filter(round => round.create_ts > lastRoundStart.toISOString())
+        .filter(round => round.create_ts < roundStart.toISOString())
+        .reduce((acc, curr) => acc + (curr.curamt / Math.pow(10, 8)), 0);
     }
 
     const rate = coinGecko.getRates('BHD').find(rate => rate.id === 'bitcoin-hd');

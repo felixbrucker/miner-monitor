@@ -30,14 +30,14 @@
                 </div>
             </td>
             <td class='ellipsis'>
-                <span data-toggle="tooltip" title="{{((dashboard.data.expectedProfitFiat || 0) | customnumber: 2) || 'unknown'}} € | round ends in about {{$ctrl.timeTillRoundFinished(dashboard.data.roundStart)}}" data-placement="bottom">
-                    {{(dashboard.data.expectedProfit || 0) | customnumber: 6}} {{dashboard.symbol}} ({{$ctrl.timeTillRoundFinishedInHours(dashboard.data.roundStart)}}h)
+                <span data-toggle="tooltip" title="{{((dashboard.data.expectedProfitFiat || 0) | customnumber: 2) || 'unknown'}} € | round ends in about {{$ctrl.timeTillRoundFinished(dashboard.data.currentRoundEndDate)}}" data-placement="bottom">
+                    {{(dashboard.data.expectedProfit || 0) | customnumber: 6}} {{dashboard.symbol}} ({{$ctrl.timeTillRoundFinishedInHours(dashboard.data.currentRoundEndDate)}}h)
                 </span>
             </td>
             <td class='ellipsis'>
                   <span data-toggle="tooltip" title="{{(dashboard.data.balanceFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
                       {{dashboard.data.balance | customnumber: 6}} {{dashboard.symbol}}
-                      <span ng-if="dashboard.data.expectedProfitLastRound" style="font-size: small" data-toggle="tooltip" title="{{((dashboard.data.expectedProfitLastRoundFiat || 0) | customnumber: 2) || 'unknown'}} € | balance updates in {{$ctrl.timeTillRoundFinished(dashboard.data.lastPayedTs)}}" data-placement="bottom">
+                      <span ng-if="dashboard.data.expectedProfitLastRound" style="font-size: small" data-toggle="tooltip" title="{{((dashboard.data.expectedProfitLastRoundFiat || 0) | customnumber: 2) || 'unknown'}} € | balance updates in {{$ctrl.timeTillRoundFinished(dashboard.data.nextBalanceUpdateDate)}}" data-placement="bottom">
                         <br>
                         + {{dashboard.data.expectedProfitLastRound | customnumber: 6}} {{dashboard.symbol}}
                       </span>
