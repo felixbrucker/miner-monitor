@@ -1,5 +1,4 @@
 const IO = require('socket.io-client');
-const bytes = require('bytes');
 const Miner = require('./miner');
 
 module.exports = class BurstProxy extends Miner {
@@ -28,13 +27,13 @@ module.exports = class BurstProxy extends Miner {
   }
 
   populateProxyStats(proxy) {
-    proxy.totalCapacityString = bytes(proxy.totalCapacity);
+    proxy.totalCapacityString = BurstProxy.capacityToString(proxy.totalCapacity, 2);
     proxy.upstreamStats.forEach(upstreamStat => {
       upstreamStat.blockTime = upstreamStat.isBHD ? 300 : 240;
 
       const blockReward = upstreamStat.isBHD ? BurstProxy.getBHDBlockReward() : BurstProxy.getBurstBlockReward(upstreamStat.blockNumber);
 
-      const capacityInTB = proxy.totalCapacity / Math.pow(1024, 4);
+      const capacityInTB = proxy.totalCapacity / 1024;
       const probabilityToFindBlock = capacityInTB / upstreamStat.netDiff;
       if (probabilityToFindBlock !== 0) {
         upstreamStat.timeToFindBlockInSeconds = 1 / probabilityToFindBlock * upstreamStat.blockTime;
@@ -50,7 +49,19 @@ module.exports = class BurstProxy extends Miner {
   }
 
   populateUpstreamStats(upstream) {
-    upstream.performanceString = bytes(upstream.estimatedCapacityInTB * Math.pow(1024, 4));
+    upstream.performanceString = BurstProxy.capacityToString(upstream.estimatedCapacityInTB * 1024, 2);
+  }
+
+  static capacityToString(capacityInGiB, precision = 0, correctUnit = true) {
+    let capacity = capacityInGiB;
+    let unit = 0;
+    const units = correctUnit ? ['GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'] : ['GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    while (capacity >= 1024) {
+      capacity /= 1024;
+      unit += 1;
+    }
+
+    return `${capacity.toFixed(precision)} ${units[unit]}`;
   }
 
   onStats(proxies) {
