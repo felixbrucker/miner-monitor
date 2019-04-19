@@ -27,7 +27,7 @@ module.exports = class BurstProxy extends Miner {
   }
 
   populateProxyStats(proxy) {
-    proxy.totalCapacityString = BurstProxy.capacityToString(proxy.totalCapacity, 2);
+    proxy.totalCapacityString = BurstProxy.capacityToString(proxy.totalCapacity);
     proxy.upstreamStats.forEach(upstreamStat => {
       upstreamStat.blockTime = upstreamStat.isBHD ? 300 : 240;
 
@@ -49,10 +49,10 @@ module.exports = class BurstProxy extends Miner {
   }
 
   populateUpstreamStats(upstream) {
-    upstream.performanceString = BurstProxy.capacityToString(upstream.estimatedCapacityInTB * 1024, 2);
+    upstream.performanceString = BurstProxy.capacityToString(upstream.estimatedCapacityInTB * 1024);
   }
 
-  static capacityToString(capacityInGiB, precision = 0, correctUnit = true) {
+  static capacityToString(capacityInGiB, precision = 2, correctUnit = true) {
     let capacity = capacityInGiB;
     let unit = 0;
     const units = correctUnit ? ['GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'] : ['GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
