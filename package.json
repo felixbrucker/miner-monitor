@@ -2,6 +2,7 @@
   "name": "miner-monitor",
   "version": "0.0.2",
   "dependencies": {
+    "@grpc/proto-loader": "^0.5.0",
     "axios": "^0.18.0",
     "bitmart-api": "^1.0.0",
     "body-parser": "^1.18.3",
@@ -13,6 +14,7 @@
     "cross-spawn": "^6.0.5",
     "dnode": "^1.2.2",
     "express": "^4.16.4",
+    "grpc": "^1.20.1",
     "hdpool-api": "^1.4.0",
     "hpool-api": "^0.0.1",
     "moment": "^2.24.0",

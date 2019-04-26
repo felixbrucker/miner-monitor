@@ -1,87 +1,50 @@
 <div class="row">
-    <div class="col-md-12">
-        <div style="float: left;font-size:120%;">{{$ctrl.entry.name}}
-        </div>
+  <div class="col-md-12">
+    <div style="float: left;font-size:120%;">{{$ctrl.entry.name}}
     </div>
+  </div>
 </div>
 <div class="row">
-    <div class="col-md-12">
-        <table class="table table-bordered table-condensed">
-            <thead>
-            <tr>
-                <th><span ng-click="$ctrl.toggleHidden()">Location</span></th>
-                <th><span data-toggle="tooltip" title="Status" data-placement="bottom">S</span>
-                <th><span data-toggle="tooltip" title="Restarts" data-placement="bottom">R</span></th>
-                <th><span data-toggle="tooltip" title="Shared space (% used)" data-placement="bottom">Shared</span>
-                </th>
-                <th><span data-toggle="tooltip" title="Change (last 24 hours)" data-placement="bottom">CH ({{$ctrl.entry.stats.historyFromNow}})</span>
-                </th>
-                <th><span data-toggle="tooltip" title="Shards received since launch"
-                          data-placement="bottom">SR</span></th>
-                <th><span data-toggle="tooltip" title="Reputation Points" data-placement="bottom">RP</span>
-                </th>
-                <th><span data-toggle="tooltip" title="Response time" data-placement="bottom">RT</span>
-                </th>
-                <th><span data-toggle="tooltip" title="Share Uptime"
-                          data-placement="bottom">Uptime</span></th>
-            </tr>
-            </thead>
-            <tbody ng-hide="$ctrl.hidden">
-            <tr ng-repeat="share in $ctrl.entry.stats.shares track by $index">
-
-                <td class='ellipsissmall'>
-                    <i class="fa fa-hdd-o" aria-hidden="true"></i>
-                    <a href="https://api.storj.io/contacts/{{share.id}}" target="_blank">{{share.config.storagePath}}</a>
-                </td>
-
-                <td>
-                    <span ng-if="share.state === 0 || share.state === 2 || share.hasTr">
-                        <span data-toggle="tooltip" title="Problems:
-                        {{share.state === 0 ? 'share stopped' : ''}}{{share.state === 2 ? 'share errored' : ''}}
-                        {{share.hasTr ? 'TR: ' + share.tr : ''}}"><i
-                                class="fa fa-stop-circle-o" aria-hidden="true" style="color:red"></i>
-                        </span>
-                    </span>
-                    <span ng-if="share.state===1 && !share.hasTr">
-                        <span data-toggle="tooltip" title="running & no timeouts"><i
-                                class="fa fa-check-circle-o" aria-hidden="true" style="color:green"></i>
-                        </span>
-                    </span>
-                </td>
-
-                <td ng-class="{danger: (share.meta.numRestarts || 0) > 10 }">{{share.meta.numRestarts || 0}}</td>
-
-                <td class='ellipsis'>
-                    <span data-toggle="tooltip" title="{{share.meta.farmerState.percentUsed}}%" data-placement="bottom">
-                        {{share.meta.farmerState.spaceUsed}}
-                    </span>
-                </td>
-
-                <td class='ellipsis'><span data-toggle="tooltip"
-                                           title="since {{$ctrl.entry.stats.historyFromNow}} ago"
-                                           data-placement="bottom">{{share.meta.farmerState.change}}</span>
-                </td>
-
-                <td class='ellipsis'>{{share.meta.farmerState.dataReceivedCount}}</td>
-
-                <td class='ellipsis'>{{share.rp}}</td>
-
-                <td class='ellipsis'>{{share.rt}}</td>
-
-                <td class='ellipsis'>{{share.meta.uptimeMs/1000 | secondsToTimeString}}</td>
-
-            </tr>
-            </tbody>
-            <tr>
-                <td colspan="2" style="font-weight: bold;">Total/Avg</td>
-                <td style="font-weight: bold;">{{$ctrl.entry.stats.totalRestarts}}</td>
-                <td style="font-weight: bold;">{{$ctrl.entry.stats.totalSpaceUsed}}</td>
-                <td style="font-weight: bold;">{{$ctrl.entry.stats.totalChange}}</td>
-                <td style="font-weight: bold;">{{$ctrl.entry.stats.totalShardsReceived}}</td>
-                <td class='ellipsis' style="font-weight: bold;">{{$ctrl.entry.stats.avgRp}}</td>
-                <td class='ellipsis' style="font-weight: bold;">{{$ctrl.entry.stats.avgRt}}</td>
-                <td></td>
-            </tr>
-        </table>
-    </div>
+  <div class="col-md-12">
+    <table class="table table-bordered table-condensed">
+      <thead>
+      <tr>
+        <th><span data-toggle="tooltip" title="Status" data-placement="bottom">S</span>
+        <th><span data-toggle="tooltip" title="Space (% used)" data-placement="bottom">Space</span></th>
+        <th><span data-toggle="tooltip" title="Bandwidth (% used)" data-placement="bottom">Bandwidth</span></th>
+        <th>Ingress</th>
+        <th>Egress</th>
+        <th>Uptime</th>
+      </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <span ng-if="$ctrl.getStatus($ctrl.entry.stats.lastContacted) === 0">
+              <i class="fa fa-stop-circle-o" aria-hidden="true" style="color:red"></i>
+            </span>
+            <span ng-if="$ctrl.getStatus($ctrl.entry.stats.lastContacted) === 1">
+              <i class="fa fa-exclamation-circle" aria-hidden="true" style="color:orange"></i>
+            </span>
+            <span ng-if="$ctrl.getStatus($ctrl.entry.stats.lastContacted) === 2">
+              <i class="fa fa-check-circle-o" aria-hidden="true" style="color:green"></i>
+            </span>
+          </td>
+          <td>
+            {{$ctrl.entry.stats.stats.used_space | bytes:2}} ({{(($ctrl.entry.stats.stats.used_space / $ctrl.entry.stats.stats.available_space) * 100).toFixed(2)}}%)
+          </td>
+          <td>
+            {{$ctrl.entry.stats.stats.used_bandwidth | bytes:2}} ({{(($ctrl.entry.stats.stats.used_bandwidth / $ctrl.entry.stats.stats.available_bandwidth) * 100).toFixed(2)}}%)
+          </td>
+          <td>
+            {{$ctrl.entry.stats.stats.used_ingress | bytes:2}}
+          </td>
+          <td>
+            {{$ctrl.entry.stats.stats.used_egress | bytes:2}}
+          </td>
+          <td>{{$ctrl.entry.stats.uptime | secondsToTimeString}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

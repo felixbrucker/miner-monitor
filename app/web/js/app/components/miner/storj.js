@@ -10,18 +10,15 @@ function StorjController($http) {
     return (Date.now() - date) / 1000;
   };
 
-  ctrl.restartShare = function(id, nodeid) {
-    return $http({
-      method: 'POST',
-      url: 'api/config/restartShares?node=' + nodeid,
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8'
-      },
-      data: {id: id}
-    }).then(function successCallback(response) {
-    }, function errorCallback(response) {
-      console.log(response);
-    });
+  ctrl.getStatus = function(lastContacted) {
+    if (!lastContacted) {
+      return 0;
+    }
+    if (moment(lastContacted).isBefore(moment().subtract(10, 'minute'))) {
+      return 1;
+    }
+
+    return 2;
   };
 }
 
