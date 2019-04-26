@@ -24,7 +24,7 @@ module.exports = class HDPool extends Dashboard {
   }
 
   async onInit() {
-    this.client = new HDPoolAccountApi(this.dashboard.user_id, this.dashboard.api_key);
+    this.client = new HDPoolAccountApi(this.dashboard.user_id, this.dashboard.api_key, this.dashboard.address === 'eco');
     await this.client.init();
 
     super.onInit();
