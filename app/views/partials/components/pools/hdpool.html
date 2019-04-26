@@ -24,7 +24,7 @@
                 <div ng-if="dashboard.data.miners !== [] && $ctrl.isVisible(id)" style="font-size:small; margin-left: 4px; margin-top: -16px">
                     <span ng-repeat="(key, miner) in dashboard.data.miners track by $index">
                       <br/>
-                      <span class="dot" ng-class="{positive: miner.online, negative: !miner.online}"></span>
+                      <span class="dot" ng-class="{negative: !miner.online, intermediary: !miner.submitting, positive: miner.online}"></span>
                       {{miner.name}}: {{miner.capacityString}}
                     </span>
                 </div>

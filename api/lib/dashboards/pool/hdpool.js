@@ -52,6 +52,7 @@ module.exports = class HDPool extends Dashboard {
       name: miner.name,
       capacityString: bytes(bytes(`${miner.capacity}GB`)),
       online: moment().diff(miner.ts * 1000, 'minutes') < 5,
+      submitting: miner.is_submit === 1,
       lastSeen: new Date(miner.ts * 1000),
     })).sort((a, b) => {
       if (a.name < b.name) {
