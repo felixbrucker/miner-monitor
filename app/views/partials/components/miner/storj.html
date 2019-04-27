@@ -9,40 +9,40 @@
     <table class="table table-bordered table-condensed">
       <thead>
       <tr>
-        <th><span data-toggle="tooltip" title="Status" data-placement="bottom">S</span>
+        <th><span data-toggle="tooltip" title="Status" data-placement="bottom">S</span></th>
         <th><span data-toggle="tooltip" title="Space (% used)" data-placement="bottom">Space</span></th>
         <th><span data-toggle="tooltip" title="Bandwidth (% used)" data-placement="bottom">Bandwidth</span></th>
-        <th>Ingress</th>
-        <th>Egress</th>
-        <th>Uptime</th>
+        <th><span data-toggle="tooltip" title="Ingress (speed)" data-placement="bottom">Ingress</span></th>
+        <th><span data-toggle="tooltip" title="Egress (speed)" data-placement="bottom">Egress</span></th>
       </tr>
       </thead>
       <tbody>
         <tr>
           <td>
-            <span ng-if="$ctrl.getStatus($ctrl.entry.stats.lastContacted) === 0">
-              <i class="fa fa-stop-circle-o" aria-hidden="true" style="color:red"></i>
+            <span data-toggle="tooltip" title="Uptime: {{$ctrl.entry.stats.uptime | secondsToTimeString}}" data-placement="bottom">
+              <span ng-if="$ctrl.getStatus($ctrl.entry.stats.lastContacted) === 0">
+                <i class="fa fa-stop-circle-o" aria-hidden="true" style="color:red"></i>
+              </span>
+              <span ng-if="$ctrl.getStatus($ctrl.entry.stats.lastContacted) === 1">
+                <i class="fa fa-exclamation-circle" aria-hidden="true" style="color:orange"></i>
+              </span>
+              <span ng-if="$ctrl.getStatus($ctrl.entry.stats.lastContacted) === 2">
+                <i class="fa fa-check-circle-o" aria-hidden="true" style="color:green"></i>
+              </span>
             </span>
-            <span ng-if="$ctrl.getStatus($ctrl.entry.stats.lastContacted) === 1">
-              <i class="fa fa-exclamation-circle" aria-hidden="true" style="color:orange"></i>
-            </span>
-            <span ng-if="$ctrl.getStatus($ctrl.entry.stats.lastContacted) === 2">
-              <i class="fa fa-check-circle-o" aria-hidden="true" style="color:green"></i>
-            </span>
           </td>
           <td>
-            {{$ctrl.entry.stats.stats.used_space | bytes:2}} ({{(($ctrl.entry.stats.stats.used_space / $ctrl.entry.stats.stats.available_space) * 100).toFixed(2)}}%)
+            {{$ctrl.entry.stats.stats.used_space | bytes:2}} ({{(($ctrl.entry.stats.stats.used_space / $ctrl.entry.stats.stats.available_space) * 100).toFixed(0)}}%)
           </td>
           <td>
-            {{$ctrl.entry.stats.stats.used_bandwidth | bytes:2}} ({{(($ctrl.entry.stats.stats.used_bandwidth / $ctrl.entry.stats.stats.available_bandwidth) * 100).toFixed(2)}}%)
+            {{$ctrl.entry.stats.stats.used_bandwidth | bytes:2}} ({{(($ctrl.entry.stats.stats.used_bandwidth / $ctrl.entry.stats.stats.available_bandwidth) * 100).toFixed(0)}}%)
           </td>
           <td>
-            {{$ctrl.entry.stats.stats.used_ingress | bytes:2}}
+            {{$ctrl.entry.stats.stats.used_ingress | bytes:2}} ({{$ctrl.entry.ingressSpeed | bytes:1}}/s)
           </td>
           <td>
-            {{$ctrl.entry.stats.stats.used_egress | bytes:2}}
+            {{$ctrl.entry.stats.stats.used_egress | bytes:2}} ({{$ctrl.entry.egressSpeed | bytes:1}}/s)
           </td>
-          <td>{{$ctrl.entry.stats.uptime | secondsToTimeString}}</td>
         </tr>
       </tbody>
     </table>

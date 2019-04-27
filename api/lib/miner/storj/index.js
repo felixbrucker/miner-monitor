@@ -1,5 +1,6 @@
 const grpc = require('grpc');
 const protoLoader = require('@grpc/proto-loader');
+const moment = require('moment');
 const Miner = require('../miner');
 
 module.exports = class Storj extends Miner {
@@ -34,12 +35,42 @@ module.exports = class Storj extends Miner {
     }
   }
 
+  updateHistoricalBandwidth() {
+    const newBandwidthEntry = [new Date(), this.stats.stats.used_ingress, this.stats.stats.used_egress];
+    this.historicalBandwidth.push(newBandwidthEntry);
+    this.historicalBandwidth = this.historicalBandwidth.filter(([entryTS]) => moment().diff(entryTS, 'minute') < 15);
+    this.updateBandwidthSpeeds();
+  }
+
+  updateBandwidthSpeeds() {
+    const oldestBandwidthEntry = this.historicalBandwidth.length === 0
+      ? [new Date(), this.stats.stats.used_ingress, this.stats.stats.used_egress]
+      : this.historicalBandwidth[0];
+    let timeInSecondsSince = moment().diff(oldestBandwidthEntry[0], 'second');
+
+    const differences = [this.stats.stats.used_ingress - oldestBandwidthEntry[1], this.stats.stats.used_egress - oldestBandwidthEntry[2]];
+    if (differences[0] < 0) {
+      differences[0] = this.stats.stats.used_ingress;
+      timeInSecondsSince = moment().diff(moment().startOf('day'), 'second');
+    }
+    if (differences[1] < 0) {
+      differences[1] = this.stats.stats.used_egress;
+      timeInSecondsSince = moment().diff(moment().startOf('day'), 'second');
+    }
+
+    this.ingressSpeed = differences[0] / timeInSecondsSince;
+    this.egressSpeed = differences[1] / timeInSecondsSince;
+  }
+
   getStats() {
     return Object.assign(
       super.getStats(),
       {
         stats: this.stats,
         id: this.device.id,
+      }, {
+        ingressSpeed: this.ingressSpeed,
+        egressSpeed: this.egressSpeed,
       });
   }
 
@@ -54,10 +85,18 @@ module.exports = class Storj extends Miner {
     const protoDescriptor = grpc.loadPackageDefinition(packageDefinition);
 
     this.client = new protoDescriptor.inspector.PieceStoreInspector(this.device.hostname, grpc.credentials.createInsecure());
+    this.historicalBandwidth = [];
+    this.ingressSpeed = 0;
+    this.egressSpeed = 0;
+    this.updateHistoricalbandwidthInterval = setInterval(this.updateHistoricalBandwidth.bind(this), 60 * 1000);
     super.onInit();
   }
 
   cleanup() {
+    if (this.updateHistoricalbandwidthInterval) {
+      clearInterval(this.updateHistoricalbandwidthInterval);
+      this.updateHistoricalbandwidthInterval = null;
+    }
     super.cleanup();
   }
 };
