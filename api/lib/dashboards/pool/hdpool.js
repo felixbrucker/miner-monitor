@@ -37,11 +37,12 @@ module.exports = class HDPool extends Dashboard {
   }
 
   async updateStats() {
+    const client = this.ecoClient ? this.ecoClient : this.client;
     const userInfo = await this.client.getUserInfo();
-    const generalStats = await this.ecoClient.getGeneralStats();
-    const miners = await this.ecoClient.getMiners();
-    const expectedEarningsHistory = await this.ecoClient.getExpectedEarningsHistory();
-    const earningsHistory = await this.ecoClient.getEarningsHistory();
+    const generalStats = await client.getGeneralStats();
+    const miners = await client.getMiners();
+    const expectedEarningsHistory = await client.getExpectedEarningsHistory();
+    const earningsHistory = await client.getEarningsHistory();
 
     this.stats.currentRoundEndDate = HDPoolAccountApi.getCurrentRoundEndDate();
     this.stats.nextBalanceUpdateDate = HDPoolAccountApi.getNextBalanceUpdateDate();
