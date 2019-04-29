@@ -24,18 +24,24 @@ module.exports = class HDPool extends Dashboard {
   }
 
   async onInit() {
-    this.client = new HDPoolAccountApi(this.dashboard.user_id, this.dashboard.api_key, this.dashboard.address === 'eco');
+    this.isEco = this.dashboard.address === 'eco';
+    this.client = new HDPoolAccountApi(this.dashboard.user_id, this.dashboard.api_key);
     await this.client.init();
+
+    if (this.isEco) {
+      this.ecoClient = new HDPoolAccountApi(this.dashboard.user_id, this.dashboard.api_key, true);
+      await this.ecoClient.init();
+    }
 
     super.onInit();
   }
 
   async updateStats() {
     const userInfo = await this.client.getUserInfo();
-    const generalStats = await this.client.getGeneralStats();
-    const miners = await this.client.getMiners();
-    const expectedEarningsHistory = await this.client.getExpectedEarningsHistory();
-    const earningsHistory = await this.client.getEarningsHistory();
+    const generalStats = await this.ecoClient.getGeneralStats();
+    const miners = await this.ecoClient.getMiners();
+    const expectedEarningsHistory = await this.ecoClient.getExpectedEarningsHistory();
+    const earningsHistory = await this.ecoClient.getEarningsHistory();
 
     this.stats.currentRoundEndDate = HDPoolAccountApi.getCurrentRoundEndDate();
     this.stats.nextBalanceUpdateDate = HDPoolAccountApi.getNextBalanceUpdateDate();
