@@ -54,6 +54,12 @@
       <hdpool dashboards="statsVm.dashboards.hdpool"></hdpool>
     </div>
 
+    <span ng-repeat="(id, dashboard) in statsVm.dashboards.hdpoolControl track by $index">
+        <div class="masonry-brick col-sm-9 col-md-6 col-lg-6 col-xl-4 col-xxl-6">
+          <hdpool-control dashboard="dashboard"></hdpool-control>
+        </div>
+    </span>
+
     <div class="masonry-brick col-sm-9 col-md-6 col-lg-6 col-xl-4 col-xxl-6" ng-if="statsVm.isDashboardTypeEnabled('hpool')">
       <hpool dashboards="statsVm.dashboards.hpool"></hpool>
     </div>
