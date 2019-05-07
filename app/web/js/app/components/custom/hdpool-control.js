@@ -24,6 +24,18 @@ function HDPoolControlController() {
       .map(account => account.stats[key] ? account.stats[key] : 0)
       .reduce((acc, right) => acc + right, 0);
   };
+
+  ctrl.capacityToString = function(capacityInGiB, precision = 2, correctUnit = true) {
+    let capacity = capacityInGiB;
+    let unit = 0;
+    const units = correctUnit ? ['GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'] : ['GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    while (capacity >= 1024) {
+      capacity /= 1024;
+      unit += 1;
+    }
+
+    return `${capacity.toFixed(precision)} ${units[unit]}`;
+  };
 }
 
 angular.module('app').component('hdpoolControl', {
