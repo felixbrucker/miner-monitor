@@ -36,6 +36,32 @@ function HDPoolControlController() {
 
     return `${capacity.toFixed(precision)} ${units[unit]}`;
   };
+
+  ctrl.getState = function(stats, state) {
+    if (state === 0) {
+      return 0;
+    }
+    if (state !== 4) {
+      return 1;
+    }
+    if (!stats || !stats.miners || stats.miners.length === 0) {
+      return 2;
+    }
+
+    return stats.miners.reduce((acc, miner) => {
+      if (!miner.online && acc >= 3) {
+        return 3;
+      }
+      if (!miner.submitting && acc >= 4) {
+        return 4;
+      }
+      if (miner.online && acc === 5) {
+        return 5;
+      }
+
+      return acc;
+    }, 5);
+  };
 }
 
 angular.module('app').component('hdpoolControl', {

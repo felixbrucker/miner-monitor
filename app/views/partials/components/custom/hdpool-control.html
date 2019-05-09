@@ -19,15 +19,15 @@
         </thead>
         <tbody>
         <tr ng-repeat="(id, account) in $ctrl.dashboard.data track by $index">
-            <td class='ellipsis'>
-                <span ng-click="$ctrl.toggleVisible(id)">{{account.stats.onlineCapacityString}}</span>
-                <div ng-if="account.stats.miners !== [] && $ctrl.isVisible(id)" style="font-size:small; margin-left: 4px; margin-top: -16px">
-                    <span ng-repeat="(key, miner) in account.stats.miners track by $index">
-                      <br/>
-                      <span class="dot" ng-class="{negative: !miner.online, intermediary: !miner.submitting, positive: miner.online}"></span>
-                      {{miner.name}}: {{miner.capacityString}}
-                    </span>
-                </div>
+            <td>
+              <span class="dot" ng-class="{
+              'waiting-for-login': $ctrl.getState(account.stats, account.state) === 0,
+              'logging-in': $ctrl.getState(account.stats, account.state) === 1,
+              negative: $ctrl.getState(account.stats, account.state) === 3,
+              intermediary: $ctrl.getState(account.stats, account.state) === 4,
+              positive: $ctrl.getState(account.stats, account.state) === 5
+              }"></span>
+              <span>{{account.stats.onlineCapacityString || 'N/A'}}</span>
             </td>
             <td class='ellipsis'>
                 <span data-toggle="tooltip" title="{{((account.stats.expectedProfitFiat || 0) | customnumber: 2) || 'unknown'}} € | round ends in about {{$ctrl.timeTillRoundFinished(account.stats.currentRoundEndDate)}}" data-placement="bottom">
@@ -35,8 +35,8 @@
                 </span>
             </td>
             <td class='ellipsis'>
-                  <span data-toggle="tooltip" title="{{(account.stats.balanceFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
-                      {{account.stats.balance.toFixed(6)}} BHD
+                  <span data-toggle="tooltip" title="{{((account.stats.balanceFiat || 0) | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                      {{(account.stats.balance || 0).toFixed(6)}} BHD
                       <span ng-if="account.stats.expectedProfitLastRound" style="font-size: small" data-toggle="tooltip" title="{{((account.stats.expectedProfitLastRoundFiat || 0) | customnumber: 2) || 'unknown'}} € | balance updates in {{$ctrl.timeTillRoundFinished(account.stats.nextBalanceUpdateDate)}}" data-placement="bottom">
                         <br>
                         + {{account.stats.expectedProfitLastRound.toFixed(6)}} BHD
@@ -44,8 +44,8 @@
                   </span>
             </td>
             <td class='ellipsis'>
-                <span data-toggle="tooltip" title="{{(account.stats.incomeLastDayFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
-                    {{account.stats.incomeLastDay.toFixed(6)}} BHD
+                <span data-toggle="tooltip" title="{{((account.stats.incomeLastDayFiat || 0) | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                    {{(account.stats.incomeLastDay || 0).toFixed(6)}} BHD
                 </span>
             </td>
         </tr>
