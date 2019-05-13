@@ -17,7 +17,7 @@ module.exports = class BHDWallet extends GenericWallet {
       method: 'getpledge',
       params: [],
     });
-    result.pledgeAmount = pledgeData.pledge;
+    result.pledgeAmount = pledgeData.pledge || pledgeData.miningRequireBalance;
     result.pledgeCapacity = pledgeData.capacity;
 
     return result;
