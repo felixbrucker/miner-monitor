@@ -16,7 +16,7 @@
     "express": "^4.16.4",
     "grpc": "^1.20.1",
     "hdpool-api": "^1.4.0",
-    "hpool-api": "^0.0.1",
+    "hpool-api": "^0.0.2",
     "moment": "^2.24.0",
     "net": "^1.0.2",
     "nodemailer": "^5.1.1",

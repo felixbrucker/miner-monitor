@@ -24,7 +24,7 @@ module.exports = class HPool extends Dashboard {
   }
 
   async onInit() {
-    this.client = new HpoolApi(this.dashboard.api_key, this.dashboard.user_id);
+    this.client = new HpoolApi(this.dashboard.api_key, this.dashboard.user_id, this.dashboard.address);
 
     super.onInit();
   }

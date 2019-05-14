@@ -98,7 +98,7 @@
       const types = [];
       switch (column) {
         case 'address':
-          types.push('nicehash', 'bitcoinBalance', 'cryptoidBalance', 'counterpartyBalance', 'ethBalance', 'burstBalance', 'node-cryptonote-pool', 'snipa-nodejs-pool', 'yiimp', 'hdpool');
+          types.push('nicehash', 'bitcoinBalance', 'cryptoidBalance', 'counterpartyBalance', 'ethBalance', 'burstBalance', 'node-cryptonote-pool', 'snipa-nodejs-pool', 'yiimp', 'hdpool', 'hpool');
           break;
         case 'ticker':
           types.push('cryptoidBalance', 'snipa-nodejs-pool', 'generic-wallet');
