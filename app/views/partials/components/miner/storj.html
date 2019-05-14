@@ -32,10 +32,14 @@
             </span>
           </td>
           <td>
-            {{$ctrl.entry.stats.stats.used_space | bytes:2}} ({{(($ctrl.entry.stats.stats.used_space / $ctrl.entry.stats.stats.available_space) * 100).toFixed(0)}}%)
+            <span data-toggle="tooltip" title="{{(($ctrl.entry.stats.stats.used_space / $ctrl.entry.stats.stats.available_space) * 100).toFixed(0)}}%" data-placement="bottom">
+              {{$ctrl.entry.stats.stats.used_space | bytes:2}}
+            </span>
           </td>
           <td>
-            {{$ctrl.entry.stats.stats.used_bandwidth | bytes:2}} ({{(($ctrl.entry.stats.stats.used_bandwidth / $ctrl.entry.stats.stats.available_bandwidth) * 100).toFixed(0)}}%)
+            <span data-toggle="tooltip" title="{{(($ctrl.entry.stats.stats.used_bandwidth / $ctrl.entry.stats.stats.available_bandwidth) * 100).toFixed(0)}}%" data-placement="bottom">
+              {{$ctrl.entry.stats.stats.used_bandwidth | bytes:2}}
+            </span>
           </td>
           <td>
             {{$ctrl.entry.stats.stats.used_ingress | bytes:2}} ({{$ctrl.entry.ingressSpeed | bytes:1}}/s)
