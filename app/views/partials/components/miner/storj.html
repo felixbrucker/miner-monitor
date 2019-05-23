@@ -32,12 +32,12 @@
             </span>
           </td>
           <td>
-            <span data-toggle="tooltip" title="{{(($ctrl.entry.stats.stats.used_space / $ctrl.entry.stats.stats.available_space) * 100).toFixed(0)}}%" data-placement="bottom">
+            <span data-toggle="tooltip" title="{{(($ctrl.entry.stats.stats.used_space / $ctrl.entry.stats.stats.total_space) * 100).toFixed(0)}}%" data-placement="bottom">
               {{$ctrl.entry.stats.stats.used_space | bytes:2}}
             </span>
           </td>
           <td>
-            <span data-toggle="tooltip" title="{{(($ctrl.entry.stats.stats.used_bandwidth / $ctrl.entry.stats.stats.available_bandwidth) * 100).toFixed(0)}}%" data-placement="bottom">
+            <span data-toggle="tooltip" title="{{(($ctrl.entry.stats.stats.used_bandwidth / $ctrl.entry.stats.stats.total_bandwidth) * 100).toFixed(0)}}%" data-placement="bottom">
               {{$ctrl.entry.stats.stats.used_bandwidth | bytes:2}}
             </span>
           </td>

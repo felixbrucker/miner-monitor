@@ -26,6 +26,8 @@ module.exports = class Storj extends Miner {
       stats.stats.used_egress = parseInt(stats.stats.used_egress, 10);
       stats.stats.used_ingress = parseInt(stats.stats.used_ingress, 10);
       stats.stats.used_space = parseInt(stats.stats.used_space, 10);
+      stats.stats.total_space = stats.stats.used_space + stats.stats.available_space;
+      stats.stats.total_bandwidth = stats.stats.used_bandwidth + stats.stats.available_bandwidth;
       stats.uptime = parseInt(stats.uptime.seconds, 10);
 
       this.stats = stats;
