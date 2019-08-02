@@ -22,7 +22,7 @@ function WalletController() {
   };
 
   ctrl.isPledgeSufficient = (data) => {
-    return data.balance >= data.pledgeAmount;
+    return (data.balance + (data.pledge || 0)) >= data.pledgeAmount;
   };
 
   ctrl.isEmpty = (obj) => {

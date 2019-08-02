@@ -44,6 +44,9 @@ const config = module.exports = {
       'generic-wallet',
       'bitbean-wallet',
       'bhd-wallet',
+      'disc-wallet',
+      'burst-wallet',
+      'boom-wallet',
       'wallet-agent',
       'coinbase',
       'yiimp'

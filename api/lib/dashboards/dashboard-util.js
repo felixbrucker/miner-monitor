@@ -19,6 +19,9 @@ const CoinbaseBalance = require('./balances/coinbase-balance');
 const GenericWallet = require('./wallets/generic-wallet');
 const BitbeanWallet = require('./wallets/bitbean-wallet');
 const BHDWallet = require('./wallets/bhd-wallet');
+const DiscWallet = require('./wallets/disc-wallet');
+const BurstWallet = require('./wallets/burst-wallet');
+const BoomWallet = require('./wallets/boom-wallet');
 const WalletAgent = require('./wallets/wallet-agent');
 
 function getClassForDashboardType(type) {
@@ -63,6 +66,12 @@ function getClassForDashboardType(type) {
       return BitbeanWallet;
     case 'bhd-wallet':
       return BHDWallet;
+    case 'disc-wallet':
+      return DiscWallet;
+    case 'burst-wallet':
+      return BurstWallet;
+    case 'boom-wallet':
+      return BoomWallet;
     case 'coinbase':
       return CoinbaseBalance;
     case 'wallet-agent':

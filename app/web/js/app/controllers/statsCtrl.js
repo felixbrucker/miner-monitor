@@ -166,7 +166,7 @@
       vm.dashboards.mpos = getDashboardArrForTypes(['genericMPOS']);
       vm.dashboards.mph = getDashboardArrForTypes(['miningpoolhub']);
       vm.dashboards.nodeCryptonotePools = getDashboardArrForTypes(['node-cryptonote-pool', 'snipa-nodejs-pool']);
-      vm.dashboards.wallets = getDashboardArrForTypes(['generic-wallet', 'bitbean-wallet', 'bhd-wallet']);
+      vm.dashboards.wallets = getDashboardArrForTypes(['generic-wallet', 'bitbean-wallet', 'bhd-wallet', 'disc-wallet', 'burst-wallet', 'boom-wallet']);
       var walletAgents = getDashboardArrForTypes(['wallet-agent']);
       walletAgents.map(walletAgent => {
         vm.dashboards.wallets = vm.dashboards.wallets.concat(walletAgent.data);

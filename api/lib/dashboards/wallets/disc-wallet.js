@@ -1,25 +1,16 @@
-const util = require('../../util');
 const GenericWallet = require('./generic-wallet');
 const coinGecko = require('../../rates/coingecko');
 
-module.exports = class BHDWallet extends GenericWallet {
+module.exports = class DiscWallet extends GenericWallet {
 
   constructor(options = {}) {
-    options.dashboard.ticker = 'BHD';
+    options.dashboard.ticker = 'DISC';
     super(options);
   }
 
   async getDataForNewWallet() {
     const result = await super.getDataForNewWallet();
-    const { result: pledgeData } = await util.postUrl(this.dashboard.baseUrl, {
-      jsonrpc: '2.0',
-      id: 0,
-      method: 'getpledge',
-      params: [],
-    });
-    result.pledgeAmount = pledgeData.pledge || pledgeData.miningRequireBalance;
-    result.pledge = pledgeData.borrowBalance;
-    result.pledgeCapacity = pledgeData.capacity;
+    result.syncProgress = 1;
 
     return result;
   }
@@ -30,7 +21,7 @@ module.exports = class BHDWallet extends GenericWallet {
       const result = await getDataForWallet();
 
       const rates = coinGecko.getRates(this.dashboard.ticker);
-      const rate = rates.find(rate => rate.id === 'bitcoin-hd');
+      const rate = rates.length > 0 ? rates[0] : null;
       if (rate) {
         result.balanceFiat = parseFloat(rate.current_price) * result.balance;
         result.totalFiat = parseFloat(rate.current_price) * result.total;
@@ -40,7 +31,7 @@ module.exports = class BHDWallet extends GenericWallet {
       }
       this.stats = result;
     } catch(err) {
-      console.error(`[${this.dashboard.name} :: BHD-Wallet-API] => ${err.message}`);
+      console.error(`[${this.dashboard.name} :: Disc-Wallet-API] => ${err.message}`);
       this.stats = null;
     }
   }
