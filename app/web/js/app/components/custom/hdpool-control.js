@@ -49,18 +49,18 @@ function HDPoolControlController() {
     }
 
     return stats.miners.reduce((acc, miner) => {
-      if (!miner.online && acc >= 3) {
-        return 3;
+      if (miner.online) {
+        return 5;
       }
-      if (!miner.submitting && acc >= 4) {
+      if (!miner.submitting && acc < 5) {
         return 4;
       }
-      if (miner.online && acc === 5) {
-        return 5;
+      if (!miner.online && acc < 4) {
+        return 3;
       }
 
       return acc;
-    }, 5);
+    }, 3);
   };
 }
 
