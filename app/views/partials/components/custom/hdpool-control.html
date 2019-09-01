@@ -27,7 +27,7 @@
               intermediary: $ctrl.getState(account.stats, account.state) === 4,
               positive: $ctrl.getState(account.stats, account.state) === 5
               }"></span>
-              <span>{{account.stats.onlineCapacityString || 'N/A'}}</span>
+              <span>{{account.stats.onlineCapacityString || 'N/A'}}<span ng-if="account.stats.realCapacity"> ({{((account.stats.onlineCapacity / account.stats.realCapacity) * 100).toFixed(2)}}%)</span></span>
               <div ng-if="account.stats.miners" style="font-size:small; margin-left: 4px; margin-top: -16px">
                 <span ng-repeat="miner in account.stats.miners">
                   <br/>
