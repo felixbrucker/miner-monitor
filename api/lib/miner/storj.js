@@ -17,7 +17,7 @@ module.exports = class Storj extends Miner {
   async updateStats() {
     try {
       const { data: stats } = await this.client.get('/');
-      await Promise.all(stats.satellites.map(async satellite => {
+      for (let satellite of stats.satellites) {
         const { data: perSatelliteStats } = await this.client.get(`/satellite/${satellite.id}`);
         satellite.stats = {
           storageSummary: perSatelliteStats.storageSummary,
@@ -31,7 +31,7 @@ module.exports = class Storj extends Miner {
         if (perSatelliteStats.audit.totalCount === 0) {
           satellite.stats.vettingProgress = 1;
         }
-      }));
+      }
       const { data: satelliteStats } = await this.client.get('/satellites');
       stats.egressSummary = satelliteStats.egressSummary;
       stats.ingressSummary = satelliteStats.ingressSummary;
