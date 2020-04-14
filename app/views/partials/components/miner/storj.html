@@ -19,33 +19,40 @@
       <tbody>
         <tr>
           <td>
-            <span data-toggle="tooltip" title="Uptime: {{$ctrl.entry.stats.uptime | secondsToTimeString}}" data-placement="bottom">
-              <span ng-if="$ctrl.getStatus($ctrl.entry.stats.lastContacted) === 0">
-                <i class="fa fa-stop-circle-o" aria-hidden="true" style="color:red"></i>
+            <span data-toggle="tooltip" title="Uptime: {{$ctrl.entry.stats.uptime | secondsToTimeString}}{{$ctrl.getMessages().length > 0 ? '\n\n' + $ctrl.getMessages().join('\n') : ''}}" data-placement="bottom">
+              <span ng-if="$ctrl.getStatus() === 0">
+                <i class="far fa-stop-circle" aria-hidden="true" style="color:red"></i>
               </span>
-              <span ng-if="$ctrl.getStatus($ctrl.entry.stats.lastContacted) === 1">
+              <span ng-if="$ctrl.getStatus() === 1">
                 <i class="fa fa-exclamation-circle" aria-hidden="true" style="color:orange"></i>
               </span>
-              <span ng-if="$ctrl.getStatus($ctrl.entry.stats.lastContacted) === 2">
-                <i class="fa fa-check-circle-o" aria-hidden="true" style="color:green"></i>
+              <span ng-if="$ctrl.getStatus() === 2">
+                <i class="fa fa-exclamation-circle" aria-hidden="true" style="color:red"></i>
+              </span>
+              <span ng-if="$ctrl.getStatus() === 3">
+                <i class="far fa-check-circle" aria-hidden="true" style="color:#36D7B7"></i>
+              </span>
+              <span ng-if="$ctrl.getStatus() === 4">
+                <i class="far fa-check-circle" aria-hidden="true" style="color:green"></i>
               </span>
             </span>
+            <span ng-if="!$ctrl.entry.stats.upToDate" data-toggle="tooltip" title="Update available" data-placement="bottom">
+                <i class="fa fa-cloud-download-alt" aria-hidden="true" style="color:#BF55EC"></i>
+              </span>
           </td>
           <td>
-            <span data-toggle="tooltip" title="{{(($ctrl.entry.stats.stats.used_space / $ctrl.entry.stats.stats.total_space) * 100).toFixed(0)}}%" data-placement="bottom">
-              {{$ctrl.entry.stats.stats.used_space | bytes:2}}
+            <span data-toggle="tooltip" title="{{(($ctrl.entry.stats.diskSpace.used / $ctrl.entry.stats.diskSpace.available) * 100).toFixed(0)}}%" data-placement="bottom">
+              {{$ctrl.entry.stats.diskSpace.used | bytes:2}}
             </span>
           </td>
           <td>
-            <span data-toggle="tooltip" title="{{(($ctrl.entry.stats.stats.used_bandwidth / $ctrl.entry.stats.stats.total_bandwidth) * 100).toFixed(0)}}%" data-placement="bottom">
-              {{$ctrl.entry.stats.stats.used_bandwidth | bytes:2}}
-            </span>
+            {{$ctrl.entry.stats.bandwidth.used | bytes:2}}
           </td>
           <td>
-            {{$ctrl.entry.stats.stats.used_ingress | bytes:2}} ({{$ctrl.entry.ingressSpeed | bytes:1}}/s)
+            {{$ctrl.entry.stats.ingressSummary | bytes:2}} ({{$ctrl.entry.ingressSpeed | bytes:1}}/s)
           </td>
           <td>
-            {{$ctrl.entry.stats.stats.used_egress | bytes:2}} ({{$ctrl.entry.egressSpeed | bytes:1}}/s)
+            {{$ctrl.entry.stats.egressSummary | bytes:2}} ({{$ctrl.entry.egressSpeed | bytes:1}}/s)
           </td>
         </tr>
       </tbody>

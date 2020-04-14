@@ -20,7 +20,7 @@
         !$ctrl.isEmpty(dashboard.data) &&
         $ctrl.isSynced(dashboard.data)" >
             <span data-toggle="tooltip" title="online & synced"><i
-                    class="fa fa-check-circle-o" aria-hidden="true" style="color:green"></i>
+                    class="far fa-check-circle" aria-hidden="true" style="color:green"></i>
             </span>
         </td>
         <td style="min-width: 43px;" ng-if="(dashboard.type === 'generic-wallet' || dashboard.type === 'cryptonight-wallet' || dashboard.type === 'disc-wallet' || dashboard.type === 'burst-wallet') &&
@@ -45,7 +45,7 @@
         </td>
         <td ng-if="(dashboard.type === 'generic-wallet' || dashboard.type === 'cryptonight-wallet' || dashboard.type === 'disc-wallet' || dashboard.type === 'burst-wallet') && (!dashboard.data || $ctrl.isEmpty(dashboard.data))">
             <span data-toggle="tooltip" title="offline"><i
-                    class="fa fa-stop-circle-o" aria-hidden="true" style="color:red"></i>
+                    class="far fa-stop-circle" aria-hidden="true" style="color:red"></i>
             </span>
         </td>
 
@@ -56,7 +56,7 @@
           $ctrl.isSynced(dashboard.data) &&
           $ctrl.isPledgeSufficient(dashboard.data)" >
               <span data-toggle="tooltip" title="online, synced & sufficient pledge"><i
-                class="fa fa-check-circle-o" aria-hidden="true" style="color:green"></i>
+                class="far fa-check-circle" aria-hidden="true" style="color:green"></i>
               </span>
         </td>
         <td ng-if="(dashboard.type === 'bhd-wallet' || dashboard.type === 'boom-wallet') &&
@@ -91,14 +91,14 @@ required pledge: {{dashboard.data.pledgeAmount.toFixed(0)}} {{dashboard.ticker}}
         </td>
         <td ng-if="dashboard.type === 'bhd-wallet' && (!dashboard.data || $ctrl.isEmpty(dashboard.data))">
               <span data-toggle="tooltip" title="offline"><i
-                class="fa fa-stop-circle-o" aria-hidden="true" style="color:red"></i>
+                class="far fa-stop-circle" aria-hidden="true" style="color:red"></i>
               </span>
         </td>
 
         <!-- bitbean wallet -->
         <td ng-if="dashboard.type === 'bitbean-wallet' && dashboard.data && !$ctrl.isEmpty(dashboard.data) && dashboard.data.sprouting && $ctrl.isSynced(dashboard.data)" >
             <span data-toggle="tooltip" title="online, synced & sprouting, interval: {{dashboard.data.sproutingInterval}}"><i
-                    class="fa fa-check-circle-o" aria-hidden="true" style="color:green"></i>
+                    class="far fa-check-circle" aria-hidden="true" style="color:green"></i>
             </span>
         </td>
         <td style="min-width: 43px;" ng-if="dashboard.type === 'bitbean-wallet' &&
@@ -125,12 +125,12 @@ required pledge: {{dashboard.data.pledgeAmount.toFixed(0)}} {{dashboard.ticker}}
         </td>
         <td ng-if="dashboard.type === 'bitbean-wallet' && dashboard.data && !$ctrl.isEmpty(dashboard.data) && !dashboard.data.sprouting">
             <span data-toggle="tooltip" title="online but not sprouting"><i
-                    class="fa fa-stop-circle-o" aria-hidden="true" style="color:red"></i>
+                    class="far fa-stop-circle" aria-hidden="true" style="color:red"></i>
             </span>
         </td>
         <td ng-if="dashboard.type === 'bitbean-wallet' && (!dashboard.data || $ctrl.isEmpty(dashboard.data))">
             <span data-toggle="tooltip" title="offline"><i
-                    class="fa fa-stop-circle-o" aria-hidden="true" style="color:red"></i>
+                    class="far fa-stop-circle" aria-hidden="true" style="color:red"></i>
             </span>
         </td>
 
