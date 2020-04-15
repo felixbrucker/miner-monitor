@@ -37,7 +37,7 @@
           <td ng-if="!(configVm.getDashboardTypes('hashrateModifier') | contains: entry.type)"><input type="number" step="0.0001" name="hrModifier-{{entry.name}}" ng-model="entry.hrModifier" placeholder="" disabled></td>
           <td>
             <button type="button" class="btn btn-warning" ng-click="configVm.delDashboard(entry.id)">
-              <i class="fa fa-trash-o" aria-hidden="true"></i>
+              <i class="fa fa-trash" aria-hidden="true"></i>
               Remove
             </button>
           </td>
@@ -73,9 +73,9 @@
 
 <div class="row" style="margin-bottom: 10px;">
   <div class="col-md-12 centerAlign">
-    <button ng-show="!configVm.waiting" type="button" class="btn btn-primary" ng-click="configVm.setConfig()" ng-disabled="config.$invalid"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save
+    <button ng-show="!configVm.waiting" type="button" class="btn btn-primary" ng-click="configVm.setConfig()" ng-disabled="config.$invalid"><i class="fa fa-save" aria-hidden="true"></i> Save
     </button>
-    <button ng-show="configVm.waiting" type="button" class="btn btn-success" disabled><i class="fa fa-refresh" aria-hidden="true"></i> Saving..
+    <button ng-show="configVm.waiting" type="button" class="btn btn-success" disabled><i class="fa fa-sync" aria-hidden="true"></i> Saving..
     </button>
     <i ng-show="configVm.waiting" class="fa fa-cog fa-spin fa-lg fa-fw"></i>
     <span class="sr-only">Loading...</span>

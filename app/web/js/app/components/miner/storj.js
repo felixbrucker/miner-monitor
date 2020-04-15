@@ -1,17 +1,8 @@
-function StorjController($http) {
+function StorjController() {
   var ctrl = this;
-  ctrl.hidden = false;
 
-  ctrl.toggleHidden = function() {
-    ctrl.hidden = !ctrl.hidden;
-  };
-
-  ctrl.secondsSince = function(date) {
-    return (Date.now() - date) / 1000;
-  };
-
-  ctrl.getStatus = function() {
-    const stats = ctrl.entry.stats;
+  ctrl.getStatus = function(node) {
+    const stats = node.stats;
     if (!stats.lastPinged) {
       return 0;
     }
@@ -32,8 +23,8 @@ function StorjController($http) {
     return 4;
   };
 
-  ctrl.getMessages = () => {
-    const stats = ctrl.entry.stats;
+  ctrl.getMessages = (node) => {
+    const stats = node.stats;
 
     const allMessages = stats.satellites.map(satellite => {
       const messages = [];
@@ -55,13 +46,32 @@ function StorjController($http) {
 
     return allMessages.reduce((acc, curr) => acc.concat(curr), []);
   };
+
+  ctrl.totalSpaceUsed = () => {
+    return ctrl.nodes.reduce((acc, node) => acc + node.stats.diskSpace.used, 0);
+  };
+  ctrl.totalBandwidthUsed = () => {
+    return ctrl.nodes.reduce((acc, node) => acc + node.stats.bandwidth.used, 0);
+  };
+  ctrl.totalIngress = () => {
+    return ctrl.nodes.reduce((acc, node) => acc + node.stats.ingressSummary, 0);
+  };
+  ctrl.totalIngressSpeed = () => {
+    return ctrl.nodes.reduce((acc, node) => acc + node.ingressSpeed, 0);
+  };
+  ctrl.totalEgress = () => {
+    return ctrl.nodes.reduce((acc, node) => acc + node.stats.egressSummary, 0);
+  };
+  ctrl.totalEgressSpeed = () => {
+    return ctrl.nodes.reduce((acc, node) => acc + node.egressSpeed, 0);
+  };
 }
 
 angular.module('app').component('storj', {
   templateUrl: 'views/partials/components/miner/storj.html',
   controller: StorjController,
   bindings: {
-    entry: '<',
+    nodes: '<',
   }
 });
 

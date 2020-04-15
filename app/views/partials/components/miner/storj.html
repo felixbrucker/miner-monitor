@@ -1,6 +1,7 @@
 <div class="row">
   <div class="col-md-12">
-    <div style="float: left;font-size:120%;">{{$ctrl.entry.name}}
+    <div style="float: left;font-size:120%;">
+      Storj Nodes
     </div>
   </div>
 </div>
@@ -9,52 +10,68 @@
     <table class="table table-bordered table-condensed">
       <thead>
       <tr>
-        <th><span data-toggle="tooltip" title="Status" data-placement="bottom">S</span></th>
-        <th><span data-toggle="tooltip" title="Space (% used)" data-placement="bottom">Space</span></th>
-        <th><span data-toggle="tooltip" title="Bandwidth (% used)" data-placement="bottom">Bandwidth</span></th>
+        <th><span data-toggle="tooltip" title="Status" data-placement="bottom">Status</span></th>
+        <th>Space used</th>
+        <th>Bandwidth</th>
         <th><span data-toggle="tooltip" title="Ingress (speed)" data-placement="bottom">Ingress</span></th>
         <th><span data-toggle="tooltip" title="Egress (speed)" data-placement="bottom">Egress</span></th>
       </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr ng-repeat="node in $ctrl.nodes track by $index">
           <td>
-            <span data-toggle="tooltip" title="Uptime: {{$ctrl.entry.stats.uptime | secondsToTimeString}}{{$ctrl.getMessages().length > 0 ? '\n\n' + $ctrl.getMessages().join('\n') : ''}}" data-placement="bottom">
-              <span ng-if="$ctrl.getStatus() === 0">
+            <span data-toggle="tooltip" title="Uptime: {{node.stats.uptime | secondsToTimeString}}{{$ctrl.getMessages(node).length > 0 ? '\n\n' + $ctrl.getMessages(node).join('\n') : ''}}" data-placement="bottom">
+              <span ng-if="$ctrl.getStatus(node) === 0">
                 <i class="far fa-stop-circle" aria-hidden="true" style="color:red"></i>
               </span>
-              <span ng-if="$ctrl.getStatus() === 1">
+              <span ng-if="$ctrl.getStatus(node) === 1">
                 <i class="fa fa-exclamation-circle" aria-hidden="true" style="color:orange"></i>
               </span>
-              <span ng-if="$ctrl.getStatus() === 2">
+              <span ng-if="$ctrl.getStatus(node) === 2">
                 <i class="fa fa-exclamation-circle" aria-hidden="true" style="color:red"></i>
               </span>
-              <span ng-if="$ctrl.getStatus() === 3">
+              <span ng-if="$ctrl.getStatus(node) === 3">
                 <i class="far fa-check-circle" aria-hidden="true" style="color:#36D7B7"></i>
               </span>
-              <span ng-if="$ctrl.getStatus() === 4">
+              <span ng-if="$ctrl.getStatus(node) === 4">
                 <i class="far fa-check-circle" aria-hidden="true" style="color:green"></i>
               </span>
+              <a href="{{node.hostname}}" target="_blank">{{node.name}}</a>
             </span>
-            <span ng-if="!$ctrl.entry.stats.upToDate" data-toggle="tooltip" title="Update available" data-placement="bottom">
-                <i class="fa fa-cloud-download-alt" aria-hidden="true" style="color:#BF55EC"></i>
-              </span>
-          </td>
-          <td>
-            <span data-toggle="tooltip" title="{{(($ctrl.entry.stats.diskSpace.used / $ctrl.entry.stats.diskSpace.available) * 100).toFixed(0)}}%" data-placement="bottom">
-              {{$ctrl.entry.stats.diskSpace.used | bytes:2}}
+            <span ng-if="!node.stats.upToDate" data-toggle="tooltip" title="Update available" data-placement="bottom">
+              <i class="fa fa-cloud-download-alt" aria-hidden="true" style="color:#BF55EC"></i>
             </span>
           </td>
           <td>
-            {{$ctrl.entry.stats.bandwidth.used | bytes:2}}
+            {{node.stats.diskSpace.used | bytes:2}} ({{((node.stats.diskSpace.used / node.stats.diskSpace.available) * 100).toFixed(0)}}%)
           </td>
           <td>
-            {{$ctrl.entry.stats.ingressSummary | bytes:2}} ({{$ctrl.entry.ingressSpeed | bytes:1}}/s)
+            {{node.stats.bandwidth.used | bytes:2}}
           </td>
           <td>
-            {{$ctrl.entry.stats.egressSummary | bytes:2}} ({{$ctrl.entry.egressSpeed | bytes:1}}/s)
+            {{node.stats.ingressSummary | bytes:2}} ({{node.ingressSpeed | bytes:1}}/s)
+          </td>
+          <td>
+            {{node.stats.egressSummary | bytes:2}} ({{node.egressSpeed | bytes:1}}/s)
           </td>
         </tr>
+      <tr>
+        <td>
+          <strong>Total</strong>
+        </td>
+        <td>
+          <strong>{{$ctrl.totalSpaceUsed() | bytes:2}}</strong>
+        </td>
+        <td>
+          <strong>{{$ctrl.totalBandwidthUsed() | bytes:2}}</strong>
+        </td>
+        <td>
+          <strong>{{$ctrl.totalIngress() | bytes:2}} ({{$ctrl.totalIngressSpeed() | bytes:1}}/s)</strong>
+        </td>
+        <td>
+          <strong>{{$ctrl.totalEgress() | bytes:2}} ({{$ctrl.totalEgressSpeed() | bytes:1}}/s)</strong>
+        </td>
+      </tr>
       </tbody>
     </table>
   </div>

@@ -48,6 +48,7 @@
     vm.creepMiner = [];
     vm.enabled={};
     vm.hidden={};
+    vm.storjNodes = [];
 
 
     // controller API
@@ -187,6 +188,7 @@
         const stats = curr.stats.reduce((upstreamStats , proxy) => upstreamStats.concat(proxy.upstreamStats), []);
         return acc.concat(...stats);
       }, []);
+      vm.storjNodes = getDeviceArrForTypes(['storj']);
     }
 
     /**
