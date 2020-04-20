@@ -27,7 +27,7 @@
             positive: pool.data.miner.online === 1,
             investor: pool.data.miner.online === 3
             }"></span>
-            <span>{{pool.data.coin}}</span>
+            <a href="https://{{pool.data.coin.toLowerCase()}}.foxypool.cf" target="_blank">{{pool.data.coin}}</a>
           </td>
           <td>
             {{pool.data.miner.pending.toFixed(8)}} {{pool.data.coin}}
