@@ -27,10 +27,10 @@ function FoxyPoolController() {
 
   ctrl.getFormattedCapacity = (capacityInGiB, precision = 2)  => {
     if (isNaN(parseFloat(capacityInGiB)) || !isFinite(capacityInGiB)) {
-      return '-';
+      return 'N/A';
     }
     if (capacityInGiB === 0) {
-      return '0 B';
+      return 'N/A';
     }
     const units = ['GiB', 'TiB', 'PiB', 'EiB'];
     let capacity = capacityInGiB;
