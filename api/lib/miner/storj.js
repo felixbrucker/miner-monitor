@@ -25,8 +25,9 @@ module.exports = class Storj extends Miner {
           egressSummary: perSatelliteStats.egressSummary,
           ingressSummary: perSatelliteStats.ingressSummary,
           vettingProgress: perSatelliteStats.audit.successCount < 100 ? perSatelliteStats.audit.successCount / 100 : 1,
-          auditScore: perSatelliteStats.audit.totalCount ? perSatelliteStats.audit.successCount / perSatelliteStats.audit.totalCount : 1,
-          uptimeScore: perSatelliteStats.uptime.totalCount ? perSatelliteStats.uptime.successCount / perSatelliteStats.uptime.totalCount : 1,
+          auditScoreTotal: perSatelliteStats.audit.totalCount ? perSatelliteStats.audit.successCount / perSatelliteStats.audit.totalCount : 1,
+          uptimeScoreTotal: perSatelliteStats.uptime.totalCount ? perSatelliteStats.uptime.successCount / perSatelliteStats.uptime.totalCount : 1,
+          auditScore: perSatelliteStats.audit.score,
         };
         if (perSatelliteStats.audit.totalCount === 0) {
           satellite.stats.vettingProgress = 1;
