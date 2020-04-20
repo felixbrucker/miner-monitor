@@ -37,6 +37,7 @@ const config = module.exports = {
       'hdpool-control',
       'hpool',
       'miningpoolhub',
+      'foxy-pool',
       'nicehash',
       'nicehashBalance',
       'node-cryptonote-pool',

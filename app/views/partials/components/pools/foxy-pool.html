@@ -1,0 +1,57 @@
+<div>
+    <div class="row">
+      <div class="col-md-12">
+        <div style="float: left;font-size:120%;">
+          Foxy-Pools
+        </div>
+      </div>
+    </div>
+    <table class="table table-bordered table-condensed leftAlign">
+        <thead>
+        <tr>
+            <th>Coin</th>
+            <th>Pending</th>
+            <th>Pledged</th>
+            <th>Deadlines</th>
+            <th>EC</th>
+            <th>Capacity</th>
+            <th>Last Payout</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="(id, pool) in $ctrl.pools track by $index">
+          <td>
+            <span class="dot" ng-class="{
+            negative: pool.data.miner.online === 0,
+            intermediary: pool.data.miner.online === 2,
+            positive: pool.data.miner.online === 1,
+            investor: pool.data.miner.online === 3
+            }"></span>
+            <span>{{pool.data.coin}}</span>
+          </td>
+          <td>
+            {{pool.data.miner.pending.toFixed(8)}} {{pool.data.coin}}
+          </td>
+          <td>
+            {{pool.data.miner.pledge ? pool.data.miner.pledge.toFixed(2) + ' ' + pool.data.coin : 'N/A'}}
+          </td>
+          <td>
+            {{pool.data.miner.deadlineCount ? pool.data.miner.deadlineCount : 'N/A'}}
+          </td>
+          <td>
+            {{$ctrl.getFormattedCapacity(pool.data.miner.ec)}}
+          </td>
+          <td>
+            {{$ctrl.getFormattedCapacity(pool.data.miner.reportedCapacity)}}
+          </td>
+          <td ng-if="pool.data.lastPayout">
+            {{pool.data.lastPayout.date}}
+            ({{$ctrl.getFormattedAmount(pool.data.lastPayout.amount) |customnumber:4}} {{pool.data.coin}})
+          </td>
+          <td ng-if="!pool.data.lastPayout">
+            N/A
+          </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

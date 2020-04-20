@@ -220,6 +220,9 @@ select {
 .negative {
   background-color: rgb(255, 77, 77);
 }
+.investor {
+  background-color: rgb(66, 134, 244);
+}
 .waiting-for-login {
   background-color: rgb(66, 176, 244);
 }

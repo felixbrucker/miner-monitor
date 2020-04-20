@@ -23,9 +23,12 @@ const DiscWallet = require('./wallets/disc-wallet');
 const BurstWallet = require('./wallets/burst-wallet');
 const BoomWallet = require('./wallets/boom-wallet');
 const WalletAgent = require('./wallets/wallet-agent');
+const FoxyPool = require('./pool/foxy-pool');
 
 function getClassForDashboardType(type) {
   switch(type) {
+    case 'foxy-pool':
+      return FoxyPool;
     case 'nicehash':
       return Nicehash;
     case 'miningpoolhub':
