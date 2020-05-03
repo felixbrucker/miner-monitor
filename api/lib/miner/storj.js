@@ -1,5 +1,7 @@
 const axios = require('axios');
 const moment = require('moment');
+const semver = require('semver');
+
 const Miner = require('./miner');
 
 module.exports = class Storj extends Miner {
@@ -11,7 +13,19 @@ module.exports = class Storj extends Miner {
     this.ingressSpeed = 0;
     this.egressSpeed = 0;
     this.updateHistoricalbandwidthInterval = setInterval(this.updateHistoricalBandwidth.bind(this), 60 * 1000);
+    this.latestVersion = null;
+    this.updateLatestVersionInterval = setInterval(this.updateLatestVersion.bind(this), 10 * 60 * 1000);
+    this.updateLatestVersion();
     super.onInit();
+  }
+
+  async updateLatestVersion() {
+    try {
+      const { data } = await axios.get('https://version.storj.io');
+      this.latestVersion = data.processes.storagenode.suggested.version;
+    } catch (err) {
+      console.error(`[${this.device.name} :: Storj] => Error updating latest version: ${err.message}`);
+    }
   }
 
   async updateStats() {
@@ -38,6 +52,11 @@ module.exports = class Storj extends Miner {
       stats.ingressSummary = satelliteStats.ingressSummary;
 
       stats.uptime = Math.floor((Date.now() - (new Date(stats.startedAt)).getTime()) / 1000);
+
+      if (this.latestVersion && semver.gt(this.latestVersion, stats.version)) {
+        stats.upToDate = false;
+        stats.latestVersion = this.latestVersion;
+      }
 
       this.stats = stats;
     } catch (err) {

@@ -38,7 +38,7 @@
               </span>
               <a href="{{node.hostname}}" target="_blank">{{node.name}}</a>
             </span>
-            <span ng-if="!node.stats.upToDate" data-toggle="tooltip" title="Update available" data-placement="bottom">
+            <span ng-if="node.stats.upToDate === false" data-toggle="tooltip" title="Update available: {{node.stats.latestVersion}}" data-placement="bottom">
               <i class="fa fa-cloud-download-alt" aria-hidden="true" style="color:#BF55EC"></i>
             </span>
           </td>
