@@ -20,7 +20,7 @@
       <tbody>
         <tr ng-repeat="node in $ctrl.nodes track by $index">
           <td>
-            <span data-toggle="tooltip" title="Uptime: {{node.stats.uptime | secondsToTimeString}}{{$ctrl.getMessages(node).length > 0 ? '\n\n' + $ctrl.getMessages(node).join('\n') : ''}}" data-placement="bottom">
+            <span data-toggle="tooltip" title="Uptime: {{((node.stats && node.stats.uptime) || -1) | secondsToTimeString}}{{$ctrl.getMessages(node).length > 0 ? '\n\n' + $ctrl.getMessages(node).join('\n') : ''}}" data-placement="bottom">
               <span ng-if="$ctrl.getStatus(node) === 0">
                 <i class="far fa-stop-circle" aria-hidden="true" style="color:red"></i>
               </span>
@@ -42,16 +42,28 @@
               <i class="fa fa-cloud-download-alt" aria-hidden="true" style="color:#BF55EC"></i>
             </span>
           </td>
-          <td>
+          <td ng-if="!node.stats">
+            N/A
+          </td>
+          <td ng-if="!node.stats">
+            N/A
+          </td>
+          <td ng-if="!node.stats">
+            N/A
+          </td>
+          <td ng-if="!node.stats">
+            N/A
+          </td>
+          <td ng-if="node.stats">
             {{node.stats.diskSpace.used | bytes:2}} ({{((node.stats.diskSpace.used / node.stats.diskSpace.available) * 100).toFixed(0)}}%)
           </td>
-          <td>
+          <td ng-if="node.stats">
             {{node.stats.bandwidth.used | bytes:2}}
           </td>
-          <td>
+          <td ng-if="node.stats">
             {{node.stats.ingressSummary | bytes:2}} ({{node.ingressSpeed | bytes:1}}/s)
           </td>
-          <td>
+          <td ng-if="node.stats">
             {{node.stats.egressSummary | bytes:2}} ({{node.egressSpeed | bytes:1}}/s)
           </td>
         </tr>

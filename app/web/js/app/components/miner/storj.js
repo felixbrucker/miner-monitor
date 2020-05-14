@@ -3,7 +3,7 @@ function StorjController() {
 
   ctrl.getStatus = function(node) {
     const stats = node.stats;
-    if (!stats.lastPinged) {
+    if (!stats || !stats.lastPinged) {
       return 0;
     }
     if (moment(stats.lastPinged).isBefore(moment().subtract(10, 'minute'))) {
@@ -26,6 +26,10 @@ function StorjController() {
 
   ctrl.getMessages = (node) => {
     const stats = node.stats;
+
+    if (!stats) {
+      return ['Your node is offline'];
+    }
 
     const allMessages = stats.satellites.map(satellite => {
       const messages = [];
@@ -54,19 +58,19 @@ function StorjController() {
   };
 
   ctrl.totalSpaceUsed = () => {
-    return ctrl.nodes.reduce((acc, node) => acc + node.stats.diskSpace.used, 0);
+    return ctrl.nodes.reduce((acc, node) => acc + ((node.stats && node.stats.diskSpace.used) || 0), 0);
   };
   ctrl.totalBandwidthUsed = () => {
-    return ctrl.nodes.reduce((acc, node) => acc + node.stats.bandwidth.used, 0);
+    return ctrl.nodes.reduce((acc, node) => acc + ((node.stats && node.stats.bandwidth.used) || 0), 0);
   };
   ctrl.totalIngress = () => {
-    return ctrl.nodes.reduce((acc, node) => acc + node.stats.ingressSummary, 0);
+    return ctrl.nodes.reduce((acc, node) => acc + ((node.stats && node.stats.ingressSummary) || 0), 0);
   };
   ctrl.totalIngressSpeed = () => {
     return ctrl.nodes.reduce((acc, node) => acc + node.ingressSpeed, 0);
   };
   ctrl.totalEgress = () => {
-    return ctrl.nodes.reduce((acc, node) => acc + node.stats.egressSummary, 0);
+    return ctrl.nodes.reduce((acc, node) => acc + ((node.stats && node.stats.egressSummary) || 0), 0);
   };
   ctrl.totalEgressSpeed = () => {
     return ctrl.nodes.reduce((acc, node) => acc + node.egressSpeed, 0);

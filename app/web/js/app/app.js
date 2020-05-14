@@ -147,6 +147,10 @@
   });
   app.filter('secondsToTimeString', function () {
     return function (seconds) {
+      if (seconds === -1) {
+        return 'N/A';
+      }
+
       return moment().subtract(seconds, 'seconds').fromNow(true);
     }
   });
