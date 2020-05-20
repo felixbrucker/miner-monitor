@@ -39,7 +39,7 @@
             {{pool.data.miner.deadlineCount ? pool.data.miner.deadlineCount : 'N/A'}}
           </td>
           <td>
-            {{$ctrl.getFormattedCapacity(pool.data.miner.ec)}}
+            {{$ctrl.getFormattedCapacity((pool.data.miner.ec || 0) * 1024)}}
           </td>
           <td>
             {{$ctrl.getFormattedCapacity(pool.data.miner.reportedCapacity)}}
