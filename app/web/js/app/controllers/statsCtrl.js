@@ -176,7 +176,7 @@
       vm.dashboards.hdpool = getDashboardArrForTypes('hdpool');
       vm.dashboards.hdpoolControl = getDashboardArrForTypes('hdpool-control');
       vm.dashboards.hpool = getDashboardArrForTypes('hpool');
-      vm.dashboards.foxyPools = getDashboardArrForTypes('foxy-pool');
+      vm.dashboards.foxyPools = getDashboardArrForTypes(['foxy-pool', 'foxy-pool-v2']);
       vm.devices = vm.current.entries
         .sort(sortByName)
         .map(group => Object.keys(group.devices)

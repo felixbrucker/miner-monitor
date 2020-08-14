@@ -98,10 +98,10 @@
       const types = [];
       switch (column) {
         case 'address':
-          types.push('nicehash', 'bitcoinBalance', 'cryptoidBalance', 'counterpartyBalance', 'ethBalance', 'burstBalance', 'node-cryptonote-pool', 'snipa-nodejs-pool', 'yiimp', 'hdpool', 'hpool', 'burst-wallet', 'boom-wallet', 'foxy-pool');
+          types.push('nicehash', 'bitcoinBalance', 'cryptoidBalance', 'counterpartyBalance', 'ethBalance', 'burstBalance', 'node-cryptonote-pool', 'snipa-nodejs-pool', 'yiimp', 'hdpool', 'hpool', 'burst-wallet', 'boom-wallet', 'foxy-pool', 'foxy-pool-v2');
           break;
         case 'ticker':
-          types.push('cryptoidBalance', 'snipa-nodejs-pool', 'generic-wallet', 'foxy-pool');
+          types.push('cryptoidBalance', 'snipa-nodejs-pool', 'generic-wallet', 'foxy-pool', 'foxy-pool-v2');
           break;
         case 'baseUrl':
           types.push('genericMPOS', 'dashboard-api', 'node-cryptonote-pool', 'snipa-nodejs-pool', 'generic-wallet', 'bitbean-wallet', 'bhd-wallet', 'disc-wallet', 'burst-wallet', 'boom-wallet', 'yiimp', 'wallet-agent', 'hdpool-control');
