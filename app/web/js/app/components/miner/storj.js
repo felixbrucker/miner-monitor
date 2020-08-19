@@ -11,9 +11,10 @@ function StorjController() {
     }
     const satellitesWithLowAuditScore = stats.satellites.filter(satellite => satellite.stats.auditScore <= 0.95 || satellite.stats.auditScoreTotal <= 0.95);
     const satellitesWithLowUptimeScore = stats.satellites.filter(satellite => satellite.stats.uptimeScoreTotal <= 0.9);
+    const satellitesWithLowSuspensionScore = stats.satellites.filter(satellite => satellite.stats.suspensionScore <= 0.9);
     const disqualifiedSatellites = stats.satellites.filter(satellite => satellite.disqualified);
     const suspendedSatellites = stats.satellites.filter(satellite => satellite.suspended);
-    if (satellitesWithLowAuditScore.length > 0 || satellitesWithLowUptimeScore.length > 0 || disqualifiedSatellites.length > 0 || suspendedSatellites.length > 0) {
+    if (satellitesWithLowAuditScore.length > 0 || satellitesWithLowUptimeScore.length > 0 || satellitesWithLowSuspensionScore.length > 0 || disqualifiedSatellites.length > 0 || suspendedSatellites.length > 0) {
       return 2;
     }
     const satellitesCurrentlyVetting = stats.satellites.filter(satellite => satellite.stats.vettingProgress < 1);
@@ -41,6 +42,9 @@ function StorjController() {
       }
       if (satellite.stats.uptimeScoreTotal <= 0.9) {
         messages.push(`${satellite.url.replace(':7777', '')} | Low uptime score: ${(satellite.stats.uptimeScoreTotal * 100).toFixed(1)}%`);
+      }
+      if (satellite.stats.suspensionScore <= 0.9) {
+        messages.push(`${satellite.url.replace(':7777', '')} | Low suspension score: ${(satellite.stats.suspensionScore * 100).toFixed(1)}%`);
       }
       if (satellite.stats.vettingProgress < 1) {
         messages.push(`${satellite.url.replace(':7777', '')} | Vetting progress: ${(satellite.stats.vettingProgress * 100).toFixed(0)}%`);
