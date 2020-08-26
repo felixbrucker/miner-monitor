@@ -21,19 +21,19 @@ class CoinGecko {
     }
     this.running = true;
     let page = 1; // what the hell coingecko? page 0 and 1 are the same
-    const limit = 100;
-    try {
-      let allRates = [];
-      let rates = [];
-      do {
-        rates = await this.doApiCall('coins/markets', {vs_currency: this.currency.toLowerCase(), per_page: limit, page});
+    const limit = 250;
+    let allRates = [];
+    let rates = [];
+    do {
+      try {
+        rates = await this.doApiCall('coins/markets', {vs_currency: this.currency.toLowerCase(), per_page: limit, page, order: 'id_asc'});
         allRates = allRates.concat(rates);
         page += 1;
-      } while (rates.length === limit);
-      this.rates = allRates;
-    } catch (err) {
-      console.error(`[CoinGecko] => ${err.message}`);
-    }
+      } catch (err) {
+        console.error(`[CoinGecko] => ${err.message}`);
+      }
+    } while (rates.length === limit);
+    this.rates = allRates;
     this.running = false;
   }
 
@@ -45,7 +45,7 @@ class CoinGecko {
   async doApiCall(endpoint, params = {}) {
     const res = await superagent.get(`${this.baseUrl}/${endpoint}`).query(params).timeout({
       response: 10 * 1000,  // Wait 10 seconds for the server to start sending,
-      deadline: 60 * 1000, // but allow 1 minute for the file to finish loading.
+      deadline: 30 * 1000, // but allow 1 minute for the file to finish loading.
     });
 
     return res.body;

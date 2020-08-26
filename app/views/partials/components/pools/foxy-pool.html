@@ -30,10 +30,14 @@
             <a href="https://{{pool.data.coin.toLowerCase()}}.foxypool.io" target="_blank">{{pool.data.coin}}</a>
           </td>
           <td>
-            {{pool.data.miner.pending.toFixed(8)}} {{pool.data.coin}}
+            <span data-toggle="tooltip" title="{{(pool.data.miner.pendingFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                {{pool.data.miner.pending.toFixed(8)}} {{pool.data.coin}}
+            </span>
           </td>
           <td>
-            {{pool.data.miner.pledge ? pool.data.miner.pledge.toFixed(2) + ' ' + pool.data.coin : 'N/A'}}
+            <span data-toggle="tooltip" title="{{(pool.data.miner.pledgeFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                 {{pool.data.miner.pledge ? pool.data.miner.pledge.toFixed(2) + ' ' + pool.data.coin : 'N/A'}}
+            </span>
           </td>
           <td>
             {{pool.data.miner.deadlineCount ? pool.data.miner.deadlineCount : 'N/A'}}
@@ -46,7 +50,9 @@
           </td>
           <td ng-if="pool.data.lastPayout">
             {{pool.data.lastPayout.date}}
-            ({{$ctrl.getFormattedAmount(pool.data.lastPayout.amount) |customnumber:4}} {{pool.data.coin}})
+            <span data-toggle="tooltip" title="{{(pool.data.lastPayout.amountFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
+                 ({{$ctrl.getFormattedAmount(pool.data.lastPayout.amount) |customnumber:4}} {{pool.data.coin}})
+            </span>
           </td>
           <td ng-if="!pool.data.lastPayout">
             N/A

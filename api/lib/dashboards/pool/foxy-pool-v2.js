@@ -1,6 +1,7 @@
 const io = require('socket.io-client');
 const moment = require('moment');
 const Dashboard = require('../dashboard');
+const coinGecko = require('../../rates/coingecko');
 
 module.exports = class FoxyPoolV2 extends Dashboard {
   constructor(options = {}) {
@@ -69,14 +70,24 @@ module.exports = class FoxyPoolV2 extends Dashboard {
     const lastPayout = poolStats.payouts.find(payout => payout.transactions.some(transaction => Object.keys(transaction.payoutAmounts).some(currentPayoutAddress => currentPayoutAddress === this.dashboard.address)));
     if (!lastPayout) {
       this.stats.lastPayout = null;
-      return;
+    } else {
+      const transaction = lastPayout.transactions.find(transaction => Object.keys(transaction.payoutAmounts).some(currentPayoutAddress => currentPayoutAddress === this.dashboard.address));
+      this.stats.lastPayout = {
+        date: moment(lastPayout.createdAt).format('YYYY-MM-DD'),
+        amount: transaction.payoutAmounts[this.dashboard.address],
+      };
     }
 
-    const transaction = lastPayout.transactions.find(transaction => Object.keys(transaction.payoutAmounts).some(currentPayoutAddress => currentPayoutAddress === this.dashboard.address));
-    this.stats.lastPayout = {
-      date: moment(lastPayout.createdAt).format('YYYY-MM-DD'),
-      amount: transaction.payoutAmounts[this.dashboard.address],
-    };
+    const rates = coinGecko.getRates(this.dashboard.ticker);
+    const rate = rates.length > 0 ? rates[0] : null;
+    if (!rate) {
+      return;
+    }
+    this.stats.miner.pendingFiat = parseFloat(rate.current_price) * this.stats.miner.pending;
+    this.stats.miner.pledgeFiat = parseFloat(rate.current_price) * this.stats.miner.pledge;
+    if (this.stats.lastPayout) {
+      this.stats.lastPayout.amountFiat = parseFloat(rate.current_price) * parseFloat(this.stats.lastPayout.amount);
+    }
   }
 
   onNewRoundStats(roundStats) {
