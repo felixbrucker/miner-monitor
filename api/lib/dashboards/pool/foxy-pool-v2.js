@@ -11,7 +11,14 @@ module.exports = class FoxyPoolV2 extends Dashboard {
 
   getCoin(poolIdentifier) {
     switch (poolIdentifier) {
+      case 'burst-testnet':
       case 'burst': return 'BURST';
+      case 'bhd':
+      case 'bhd-testnet':
+      case 'bhd-eco': return 'BHD';
+      case 'lhd': return 'LHD';
+      case 'xhd': return 'XHD';
+      case 'hdd': return 'HDD';
     }
   }
 
