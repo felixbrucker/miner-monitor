@@ -76,7 +76,7 @@
       <storj nodes="statsVm.storjNodes"></storj>
     </div>
 
-    <div class="masonry-brick col-sm-12 col-md-12 col-lg-8 col-xl-6 col-xxl-8" ng-if="statsVm.isDashboardTypeEnabled('foxy-pool')">
+    <div class="masonry-brick col-sm-12 col-md-12 col-lg-8 col-xl-6 col-xxl-8" ng-if="statsVm.isDashboardTypeEnabled('foxy-pool') || statsVm.isDashboardTypeEnabled('foxy-pool-v2')">
       <foxy-pool pools="statsVm.dashboards.foxyPools"></foxy-pool>
     </div>
 
