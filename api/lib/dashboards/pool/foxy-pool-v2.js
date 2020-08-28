@@ -23,7 +23,7 @@ module.exports = class FoxyPoolV2 extends Dashboard {
   }
 
   async onInit() {
-    const url = 'https://api-v2.foxypool.io:2096/web-ui';
+    const url = 'https://api.foxypool.io/web-ui';
     this.client = io(url, {
       rejectUnauthorized : false,
       transports: ['websocket'],
