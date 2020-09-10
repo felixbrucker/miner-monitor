@@ -3,7 +3,7 @@
   "version": "0.0.2",
   "dependencies": {
     "@grpc/proto-loader": "^0.5.0",
-    "axios": "^0.18.0",
+    "axios": "^0.20.0",
     "bitmart-api": "^1.0.0",
     "body-parser": "^1.18.3",
     "bytes": "^3.1.0",
@@ -25,7 +25,8 @@
     "reconnecting-websocket": "^4.1.10",
     "socket.io-client": "^2.2.0",
     "superagent": "^4.1.0",
-    "ws": "^6.2.0"
+    "ws": "^6.2.0",
+    "uuid": "^8.3.0"
   },
   "scripts": {
     "start": "node main.js"

@@ -3,48 +3,42 @@
     <table class="table table-bordered table-condensed leftAlign">
         <thead>
         <tr>
-            <th class="leftAlign">Algorithm</th>
-            <th class="leftAlign">Hashrate</th>
+            <th class="leftAlign">Mining Rig</th>
+            <th class="leftAlign">Devices</th>
             <th class="leftAlign">Profitability</th>
             <th class="leftAlign">Unpaid balance</th>
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="(id2, data) in $ctrl.dashboard.data.current track by $index">
-            <td ng-if="data.data['1']!==0"><span ng-click="$ctrl.toggleHidden(id2)">{{data.name}}</span></td>
-            <td ng-if="data.data['1']!==0 && data.data['0'].a!==undefined"
-                class='ellipsisbig'><span
-                    data-highlighter="data.data['0'].a">{{data.data['0'].a}}</span>
-                {{data.suffix}}/s
-                <span ng-if="data.worker!==undefined" style="font-size:small;">
-                    <span ng-repeat="(key, value) in data.worker track by $index" ng-hide="$ctrl.isHidden(id2)">
-                        <br/>
-                        {{value['0']}}: {{value['1'].a}}<span class="nomobile"> {{data.suffix}}/s (diff: {{value['4']}}, connected: {{value['2']}} min)</span>
-                    </span>
+        <tr ng-repeat="miningRig in $ctrl.dashboard.data.miningStats.miningRigs track by miningRig.rigId">
+            <td>{{miningRig.name}} ({{miningRig.minerStatus}})</td>
+            <td>
+              <span ng-repeat="device in miningRig.devices track by device.id">
+                {{device.name}} ({{device.status.description}})
+                <span ng-if="device.temperature !== -1">| {{device.temperature}}°C</span>
+                <span ng-if="device.load !== -1">| {{device.load}}%</span>
+                <span ng-repeat="speed in device.speeds track by speed.algorithm">
+                  <br/>
+                  <span style="padding-left: 12px">{{speed.title}}: {{speed.speed}} {{speed.displaySuffix}}/s</span>
                 </span>
+              <br/>
+              </span>
             </td>
-            <td ng-if="data.data['1']!==0 && data.data['0'].a==undefined">0.00 {{data.suffix}}/s
+            <td class='ellipsis'>
+              {{miningRig.profitability | customnumber:4}} BTC/Day
             </td>
-            <td ng-if="data.data['1']!==0 && data.data['0'].a!==undefined" class='ellipsis'><span
-                    data-highlighter="data.profitability">{{data.profitability * data.data['0'].a | customnumber:4}}</span>
-                BTC/Day
-            </td>
-            <td ng-if="data.data['1']!==0 && data.data['0'].a==undefined" class='ellipsis'>0.0000
-                BTC/Day
-            </td>
-            <td ng-if="data.data['1']!==0"><span data-highlighter="data.data['1']"
-                                                 class='ellipsis'>{{data.data['1'] | customnumber:8}}</span>
-                BTC
+            <td>
+              <span class='ellipsis'>{{miningRig.unpaidAmount | customnumber:8}}</span> BTC
             </td>
         </tr>
         </tbody>
-        <tr ng-if="$ctrl.dashboard.data.sum!==undefined && $ctrl.dashboard.data.sum!==null">
+        <tr ng-if="$ctrl.dashboard.data.miningStats!==undefined && $ctrl.dashboard.data.miningStats!==null">
             <td colspan="2" style="font-weight: bold;">Total</td>
-            <td style="font-weight: bold;">{{$ctrl.dashboard.data.sum.profitability | customnumber:4}}
-                BTC/Day<br/>{{$ctrl.dashboard.data.sum.profitabilityFiat
+            <td style="font-weight: bold;">{{$ctrl.dashboard.data.miningStats.totalProfitability | customnumber:4}}
+                BTC/Day<br/>{{($ctrl.dashboard.data.miningStats.totalProfitabilityFiat || 0)
                 | customnumber:2}} EUR/Day
             </td>
-            <td style="font-weight: bold;">{{$ctrl.dashboard.data.sum.unpaidBalance | customnumber:8}} BTC<br/>{{$ctrl.dashboard.data.sum.unpaidBalanceFiat
+            <td style="font-weight: bold;">{{$ctrl.dashboard.data.balances.pending | customnumber:8}} BTC<br/>{{($ctrl.dashboard.data.balances.pendingFiat || 0)
                 | customnumber:2}} EUR
             </td>
         </tr>
@@ -62,7 +56,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="(id, data) in $ctrl.dashboard.data.payments track by $index">
+        <tr ng-repeat="(id, data) in $ctrl.dashboard.data.miningPayouts track by $index">
             <td>{{data.time * 1000 | date: "yyyy-MM-dd HH:mm"}}</td>
             <td>{{data.amount}} BTC</td>
             <td>{{data.fee}} BTC</td>
@@ -74,9 +68,6 @@
     </table>
 </div>
 <div class="col-md-12 centerAlign">
-    <a href="https://www.nicehash.com/miner/{{$ctrl.dashboard.data.address}}" target="_blank">Nicehash
+    <a href="https://www.nicehash.com/my/mining/rigs" target="_blank">Nicehash
         {{$ctrl.parseName($ctrl.dashboard.name)}}</a>
-</div>
-<div class="col-md-12 centerAlign" style="margin-bottom: 10px;">
-    <a href="https://www.nicehash.com/" target="_blank">Nicehash Homepage</a>
 </div>

@@ -204,7 +204,8 @@
   });
   app.filter('customnumber', function ($filter) {
     return function (number, precision = 2, force = false) {
-      if (isNaN(parseFloat(number)) || !isFinite(number)) return '';
+      number = parseFloat(number);
+      if (isNaN(number) || !isFinite(number)) return '';
       if (number === 0) {
         precision = 0;
       }
