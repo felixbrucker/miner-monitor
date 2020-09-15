@@ -62,25 +62,25 @@ function StorjController() {
   };
 
   ctrl.totalSpaceUsed = () => {
-    return ctrl.nodes.reduce((acc, node) => acc + ((node.stats && node.stats.diskSpace.used) || 0), 0);
+    return ctrl.nodes.reduce((acc, node) => acc + ((node.stats && node.stats.diskSpace && node.stats.diskSpace.used) || 0), 0);
   };
   ctrl.totalBandwidthUsed = () => {
-    return ctrl.nodes.reduce((acc, node) => acc + ((node.stats && node.stats.bandwidth.used) || 0), 0);
+    return ctrl.nodes.reduce((acc, node) => acc + ((node.stats && node.stats.bandwidth && node.stats.bandwidth.used) || 0), 0);
   };
   ctrl.totalIngress = () => {
     return ctrl.nodes.reduce((acc, node) => acc + ((node.stats && node.stats.ingressSummary) || 0), 0);
   };
   ctrl.totalIngressSpeed = () => {
-    return ctrl.nodes.reduce((acc, node) => acc + node.ingressSpeed, 0);
+    return ctrl.nodes.reduce((acc, node) => acc + (node.ingressSpeed || 0), 0);
   };
   ctrl.totalEgress = () => {
     return ctrl.nodes.reduce((acc, node) => acc + ((node.stats && node.stats.egressSummary) || 0), 0);
   };
   ctrl.totalEgressSpeed = () => {
-    return ctrl.nodes.reduce((acc, node) => acc + node.egressSpeed, 0);
+    return ctrl.nodes.reduce((acc, node) => acc + (node.egressSpeed || 0), 0);
   };
-  ctrl.totalEstimatedPayout = () => {
-    return ctrl.nodes.reduce((acc, node) => acc + ((node.stats && node.stats.estimatedPayout) || 0), 0);
+  ctrl.totalEstimatedPayoutFiat = () => {
+    return ctrl.nodes.reduce((acc, node) => acc + ((node.stats && node.stats.estimatedPayoutFiat) || 0), 0);
   };
 }
 

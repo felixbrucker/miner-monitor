@@ -3,6 +3,7 @@ const moment = require('moment');
 const semver = require('semver');
 
 const Miner = require('./miner');
+const coinGecko = require('../rates/coingecko');
 
 module.exports = class Storj extends Miner {
   onInit() {
@@ -61,7 +62,11 @@ module.exports = class Storj extends Miner {
       }
 
       const { data: estimatedPayoutData } = await this.client.get('/estimated-payout');
-      stats.estimatedPayout = estimatedPayoutData.currentMonth.payout / 100;
+      stats.estimatedPayoutUsd = estimatedPayoutData.currentMonth.payout / 100;
+      const rate = coinGecko.getRates('usd')[0];
+      if (rate) {
+        stats.estimatedPayoutFiat = parseFloat(rate.current_price) * stats.estimatedPayoutUsd;
+      }
 
       this.stats = stats;
     } catch (err) {

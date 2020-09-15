@@ -15,7 +15,7 @@
         <th>Bandwidth</th>
         <th><span data-toggle="tooltip" title="Ingress (speed)" data-placement="bottom">Ingress</span></th>
         <th><span data-toggle="tooltip" title="Egress (speed)" data-placement="bottom">Egress</span></th>
-        <th>Earnings</th>
+        <th>Pending</th>
       </tr>
       </thead>
       <tbody>
@@ -71,7 +71,7 @@
             {{node.stats.egressSummary | bytes:2}} ({{node.egressSpeed | bytes:1}}/s)
           </td>
           <td ng-if="node.stats">
-            {{node.stats.estimatedPayout.toFixed(2)}} $
+            {{(node.stats.estimatedPayoutFiat || 0).toFixed(2)}} €
           </td>
         </tr>
       <tr>
@@ -91,7 +91,7 @@
           <strong>{{$ctrl.totalEgress() | bytes:2}} ({{$ctrl.totalEgressSpeed() | bytes:1}}/s)</strong>
         </td>
         <td>
-          <strong>{{$ctrl.totalEstimatedPayout().toFixed(2)}} $</strong>
+          <strong>{{$ctrl.totalEstimatedPayoutFiat().toFixed(2)}} €</strong>
         </td>
       </tr>
       </tbody>
