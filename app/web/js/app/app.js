@@ -88,6 +88,11 @@
       if (bytes === 0) {
         return '0 B';
       }
+      var negative = false;
+      if (bytes < 0) {
+        bytes = Math.abs(bytes);
+        negative = true;
+      }
       if (typeof precision === 'undefined') precision = 1;
       var units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'],
         number = Math.floor(Math.log(bytes) / Math.log(1024));
@@ -96,7 +101,9 @@
         return bytes.toFixed(precision) + ' B';
       }
 
-      return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) + ' ' + units[number];
+      var formattedBytes = (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) + ' ' + units[number];
+
+      return negative ? `-${formattedBytes}` : formattedBytes;
     }
   });
   app.filter('hashrate', function () {

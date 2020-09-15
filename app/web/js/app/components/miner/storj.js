@@ -79,6 +79,9 @@ function StorjController() {
   ctrl.totalEgressSpeed = () => {
     return ctrl.nodes.reduce((acc, node) => acc + node.egressSpeed, 0);
   };
+  ctrl.totalEstimatedPayout = () => {
+    return ctrl.nodes.reduce((acc, node) => acc + ((node.stats && node.stats.estimatedPayout) || 0), 0);
+  };
 }
 
 angular.module('app').component('storj', {

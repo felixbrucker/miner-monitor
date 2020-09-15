@@ -43,6 +43,7 @@ module.exports = class Storj extends Miner {
           uptimeScoreTotal: perSatelliteStats.uptime.totalCount ? perSatelliteStats.uptime.successCount / perSatelliteStats.uptime.totalCount : 1,
           auditScore: perSatelliteStats.audit.score,
           suspensionScore: perSatelliteStats.audit.unknownScore,
+          onlineScore: perSatelliteStats.onlineScore,
         };
         if (perSatelliteStats.audit.totalCount === 0) {
           satellite.stats.vettingProgress = 1;
@@ -58,6 +59,9 @@ module.exports = class Storj extends Miner {
         stats.upToDate = false;
         stats.latestVersion = this.latestVersion;
       }
+
+      const { data: estimatedPayoutData } = await this.client.get('/estimated-payout');
+      stats.estimatedPayout = estimatedPayoutData.currentMonth.payout / 100;
 
       this.stats = stats;
     } catch (err) {
