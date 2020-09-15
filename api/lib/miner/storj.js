@@ -63,7 +63,7 @@ module.exports = class Storj extends Miner {
 
       const { data: estimatedPayoutData } = await this.client.get('/estimated-payout');
       stats.estimatedPayoutUsd = estimatedPayoutData.currentMonth.payout / 100;
-      const rate = coinGecko.getRates('usd')[0];
+      const rate = coinGecko.getRates('usdt')[0];
       if (rate) {
         stats.estimatedPayoutFiat = parseFloat(rate.current_price) * stats.estimatedPayoutUsd;
       }
