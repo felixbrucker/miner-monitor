@@ -58,6 +58,10 @@ function StorjController() {
       return messages;
     });
 
+    if (moment(stats.lastPinged).isBefore(moment().subtract(10, 'minute'))) {
+      allMessages.push([`Last ping was ${moment.duration(moment(stats.lastPinged).diff()).humanize(true)}`]);
+    }
+
     return allMessages.reduce((acc, curr) => acc.concat(curr), []);
   };
 
