@@ -9,6 +9,19 @@ function ChiaPlotterController() {
     return ctrl.plotJobs.reduce((acc, plotJob) => acc + plotJob.expectedTibPerMonth, 0);
   };
 
+  ctrl.atLeastOneJobHasEta = () => {
+    return ctrl.plotJobs.some((plotJob) => !!plotJob.avgPlotTimeInSeconds);
+  };
+
+  ctrl.plotJobWithLowestEta = () => {
+    return ctrl.plotJobs.reduce((acc, plotJob) => {
+      if (!acc) {
+        return plotJob;
+      }
+      return acc.avgPlotTimeInSeconds < plotJob.avgPlotTimeInSeconds ? acc : plotJob;
+    }, null);
+  };
+
   ctrl.getFormattedEta = (plotJob) => {
     const elapsedTimeInSeconds = moment().diff(moment(plotJob.startedAt), 'seconds');
     const etaInSeconds = Math.max(plotJob.avgPlotTimeInSeconds - elapsedTimeInSeconds, 0);

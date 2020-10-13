@@ -49,7 +49,8 @@
           <td>
             <strong>{{$ctrl.totalExpectedTibPerMonth() | capacity:'TiB'}} / m</strong>
           </td>
-          <td colspan="3">
+          <td colspan="3" style="text-align: center">
+            <span ng-if="$ctrl.atLeastOneJobHasEta()"><strong>Next plot done in {{$ctrl.getFormattedEta($ctrl.plotJobWithLowestEta())}}</strong></span>
           </td>
         </tr>
       </tbody>
