@@ -18,7 +18,11 @@ function ChiaPlotterController() {
       if (!acc) {
         return plotJob;
       }
-      return acc.avgPlotTimeInSeconds < plotJob.avgPlotTimeInSeconds ? acc : plotJob;
+      const accElapsedTimeInSeconds = moment().diff(moment(acc.startedAt), 'seconds');
+      const accEtaInSeconds = Math.max(acc.avgPlotTimeInSeconds - accElapsedTimeInSeconds, 0);
+      const elapsedTimeInSeconds = moment().diff(moment(plotJob.startedAt), 'seconds');
+      const etaInSeconds = Math.max(plotJob.avgPlotTimeInSeconds - elapsedTimeInSeconds, 0);
+      return accEtaInSeconds < etaInSeconds ? acc : plotJob;
     }, null);
   };
 
