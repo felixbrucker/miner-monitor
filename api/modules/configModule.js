@@ -23,6 +23,7 @@ const config = module.exports = {
       'creep-miner',
       'burst-proxy',
       'storj',
+      'chia-plotter',
     ],
     dashboardTypes:[
       'bitcoinBalance',

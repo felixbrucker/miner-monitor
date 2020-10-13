@@ -80,6 +80,10 @@
       <foxy-pool pools="statsVm.dashboards.foxyPools"></foxy-pool>
     </div>
 
+    <div class="masonry-brick col-sm-12 col-md-12 col-lg-8 col-xl-6 col-xxl-8" ng-if="statsVm.isDeviceTypeEnabled('chia-plotter')">
+      <chia-plotter plot-jobs="statsVm.chiaPlotterPlotJobs"></chia-plotter>
+    </div>
+
     <span ng-repeat="(id, entry) in statsVm.devices track by $index">
         <div class="masonry-brick col-sm-9 col-md-6 col-lg-6 col-xl-4 col-xxl-6" ng-if="entry.type === 'miner-agent'">
             <miner-manager entry="entry"></miner-manager>

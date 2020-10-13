@@ -1,0 +1,58 @@
+<div class="row">
+  <div class="col-md-12">
+    <div style="float: left;font-size:120%;">
+      Chia Plotter
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-bordered table-condensed">
+      <thead>
+      <tr>
+        <th>Destination</th>
+        <th>Free Space</th>
+        <th>TiB / month</th>
+        <th>Phase</th>
+        <th>Operation</th>
+        <th>Progress</th>
+      </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="plotJob in $ctrl.plotJobs track by plotJob.hash">
+          <td class='ellipsissmall'>
+            {{plotJob.destinationDir}}
+          </td>
+          <td>
+            {{plotJob.freeSpaceOnDestinationDirInGib | capacity:'GiB'}}
+          </td>
+          <td>
+            {{plotJob.expectedTibPerMonth | capacity:'TiB'}} / m
+          </td>
+          <td>
+            {{plotJob.currentPhase}} / {{plotJob.totalPhases}}
+          </td>
+          <td>
+            {{plotJob.operation}}
+          </td>
+          <td>
+            {{plotJob.progress.toFixed(2)}}%<span ng-if="plotJob.avgPlotTimeInSeconds"> (ETA: {{$ctrl.getFormattedEta(plotJob)}})</span>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Total</strong>
+          </td>
+          <td>
+            <strong>{{$ctrl.totalFreeSpace() | capacity:'GiB'}}</strong>
+          </td>
+          <td>
+            <strong>{{$ctrl.totalExpectedTibPerMonth() | capacity:'TiB'}} / m</strong>
+          </td>
+          <td colspan="3">
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

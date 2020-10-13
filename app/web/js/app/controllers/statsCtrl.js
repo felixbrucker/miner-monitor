@@ -49,6 +49,7 @@
     vm.enabled={};
     vm.hidden={};
     vm.storjNodes = [];
+    vm.chiaPlotterPlotJobs = [];
 
 
     // controller API
@@ -190,6 +191,7 @@
         return acc.concat(...stats);
       }, []);
       vm.storjNodes = getDeviceArrForTypes(['storj']);
+      vm.chiaPlotterPlotJobs = getDeviceArrForTypes(['chia-plotter']).reduce((acc, curr) => acc.concat(...curr.stats), []);
     }
 
     /**

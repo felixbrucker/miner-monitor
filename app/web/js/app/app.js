@@ -106,6 +106,31 @@
       return negative ? `-${formattedBytes}` : formattedBytes;
     }
   });
+  app.filter('capacity', function () {
+    return function (capacity, unit, precision = 2) {
+      if (isNaN(parseFloat(capacity)) || !isFinite(capacity)) return '-';
+      if (capacity === 0) {
+        return '0 B';
+      }
+      var negative = false;
+      if (capacity < 0) {
+        capacity = Math.abs(capacity);
+        negative = true;
+      }
+      var units = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB'];
+      var unitIndex = Math.floor(Math.log(capacity) / Math.log(1024));
+      var unitOffset = units.findIndex((curr) => curr === unit);
+      var fullUnitIndex = unitOffset !== -1 ? unitOffset + unitIndex : unitIndex;
+
+      if (fullUnitIndex < 0) {
+        return capacity.toFixed(precision) + ' B';
+      }
+
+      var formattedCapacity = (capacity / Math.pow(1024, Math.floor(unitIndex))).toFixed(precision) + ' ' + units[fullUnitIndex];
+
+      return negative ? `-${formattedCapacity}` : formattedCapacity;
+    }
+  });
   app.filter('hashrate', function () {
     return function (hashrate, precision, start = 1) {
       if (isNaN(parseFloat(hashrate)) || !isFinite(hashrate)) return '';
