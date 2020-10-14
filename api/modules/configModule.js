@@ -25,6 +25,7 @@ const config = module.exports = {
       'storj',
       'chia-plotter',
       'chia-miner',
+      'chia-farmer',
     ],
     dashboardTypes:[
       'bitcoinBalance',

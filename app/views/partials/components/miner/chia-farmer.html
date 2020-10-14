@@ -1,0 +1,37 @@
+<div class="row">
+  <div class="col-md-12">
+    <div style="float: left;font-size:120%;">
+      Chia Farmer: {{$ctrl.farmer.name}} | {{$ctrl.getConnectedHarvesterCount()}} Harvester connected
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-bordered table-condensed">
+      <thead>
+      <tr>
+        <th>Height</th>
+        <th>Challenge</th>
+        <th>Proofs</th>
+        <th>Best DL</th>
+      </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="challenge in $ctrl.farmer.stats.challenges track by challenge.challenge">
+          <td>
+            {{challenge.height}}
+          </td>
+          <td>
+            {{challenge.challenge.substr(2, 10)}}
+          </td>
+          <td>
+            {{challenge.estimates.length}}
+          </td>
+          <td>
+            {{$ctrl.bestDLForChallenge(challenge)}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
