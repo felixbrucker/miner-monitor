@@ -155,7 +155,7 @@ required pledge: {{dashboard.data.pledgeAmount.toFixed(0)}} {{dashboard.ticker}}
         </td>
         <td ng-if="!dashboard.data || $ctrl.isEmpty(dashboard.data)">N/A</td>
 
-        <td ng-if="dashboard.data && !$ctrl.isEmpty(dashboard.data)">{{dashboard.data.connections}}</td>
+        <td ng-if="dashboard.data && !$ctrl.isEmpty(dashboard.data)">{{dashboard.data.connections !== undefined ? dashboard.data.connections : 'N/A'}}</td>
         <td ng-if="!dashboard.data || $ctrl.isEmpty(dashboard.data)">N/A</td>
     </tr>
     <tr>
