@@ -192,6 +192,7 @@
       }, []);
       vm.storjNodes = getDeviceArrForTypes(['storj']);
       vm.chiaPlotterPlotJobs = getDeviceArrForTypes(['chia-plotter']).reduce((acc, curr) => acc.concat(...curr.stats), []);
+      vm.chiaMiners = getDeviceArrForTypes(['chia-miner']);
     }
 
     /**

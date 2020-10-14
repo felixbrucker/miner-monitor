@@ -24,6 +24,7 @@ const config = module.exports = {
       'burst-proxy',
       'storj',
       'chia-plotter',
+      'chia-miner',
     ],
     dashboardTypes:[
       'bitcoinBalance',

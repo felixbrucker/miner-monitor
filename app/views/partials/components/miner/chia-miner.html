@@ -1,0 +1,72 @@
+<div class="row">
+  <div class="col-md-12">
+    <div style="float: left;font-size:120%;">
+      Chia Miner
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-bordered table-condensed">
+      <thead>
+      <tr>
+        <th>Machine</th>
+        <th>State</th>
+        <th>Capacity</th>
+        <th>Challenge</th>
+        <th>Elapsed</th>
+        <th>Scan Time</th>
+        <th><span data-toggle="tooltip" title="Eligible Plots" data-placement="bottom">E</span></th>
+        <th><span data-toggle="tooltip" title="Found Proofs" data-placement="bottom">P</span></th>
+      </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="miner in $ctrl.miners track by $index">
+          <td>
+            {{miner.name}}
+          </td>
+          <td>
+            <span ng-if="$ctrl.getStatus(miner.stats) === 0">
+              <i class="far fa-stop-circle" aria-hidden="true" style="color:red"></i>
+            </span>
+            <span ng-if="$ctrl.getStatus(miner.stats) === 1">
+              <i class="fa fa-exclamation-circle" aria-hidden="true" style="color:red"></i>
+            </span>
+            <span ng-if="$ctrl.getStatus(miner.stats) === 2">
+              <i class="far fa-check-circle" aria-hidden="true" style="color:green"></i>
+            </span>
+            {{$ctrl.getState(miner.stats)}}
+          </td>
+          <td>
+            {{(miner.stats.capacityInGib || 0) | capacity:'GiB'}}
+          </td>
+          <td>
+            {{miner.stats.challengeHashStart || 'N/A'}}
+          </td>
+          <td>
+            {{$ctrl.getFormattedElapsedDuration(miner.stats)}}
+          </td>
+          <td>
+            {{(miner.stats.scanDurationInSeconds !== undefined ? miner.stats.scanDurationInSeconds.toFixed(2) + ' sec' : 'N/A')}}
+          </td>
+          <td>
+            {{miner.stats.eligiblePlots || 0}}
+          </td>
+          <td>
+            {{miner.stats.foundProofs || 0}}
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <strong>Total</strong>
+          </td>
+          <td>
+            <strong>{{$ctrl.totalCapacityInGib() | capacity:'GiB'}}</strong>
+          </td>
+          <td colspan="5">
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

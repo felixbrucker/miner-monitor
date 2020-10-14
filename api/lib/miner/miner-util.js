@@ -3,6 +3,7 @@ const CreepMiner = require('./creep-miner');
 const BurstProxy = require('./burst-proxy');
 const Storj = require('./storj');
 const ChiaPlotter = require('./chia-plotter');
+const ChiaMiner = require('./chia-miner');
 
 function getClassForMinerType(type) {
   switch(type) {
@@ -12,6 +13,8 @@ function getClassForMinerType(type) {
       return Storj;
     case 'chia-plotter':
       return ChiaPlotter;
+    case 'chia-miner':
+      return ChiaMiner;
     case 'creep-miner':
       return CreepMiner;
     case 'burst-proxy':
