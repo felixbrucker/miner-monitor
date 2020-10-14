@@ -52,6 +52,7 @@ const config = module.exports = {
       'disc-wallet',
       'burst-wallet',
       'boom-wallet',
+      'chia-wallet',
       'wallet-agent',
       'coinbase',
       'yiimp'

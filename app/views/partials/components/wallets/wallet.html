@@ -15,7 +15,7 @@
         <td>{{dashboard.name}}</td>
 
         <!-- generic wallet -->
-        <td ng-if="(dashboard.type === 'generic-wallet' || dashboard.type === 'cryptonight-wallet' || dashboard.type === 'disc-wallet' || dashboard.type === 'burst-wallet') &&
+        <td ng-if="(dashboard.type === 'generic-wallet' || dashboard.type === 'cryptonight-wallet' || dashboard.type === 'disc-wallet' || dashboard.type === 'burst-wallet' || dashboard.type === 'chia-wallet') &&
         dashboard.data &&
         !$ctrl.isEmpty(dashboard.data) &&
         $ctrl.isSynced(dashboard.data)" >
@@ -23,7 +23,7 @@
                     class="far fa-check-circle" aria-hidden="true" style="color:green"></i>
             </span>
         </td>
-        <td style="min-width: 43px;" ng-if="(dashboard.type === 'generic-wallet' || dashboard.type === 'cryptonight-wallet' || dashboard.type === 'disc-wallet' || dashboard.type === 'burst-wallet') &&
+        <td style="min-width: 43px;" ng-if="(dashboard.type === 'generic-wallet' || dashboard.type === 'cryptonight-wallet' || dashboard.type === 'disc-wallet' || dashboard.type === 'burst-wallet' || dashboard.type === 'chia-wallet') &&
         dashboard.data &&
         !$ctrl.isEmpty(dashboard.data) &&
         $ctrl.isSyncing(dashboard.data)" >
@@ -43,7 +43,7 @@
                     class="fa fa-exclamation-triangle " aria-hidden="true" style="color:red"></i>
             </span>
         </td>
-        <td ng-if="(dashboard.type === 'generic-wallet' || dashboard.type === 'cryptonight-wallet' || dashboard.type === 'disc-wallet' || dashboard.type === 'burst-wallet') && (!dashboard.data || $ctrl.isEmpty(dashboard.data))">
+        <td ng-if="(dashboard.type === 'generic-wallet' || dashboard.type === 'cryptonight-wallet' || dashboard.type === 'disc-wallet' || dashboard.type === 'burst-wallet' || dashboard.type === 'chia-wallet') && (!dashboard.data || $ctrl.isEmpty(dashboard.data))">
             <span data-toggle="tooltip" title="offline"><i
                     class="far fa-stop-circle" aria-hidden="true" style="color:red"></i>
             </span>

@@ -25,6 +25,7 @@ const BoomWallet = require('./wallets/boom-wallet');
 const WalletAgent = require('./wallets/wallet-agent');
 const FoxyPool = require('./pool/foxy-pool');
 const FoxyPoolV2 = require('./pool/foxy-pool-v2');
+const ChiaWallet = require('./wallets/chia-wallet');
 
 function getClassForDashboardType(type) {
   switch(type) {
@@ -82,6 +83,8 @@ function getClassForDashboardType(type) {
       return CoinbaseBalance;
     case 'wallet-agent':
       return WalletAgent;
+    case 'chia-wallet':
+      return ChiaWallet;
     default:
       throw new Error(`No class matched '${type}'`);
   }
