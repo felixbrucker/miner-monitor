@@ -14,7 +14,7 @@ function ChiaPlotterController() {
   };
 
   ctrl.plotJobWithLowestEta = () => {
-    return ctrl.plotJobs.reduce((acc, plotJob) => {
+    return ctrl.plotJobs.filter(plotJob => !!plotJob.avgPlotTimeInSeconds).reduce((acc, plotJob) => {
       if (!acc) {
         return plotJob;
       }

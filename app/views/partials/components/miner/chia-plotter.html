@@ -26,8 +26,11 @@
           <td>
             {{plotJob.freeSpaceOnDestinationDirInGib | capacity:'GiB'}}
           </td>
-          <td>
+          <td ng-if="plotJob.expectedTibPerMonth">
             {{plotJob.expectedTibPerMonth | capacity:'TiB'}} / m
+          </td>
+          <td ng-if="!plotJob.expectedTibPerMonth">
+            N/A
           </td>
           <td>
             {{plotJob.currentPhase}} / {{plotJob.totalPhases}}
