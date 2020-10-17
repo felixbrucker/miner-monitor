@@ -191,7 +191,23 @@
         return acc.concat(...stats);
       }, []);
       vm.storjNodes = getDeviceArrForTypes(['storj']);
-      vm.chiaPlotterPlotJobs = getDeviceArrForTypes(['chia-plotter']).reduce((acc, curr) => acc.concat(...curr.stats), []);
+      vm.chiaPlotterPlotJobs = getDeviceArrForTypes(['chia-plotter']).reduce((acc, curr) => acc.concat(...curr.stats), []).sort((a, b) => {
+        if (a.avgPlotTimeInSeconds === null && b.avgPlotTimeInSeconds === null) {
+          return 0;
+        }
+        if (a.avgPlotTimeInSeconds === null) {
+          return 1;
+        }
+        if (b.avgPlotTimeInSeconds === null) {
+          return -1;
+        }
+        const elapsedTimeInSecondsA = moment().diff(moment(a.startedAt), 'seconds');
+        const etaInSecondsA = Math.max(a.avgPlotTimeInSeconds - elapsedTimeInSecondsA, 0);
+        const elapsedTimeInSecondsB = moment().diff(moment(b.startedAt), 'seconds');
+        const etaInSecondsB = Math.max(b.avgPlotTimeInSeconds - elapsedTimeInSecondsB, 0);
+
+        return etaInSecondsA - etaInSecondsB;
+      });
       vm.chiaMiners = getDeviceArrForTypes(['chia-miner']);
     }
 
