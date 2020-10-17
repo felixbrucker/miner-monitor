@@ -30,7 +30,7 @@ module.exports = class ChiaWallet extends Dashboard {
       lastBlockReceived: Date.now() / 1e3, // placeholder because unsupported
     };
     const { data: balanceData } = await this.client.post('/get_wallet_balance', { wallet_id: 1 });
-    result.balance = balanceData.wallet_balance.confirmed_wallet_balance / 1e12;
+    result.balance = balanceData.wallet_balance.spendable_balance / 1e12;
     result.unconfirmed = (balanceData.wallet_balance.unconfirmed_wallet_balance / 1e12) - result.balance;
     result.total = result.balance + result.unconfirmed;
 
