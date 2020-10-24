@@ -19,6 +19,7 @@ module.exports = class ChiaFarmer extends Miner {
         connections: connections.connections,
       };
     } catch (err) {
+      this.stats = null;
       console.error(`[${this.device.name} :: ChiaFarmer] => ${err.message}`);
     }
   }

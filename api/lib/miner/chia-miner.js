@@ -15,6 +15,7 @@ module.exports = class ChiaMiner extends Miner {
       const { data: stats } = await this.client.get('stats');
       this.stats = stats;
     } catch (err) {
+      this.stats = null;
       console.error(`[${this.device.name} :: ChiaMiner] => ${err.message}`);
     }
   }

@@ -191,7 +191,13 @@
         return acc.concat(...stats);
       }, []);
       vm.storjNodes = getDeviceArrForTypes(['storj']);
-      vm.chiaPlotterPlotJobs = getDeviceArrForTypes(['chia-plotter']).reduce((acc, curr) => acc.concat(...curr.stats), []).sort((a, b) => {
+      vm.chiaPlotterPlotJobs = getDeviceArrForTypes(['chia-plotter']).reduce((acc, curr) => {
+        if (curr.stats) {
+          return acc.concat(...curr.stats);
+        }
+
+        return acc;
+      }, []).sort((a, b) => {
         if (a.avgPlotTimeInSeconds === null && b.avgPlotTimeInSeconds === null) {
           return 0;
         }

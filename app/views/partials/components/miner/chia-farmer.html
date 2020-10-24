@@ -17,7 +17,7 @@
       </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="challenge in $ctrl.farmer.stats.challenges track by challenge.challenge">
+        <tr ng-if="$ctrl.farmer.stats" ng-repeat="challenge in $ctrl.farmer.stats.challenges track by challenge.challenge">
           <td>
             {{challenge.height}}
           </td>

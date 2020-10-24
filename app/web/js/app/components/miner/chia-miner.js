@@ -38,7 +38,7 @@ function ChiaMinerController() {
   };
 
   ctrl.totalCapacityInGib = () => {
-    return ctrl.miners.reduce((acc, miner) => acc + (miner.stats.capacityInGib || 0), 0);
+    return ctrl.miners.reduce((acc, miner) => acc + ((miner.stats && miner.stats.capacityInGib) || 0), 0);
   };
 }
 
