@@ -26,6 +26,7 @@ const config = module.exports = {
       'chia-plotter',
       'chia-miner',
       'chia-farmer',
+      'chia-archiver',
     ],
     dashboardTypes:[
       'bitcoinBalance',

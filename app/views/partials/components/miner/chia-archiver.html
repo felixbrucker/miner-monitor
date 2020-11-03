@@ -1,0 +1,52 @@
+<div class="row">
+  <div class="col-md-12">
+    <div style="float: left;font-size:120%;">
+      Chia Archiver: {{$ctrl.archiver.name}}
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-bordered table-condensed">
+      <thead>
+      <tr>
+        <th>Source</th>
+        <th>Destination</th>
+        <th>Speed</th>
+        <th>Elapsed</th>
+        <th>Progress</th>
+      </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="transfer in $ctrl.archiver.stats track by transfer.name">
+          <td>
+            {{transfer.ip}}
+          </td>
+          <td>
+            {{transfer.destinationDirectory}}
+          </td>
+          <td>
+            {{transfer.speedInMibPerSecond.toFixed(2)}} MiB/s ({{transfer.writtenGib.toFixed(2)}} / {{transfer.sizeInGib.toFixed(2)}} GiB)
+          </td>
+          <td>
+            {{$ctrl.getFormattedDuration(transfer.elapsedTimeInSeconds)}}
+          </td>
+          <td>
+            {{transfer.progress.toFixed(2)}}% (ETA: {{$ctrl.getFormattedDuration(transfer.remainingTimeInSeconds)}})
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <strong>Total</strong>
+          </td>
+          <td>
+            <strong>{{$ctrl.totalSpeedInMibPerSecond().toFixed(2)}} MiB/s ({{$ctrl.totalWrittenGib().toFixed(2)}} / {{$ctrl.totalSizeInGib().toFixed(2)}} GiB)</strong>
+          </td>
+          <td colspan="2" style="text-align: center">
+            <strong>Next plot done in {{$ctrl.lowestEtaFormatted()}}</strong>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
