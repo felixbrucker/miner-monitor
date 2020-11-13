@@ -2,7 +2,7 @@ function ChiaArchiverController() {
   var ctrl = this;
 
   ctrl.totalSpeedInMibPerSecond = () => {
-    return ctrl.archiver.stats.reduce((acc, transfer) => acc + transfer.speedInMibPerSecond, 0);
+    return ctrl.archiver.stats.reduce((acc, transfer) => acc + transfer.currSpeedInMibPerSecond, 0);
   };
 
   ctrl.totalWrittenGib = () => {
@@ -18,13 +18,13 @@ function ChiaArchiverController() {
       if (!acc) {
         return transfer;
       }
-      return acc.remainingTimeInSeconds < transfer.remainingTimeInSeconds ? acc : transfer;
+      return acc.currRemainingTimeInSeconds < transfer.currRemainingTimeInSeconds ? acc : transfer;
     }, null);
     if (!transferWithLowestEta) {
       return 'N/A';
     }
 
-    return ctrl.getFormattedDuration(transferWithLowestEta.remainingTimeInSeconds);
+    return ctrl.getFormattedDuration(transferWithLowestEta.currRemainingTimeInSeconds);
   };
 
   ctrl.getFormattedDuration = (durationInSeconds) => {

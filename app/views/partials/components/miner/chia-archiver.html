@@ -26,13 +26,13 @@
             {{transfer.destinationDirectory}}
           </td>
           <td>
-            {{transfer.speedInMibPerSecond.toFixed(2)}} MiB/s ({{transfer.writtenGib.toFixed(2)}} / {{transfer.sizeInGib.toFixed(2)}} GiB)
+            {{transfer.currSpeedInMibPerSecond.toFixed(2)}} MiB/s ({{transfer.writtenGib.toFixed(2)}} / {{transfer.sizeInGib.toFixed(2)}} GiB)
           </td>
           <td>
             {{$ctrl.getFormattedDuration(transfer.elapsedTimeInSeconds)}}
           </td>
           <td>
-            {{transfer.progress.toFixed(2)}}% (ETA: {{$ctrl.getFormattedDuration(transfer.remainingTimeInSeconds)}})
+            {{transfer.progress.toFixed(2)}}% (ETA: {{$ctrl.getFormattedDuration(transfer.currRemainingTimeInSeconds)}})
           </td>
         </tr>
         <tr>
