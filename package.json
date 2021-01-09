@@ -7,7 +7,7 @@
     "bitmart-api": "^1.0.0",
     "body-parser": "^1.18.3",
     "bytes": "^3.1.0",
-    "coinbase": "^2.0.8",
+    "coinbase-pro-node": "^2.16.0",
     "colors": "^1.3.3",
     "compression": "^1.7.3",
     "console-stamp": "^0.2.7",

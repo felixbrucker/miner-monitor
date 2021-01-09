@@ -1,5 +1,4 @@
-const nodeutil = require('util');
-const coinbaseClient = require('coinbase').Client;
+const { CoinbasePro } = require('coinbase-pro-node');
 const Dashboard = require('../dashboard');
 const coinGecko = require('../../rates/coingecko');
 
@@ -18,13 +17,12 @@ module.exports = class CoinbaseBalance extends Dashboard {
 
   async updateStats() {
     try {
-      const getAccounts = nodeutil.promisify(this.client.getAccounts).bind(this.client);
-      let accounts = await getAccounts({});
-      accounts = accounts
+      const accounts = await this.client.rest.account.listAccounts();
+      this.stats = accounts
         .map(account => ({
           name: account.name,
           ticker: account.currency,
-          balance: parseFloat(account.balance.amount),
+          balance: parseFloat(account.balance),
         }))
         .filter(account => account.balance > 0)
         .map(account => {
@@ -33,20 +31,25 @@ module.exports = class CoinbaseBalance extends Dashboard {
           if (rate) {
             account.balanceFiat = parseFloat(rate.current_price) * account.balance;
           }
+
           return account;
         });
-      this.stats = accounts;
     } catch(err) {
       console.error(`[${this.dashboard.name} :: Coinbase-Balance-API] => ${err.message}`);
     }
   }
 
   async onInit() {
-    const apiKeyAndSecret = this.dashboard.api_key.split(':');
-    if (apiKeyAndSecret.length !== 2) {
-      return console.error(`[${this.dashboard.name} :: Coinbase-Balance-API] => Invalid api key and secret key string, format is: 'api_key:api_secret'`);
+    const apiKeySecretAndPassphrase = this.dashboard.api_key.split(':');
+    if (apiKeySecretAndPassphrase.length !== 3) {
+      return console.error(`[${this.dashboard.name} :: Coinbase-Balance-API] => Invalid api key, secret key and passphrase string, format is: 'api_key:api_secret:passphrase'`);
     }
-    this.client = new coinbaseClient({'apiKey': apiKeyAndSecret[0], 'apiSecret': apiKeyAndSecret[1]});
+    this.client = new CoinbasePro({
+      apiKey: apiKeySecretAndPassphrase[0],
+      apiSecret: apiKeySecretAndPassphrase[1],
+      passphrase: apiKeySecretAndPassphrase[2],
+      useSandbox: false,
+    });
     super.onInit();
   }
 };
