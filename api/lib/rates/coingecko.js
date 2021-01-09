@@ -12,6 +12,10 @@ class CoinGecko {
   }
 
   getRates(symbol) {
+    if (symbol.toLowerCase() === 'eur') {
+      return [{ current_price: 1 }];
+    }
+
     return this.rates.filter(rate => rate.symbol === symbol.toLowerCase());
   }
 
