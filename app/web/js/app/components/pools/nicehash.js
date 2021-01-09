@@ -13,6 +13,8 @@ function NicehashController() {
   ctrl.isHidden = function(id) {
     return ctrl.hidden[id];
   }
+
+  ctrl.filterActiveDevices = (devices) => devices.filter(device => device.status.enumName !== 'DISABLED');
 }
 
 angular.module('app').component('nicehash', {

@@ -211,16 +211,16 @@ select {
   border-radius: 50%;
   display: inline-block;
 }
-.positive {
+.positive, .mining {
   background-color: rgb(75, 210, 143);
 }
-.intermediary {
+.intermediary, .inactive, .stopped {
   background-color: rgb(255, 170, 0);
 }
-.negative {
+.negative, .error, .offline {
   background-color: rgb(255, 77, 77);
 }
-.investor {
+.investor, .benchmarking {
   background-color: rgb(66, 134, 244);
 }
 .waiting-for-login {

@@ -3,10 +3,9 @@ const coinGecko = require('../../rates/coingecko');
 const NicehashApi = require('../../nicehash-api');
 
 module.exports = class Nicehash extends Dashboard {
-
   static getDefaults() {
     return {
-      interval: 2 * 60 * 1000,
+      interval: 60 * 1000,
     };
   }
 
@@ -25,21 +24,37 @@ module.exports = class Nicehash extends Dashboard {
   }
 
   async updateStats() {
-    const accountDetails = await this.nicehashApi.getAccount();
     const miningStats = await this.nicehashApi.getMiningStats();
-    const miningPayouts = await this.nicehashApi.getMiningPayouts();
-
-    const rates = coinGecko.getRates('BTC');
-    const rate = rates.length > 0 ? rates[0] : null;
-    if (rate) {
-      miningStats.totalProfitabilityFiat = parseFloat(rate.current_price) * miningStats.totalProfitability;
-      accountDetails.total.pendingFiat = parseFloat(rate.current_price) * accountDetails.total.pending;
+    const btcRates = coinGecko.getRates('BTC');
+    const btcRate = btcRates.length > 0 ? btcRates[0] : null;
+    if (btcRate) {
+      miningStats.totalProfitabilityFiat = parseFloat(btcRate.current_price) * miningStats.totalProfitability;
+      miningStats.unpaidAmountFiat = parseFloat(btcRate.current_price) * parseFloat(miningStats.unpaidAmount);
     }
 
+    const accountDetails = await this.nicehashApi.getAccount();
+    const accountTotalCurrencyRates = coinGecko.getRates(accountDetails.total.currency);
+    const accountTotalCurrencyRate = accountTotalCurrencyRates.length > 0 ? accountTotalCurrencyRates[0] : null;
+    if (accountTotalCurrencyRate) {
+      accountDetails.total.availableFiat = parseFloat(accountTotalCurrencyRate.current_price) * parseFloat(accountDetails.total.available);
+      accountDetails.total.pendingFiat = parseFloat(accountTotalCurrencyRate.current_price) * parseFloat(accountDetails.total.pending);
+      accountDetails.total.totalBalanceFiat = parseFloat(accountTotalCurrencyRate.current_price) * parseFloat(accountDetails.total.totalBalance);
+    }
+    const positiveBalances = accountDetails.currencies.filter(currency => parseFloat(currency.totalBalance) > 0);
+    positiveBalances.forEach(balance => {
+      const rates = coinGecko.getRates(balance.currency);
+      const rate = rates.length > 0 ? rates[0] : null;
+      if (rate) {
+        balance.availableFiat = parseFloat(rate.current_price) * parseFloat(balance.available);
+        balance.pendingFiat = parseFloat(rate.current_price) * parseFloat(balance.pending);
+        balance.totalBalanceFiat = parseFloat(rate.current_price) * parseFloat(balance.totalBalance);
+      }
+    });
+
     this.stats = {
-      balances: accountDetails.total,
       miningStats,
-      miningPayouts,
+      totalBalance: accountDetails.total,
+      positiveBalances,
     };
   }
 };

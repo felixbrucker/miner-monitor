@@ -11,21 +11,39 @@
         </thead>
         <tbody>
         <tr ng-repeat="miningRig in $ctrl.dashboard.data.miningStats.miningRigs track by miningRig.rigId">
-            <td>{{miningRig.name}} ({{miningRig.minerStatus}})</td>
             <td>
-              <span ng-repeat="device in miningRig.devices track by device.id">
-                {{device.name}} ({{device.status.description}})
+              <span class="dot" ng-class="{
+                error: miningRig.minerStatus === 'ERROR',
+                offline: miningRig.minerStatus === 'OFFLINE',
+                stopped: miningRig.minerStatus === 'STOPPED',
+                mining: miningRig.minerStatus === 'MINING',
+                benchmarking: miningRig.minerStatus === 'BENCHMARKING'
+                }">
+              </span>
+              {{miningRig.name}}
+            </td>
+            <td>
+              <span ng-repeat="device in $ctrl.filterActiveDevices(miningRig.devices) track by device.id">
+                <span class="dot" ng-class="{
+                  error: device.status.enumName === 'ERROR',
+                  offline: device.status.enumName === 'OFFLINE',
+                  inactive: device.status.enumName === 'INACTIVE',
+                  mining: device.status.enumName === 'MINING',
+                  benchmarking: device.status.enumName === 'BENCHMARKING'
+                  }">
+                </span>
+                {{device.name}}
                 <span ng-if="device.temperature !== -1">| {{device.temperature}}°C</span>
                 <span ng-if="device.load !== -1">| {{device.load}}%</span>
                 <span ng-repeat="speed in device.speeds track by speed.algorithm">
                   <br/>
-                  <span style="padding-left: 12px">{{speed.title}}: {{speed.speed}} {{speed.displaySuffix}}/s</span>
+                  <span>└─ {{speed.title}}: {{speed.speed}} {{speed.displaySuffix}}/s</span>
                 </span>
               <br/>
               </span>
             </td>
             <td class='ellipsis'>
-              {{miningRig.profitability | customnumber:4}} BTC/Day
+              {{miningRig.profitability | customnumber:8}} BTC/Day
             </td>
             <td>
               <span class='ellipsis'>{{miningRig.unpaidAmount | customnumber:8}}</span> BTC
@@ -34,37 +52,68 @@
         </tbody>
         <tr ng-if="$ctrl.dashboard.data.miningStats!==undefined && $ctrl.dashboard.data.miningStats!==null">
             <td colspan="2" style="font-weight: bold;">Total</td>
-            <td style="font-weight: bold;">{{$ctrl.dashboard.data.miningStats.totalProfitability | customnumber:4}}
+            <td style="font-weight: bold;">{{$ctrl.dashboard.data.miningStats.totalProfitability | customnumber:8}}
                 BTC/Day<br/>{{($ctrl.dashboard.data.miningStats.totalProfitabilityFiat || 0)
                 | customnumber:2}} EUR/Day
             </td>
-            <td style="font-weight: bold;">{{$ctrl.dashboard.data.balances.pending | customnumber:8}} BTC<br/>{{($ctrl.dashboard.data.balances.pendingFiat || 0)
+            <td style="font-weight: bold;">{{$ctrl.dashboard.data.miningStats.unpaidAmount | customnumber:8}} BTC<br/>{{($ctrl.dashboard.data.miningStats.unpaidAmountFiat || 0)
                 | customnumber:2}} EUR
             </td>
         </tr>
     </table>
 </div>
 <div class="col-md-12">
-    <div class="centerAlign">Payments ({{$ctrl.parseName($ctrl.dashboard.name)}}):</div>
+    <div class="centerAlign">Balances ({{$ctrl.parseName($ctrl.dashboard.name)}}):</div>
     <table class="table table-bordered table-condensed leftAlign">
         <thead>
         <tr>
-            <th>Date</th>
-            <th>Amount</th>
-            <th>Fee</th>
-            <th>TXID</th>
+            <th>Ticker</th>
+            <th>Available</th>
+            <th>Pending</th>
+            <th>Total</th>
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="(id, data) in $ctrl.dashboard.data.miningPayouts track by $index">
-            <td>{{data.time * 1000 | date: "yyyy-MM-dd HH:mm"}}</td>
-            <td>{{data.amount}} BTC</td>
-            <td>{{data.fee}} BTC</td>
-            <td class='ellipsisbig'><a href="https://blockchain.info/tx/{{data.TXID}}"
-                                       target="_blank">{{data.TXID}}</a>
+        <tr ng-repeat="(id, balance) in $ctrl.dashboard.data.positiveBalances track by balance.currency">
+            <td>{{balance.currency}}</td>
+            <td>
+              <span data-toggle="tooltip"
+                    title="{{(balance.availableFiat | customnumber: 2) || 'unknown'}} €"
+                    data-placement="bottom">
+                {{balance.available}} {{balance.currency}}
+              </span>
+            </td>
+            <td>
+              <span data-toggle="tooltip"
+                    title="{{(balance.pendingFiat | customnumber: 2) || 'unknown'}} €"
+                    data-placement="bottom">
+                {{balance.pending}} {{balance.currency}}
+              </span>
+            </td>
+            <td>
+              <span data-toggle="tooltip"
+                      title="{{(balance.totalBalanceFiat | customnumber: 2) || 'unknown'}} €"
+                      data-placement="bottom">
+                {{balance.totalBalance}} {{balance.currency}}
+              </span>
             </td>
         </tr>
         </tbody>
+        <tr>
+          <td style="font-weight: bold;">Total</td>
+          <td style="font-weight: bold;">
+            {{$ctrl.dashboard.data.totalBalance.available | customnumber:8}} {{$ctrl.dashboard.data.totalBalance.currency}} /
+            {{($ctrl.dashboard.data.totalBalance.availableFiat | customnumber:2) || 0}} EUR
+          </td>
+          <td style="font-weight: bold;">
+            {{$ctrl.dashboard.data.totalBalance.pending | customnumber:8}} {{$ctrl.dashboard.data.totalBalance.currency}} /
+            {{($ctrl.dashboard.data.totalBalance.pendingFiat | customnumber:2) || 0}} EUR
+          </td>
+          <td style="font-weight: bold;">
+            {{$ctrl.dashboard.data.totalBalance.totalBalance | customnumber:8}} {{$ctrl.dashboard.data.totalBalance.currency}} /
+            {{($ctrl.dashboard.data.totalBalance.totalBalanceFiat | customnumber:2) || 0}} EUR
+          </td>
+        </tr>
     </table>
 </div>
 <div class="col-md-12 centerAlign">
