@@ -34,19 +34,27 @@ module.exports = class Storj extends Miner {
       const { data: stats } = await this.client.get('/');
       for (let satellite of stats.satellites) {
         const { data: perSatelliteStats } = await this.client.get(`/satellite/${satellite.id}`);
+        const isLegacy = perSatelliteStats.audit !== undefined;
+        let vettingProgress = 0;
+        if (isLegacy) {
+          vettingProgress = perSatelliteStats.audit.successCount < 100 ? perSatelliteStats.audit.successCount / 100 : 1;
+        } else {
+          vettingProgress = 1;
+        }
         satellite.stats = {
           storageSummary: perSatelliteStats.storageSummary,
           bandwidthSummary: perSatelliteStats.bandwidthSummary,
           egressSummary: perSatelliteStats.egressSummary,
           ingressSummary: perSatelliteStats.ingressSummary,
-          vettingProgress: perSatelliteStats.audit.successCount < 100 ? perSatelliteStats.audit.successCount / 100 : 1,
-          auditScoreTotal: perSatelliteStats.audit.totalCount ? perSatelliteStats.audit.successCount / perSatelliteStats.audit.totalCount : 1,
-          uptimeScoreTotal: perSatelliteStats.uptime.totalCount ? perSatelliteStats.uptime.successCount / perSatelliteStats.uptime.totalCount : 1,
-          auditScore: perSatelliteStats.audit.score,
-          suspensionScore: perSatelliteStats.audit.unknownScore,
-          onlineScore: perSatelliteStats.onlineScore,
+          vettingProgress,
+          auditScoreTotal: isLegacy ? perSatelliteStats.audit.score : perSatelliteStats.audits.auditScore,
+          uptimeScoreTotal: isLegacy ? (perSatelliteStats.uptime.totalCount ? perSatelliteStats.uptime.successCount / perSatelliteStats.uptime.totalCount : 1) : 1,
+          auditScore: isLegacy ? perSatelliteStats.audit.score : perSatelliteStats.audits.auditScore,
+          suspensionScore: isLegacy ? perSatelliteStats.audit.unknownScore : perSatelliteStats.audits.suspensionScore,
+          onlineScore: isLegacy ? perSatelliteStats.onlineScore : perSatelliteStats.audits.onlineScore,
         };
-        if (perSatelliteStats.audit.totalCount === 0) {
+
+        if (isLegacy && perSatelliteStats.audit.totalCount === 0) {
           satellite.stats.vettingProgress = 1;
         }
       }
