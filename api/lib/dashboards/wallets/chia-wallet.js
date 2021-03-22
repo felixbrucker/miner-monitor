@@ -1,3 +1,4 @@
+const { Agent: HttpsAgent } = require('https');
 const axios = require('axios');
 
 const Dashboard = require('../dashboard');
@@ -18,6 +19,18 @@ module.exports = class ChiaWallet extends Dashboard {
   onInit() {
     this.client = axios.create({
       baseURL: this.dashboard.baseUrl,
+      httpsAgent: new HttpsAgent({
+        rejectUnauthorized: false,
+        cert: this.dashboard.api_key.split(':')[0].split('\\n').join('\n'),
+        key: this.dashboard.api_key.split(':')[1].split('\\n').join('\n'),
+      }),
+    });
+    this.client.interceptors.response.use((response) => {
+      if (response.data.error) {
+        throw new Error(response.data.error);
+      }
+
+      return response;
     });
     this.updateStats();
     this.runningInterval = setInterval(this.updateStats.bind(this), this.interval);
