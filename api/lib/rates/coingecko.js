@@ -15,6 +15,9 @@ class CoinGecko {
     if (symbol.toLowerCase() === 'eur') {
       return [{ current_price: 1 }];
     }
+    if (symbol.toLowerCase() === 'burst') {
+      symbol = 'signa';
+    }
 
     return this.rates.filter(rate => rate.symbol === symbol.toLowerCase());
   }
