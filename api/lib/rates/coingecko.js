@@ -1,5 +1,7 @@
 const superagent = require('superagent');
 
+const util = require('../util');
+
 class CoinGecko {
   constructor() {
     this.interval = 20 * 60 * 1000;
@@ -38,6 +40,7 @@ class CoinGecko {
         page += 1;
       } catch (err) {
         console.error(`[CoinGecko] => ${err.message}`);
+        await util.sleep(15);
       }
     } while (rates.length === limit);
     this.rates = allRates;

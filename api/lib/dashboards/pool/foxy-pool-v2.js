@@ -1,4 +1,4 @@
-const io = require('socket.io-client');
+const axios = require('axios');
 const moment = require('moment');
 const Dashboard = require('../dashboard');
 const coinGecko = require('../../rates/coingecko');
@@ -6,49 +6,55 @@ const coinGecko = require('../../rates/coingecko');
 module.exports = class FoxyPoolV2 extends Dashboard {
   constructor(options = {}) {
     super(options);
-    this.stats.coin = this.getCoin(this.dashboard.ticker);
+    this.poolIdentifier = this.dashboard.ticker;
+    this.stats.coin = this.getCoin(this.poolIdentifier);
   }
 
   getCoin(poolIdentifier) {
     switch (poolIdentifier) {
-      case 'burst-testnet':
-      case 'burst': return 'BURST';
-      case 'bhd':
-      case 'bhd-testnet':
-      case 'bhd-eco': return 'BHD';
-      case 'lhd': return 'LHD';
-      case 'xhd': return 'XHD';
-      case 'hdd': return 'HDD';
+      case 'signa': return 'SIGNA';
+      case 'bhd': return 'BHD';
+      default: return poolIdentifier.toUpperCase();
     }
   }
 
   async onInit() {
-    const url = 'https://api.foxypool.io/web-ui';
-    this.client = io(url, {
-      rejectUnauthorized : false,
-      transports: ['websocket'],
-    });
-
-    this.client.on('connect', this.onWebSocketIoConnected.bind(this));
-    this.client.on('stats/pool', (_, poolStats) => this.onNewPoolStats(poolStats));
-    this.client.on('stats/round', (_, roundStats) => this.onNewRoundStats(roundStats));
-    this.client.on('stats/live', (_, liveStats) => this.onNewLiveStats(liveStats));
-
     super.onInit();
-  }
+    this.poolIdentifier = this.dashboard.ticker;
 
-  async onWebSocketIoConnected() {
-    await new Promise(resolve => this.client.emit('subscribe', [this.dashboard.ticker], resolve));
-    this.client.emit('stats/init', this.dashboard.ticker, ([poolConfig, poolStats, roundStats, liveStats]) => {
-      this.onNewPoolConfig(poolConfig);
-      this.onNewPoolStats(poolStats);
-      this.onNewRoundStats(roundStats);
-      this.onNewLiveStats(liveStats);
+    this.client = axios.create({
+      baseURL: `https://api.foxypool.io/api/stats`,
     });
+    await this.initHttpStats();
+    setInterval(this.updatePoolStats.bind(this), 61 * 1000);
+    setInterval(this.updateRoundStats.bind(this), 61 * 1000);
   }
 
-  onNewPoolConfig(poolConfig) {
-    this.poolConfig = poolConfig;
+  async initHttpStats() {
+    await Promise.all([
+      this.updatePoolStats(),
+      this.updateRoundStats(),
+    ]);
+  }
+
+  async updatePoolStats() {
+    this.onNewPoolStats(await this.getPoolStats());
+  }
+
+  async updateRoundStats() {
+    this.onNewRoundStats(await this.getRoundStats());
+  }
+
+  async getPoolStats() {
+    const { data } = await this.client.get(`${this.poolIdentifier}/pool`);
+
+    return data;
+  }
+
+  async getRoundStats() {
+    const { data } = await this.client.get(`${this.poolIdentifier}/round`);
+
+    return data;
   }
 
   onNewPoolStats(poolStats) {
@@ -101,16 +107,12 @@ module.exports = class FoxyPoolV2 extends Dashboard {
     this.roundStats = roundStats;
   }
 
-  onNewLiveStats(liveStats) {
-    this.liveStats = liveStats;
-  }
-
   getAccountState(account) {
     const lastSubmitHeight = account.lastSubmissionHeight;
     if (!lastSubmitHeight) {
       return account.pledgeShare > 0 ? 3 : 0;
     }
-    if (!this.roundStats) {
+    if (!this.roundStats || !this.roundStats.round) {
       return 1;
     }
     if (this.roundStats.round.height - lastSubmitHeight > 6) {

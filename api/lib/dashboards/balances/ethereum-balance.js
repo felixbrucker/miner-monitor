@@ -45,10 +45,6 @@ module.exports = class EthereumBalance extends Dashboard {
 
       this.stats = result;
     } catch(err) {
-      if (err.message === 'Request failed with status code 429') {
-        await util.sleep(3);
-        return this.updateStats();
-      }
       console.error(`[${this.dashboard.name} :: Ethereum-Balance-API] => ${err.message}`);
     }
   }
