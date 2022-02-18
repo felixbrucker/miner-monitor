@@ -61,12 +61,18 @@ function StorjController() {
     if (moment(stats.lastPinged).isBefore(moment().subtract(10, 'minute'))) {
       allMessages.push([`Last ping was ${moment.duration(moment(stats.lastPinged).diff()).humanize(true)}`]);
     }
+    if (stats.quicEnabled === false) {
+      allMessages.push(['QUIC is misconfigured']);
+    }
 
     return allMessages.reduce((acc, curr) => acc.concat(curr), []);
   };
 
   ctrl.totalSpaceUsed = () => {
     return ctrl.nodes.reduce((acc, node) => acc + ((node.stats && node.stats.diskSpace && node.stats.diskSpace.used) || 0), 0);
+  };
+  ctrl.totalDiskUsageSpeed = () => {
+    return ctrl.nodes.reduce((acc, node) => acc + (node.diskUsageSpeed || 0), 0);
   };
   ctrl.totalBandwidthUsed = () => {
     return ctrl.nodes.reduce((acc, node) => acc + ((node.stats && node.stats.bandwidth && node.stats.bandwidth.used) || 0), 0);

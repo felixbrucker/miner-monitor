@@ -11,9 +11,12 @@ module.exports = class Storj extends Miner {
       baseURL: `${this.device.hostname}/api/sno`,
     });
     this.historicalBandwidth = [];
+    this.historicalDiskUsage = [];
     this.ingressSpeed = 0;
     this.egressSpeed = 0;
+    this.diskUsageSpeed = 0;
     this.updateHistoricalbandwidthInterval = setInterval(this.updateHistoricalBandwidth.bind(this), 60 * 1000);
+    this.updateHistoricalDiskUsageInterval = setInterval(this.updateHistoricalDiskUsage.bind(this), 60 * 1000);
     this.latestVersion = null;
     this.updateLatestVersionInterval = setInterval(this.updateLatestVersion.bind(this), 10 * 60 * 1000);
     this.updateLatestVersion();
@@ -94,9 +97,10 @@ module.exports = class Storj extends Miner {
   }
 
   updateBandwidthSpeeds() {
-    const oldestBandwidthEntry = this.historicalBandwidth.length === 0
-      ? [new Date(), this.stats.ingressSummary, this.stats.egressSummary]
-      : this.historicalBandwidth[0];
+    if (this.historicalBandwidth.length < 2) {
+      return;
+    }
+    const oldestBandwidthEntry = this.historicalBandwidth[0];
     let timeInSecondsSince = moment().diff(oldestBandwidthEntry[0], 'second');
 
     const differences = [this.stats.ingressSummary - oldestBandwidthEntry[1], this.stats.egressSummary - oldestBandwidthEntry[2]];
@@ -113,6 +117,27 @@ module.exports = class Storj extends Miner {
     this.egressSpeed = differences[1] / timeInSecondsSince;
   }
 
+  updateHistoricalDiskUsage() {
+    if (!this.stats) {
+      return;
+    }
+    const newDiskUsageEntry = [new Date(), this.stats.diskSpace.used];
+    this.historicalDiskUsage.push(newDiskUsageEntry);
+    this.historicalDiskUsage = this.historicalDiskUsage.filter(([entryTs]) => moment().diff(entryTs, 'minute') < 15);
+    this.updateDiskUsageSpeeds();
+  }
+
+  updateDiskUsageSpeeds() {
+    if (this.historicalDiskUsage.length < 2) {
+      return;
+    }
+    const oldestDiskUsageEntry = this.historicalDiskUsage[0];
+    const difference = this.stats.diskSpace.used - oldestDiskUsageEntry[1];
+    const timeInSecondsSince = moment().diff(oldestDiskUsageEntry[0], 'second');
+
+    this.diskUsageSpeed = difference / timeInSecondsSince;
+  }
+
   getStats() {
     return Object.assign(
       super.getStats(),
@@ -122,6 +147,7 @@ module.exports = class Storj extends Miner {
       }, {
         ingressSpeed: this.ingressSpeed,
         egressSpeed: this.egressSpeed,
+        diskUsageSpeed: this.diskUsageSpeed,
       });
   }
 
@@ -131,6 +157,14 @@ module.exports = class Storj extends Miner {
     if (this.updateHistoricalbandwidthInterval) {
       clearInterval(this.updateHistoricalbandwidthInterval);
       this.updateHistoricalbandwidthInterval = null;
+    }
+    if (this.updateHistoricalDiskUsageInterval) {
+      clearInterval(this.updateHistoricalDiskUsageInterval);
+      this.updateHistoricalDiskUsageInterval = null;
+    }
+    if (this.updateLatestVersionInterval) {
+      clearInterval(this.updateLatestVersionInterval);
+      this.updateLatestVersionInterval = null;
     }
     super.cleanup();
   }
