@@ -31,7 +31,7 @@
           </td>
           <td>
             <span data-toggle="tooltip" title="{{(pool.data.miner.pendingFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
-                {{pool.data.miner.pending.toFixed(8)}} {{pool.data.coin}}
+                {{pool.data.miner.pending.toFixed(4)}} {{pool.data.coin}}
             </span>
           </td>
           <td>
@@ -48,7 +48,7 @@
           <td>
             {{$ctrl.getFormattedCapacity(pool.data.miner.reportedCapacity)}}
           </td>
-          <td ng-if="pool.data.lastPayout">
+          <td ng-if="pool.data.lastPayout" class="ellipsis">
             {{pool.data.lastPayout.date}}
             <span data-toggle="tooltip" title="{{(pool.data.lastPayout.amountFiat | customnumber: 2) || 'unknown'}} €" data-placement="bottom">
                  ({{$ctrl.getFormattedAmount(pool.data.lastPayout.amount) |customnumber:4}} {{pool.data.coin}})
