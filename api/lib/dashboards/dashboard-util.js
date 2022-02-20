@@ -13,7 +13,7 @@ const CryptoidBalance = require('./balances/cryptoid-balance');
 const CounterpartyBalance = require('./balances/counterparty-balance');
 const EthereumBalance = require('./balances/ethereum-balance');
 const BitmartBalance = require('./balances/bitmart-balance');
-const BurstBalance = require('./balances/burst-balance');
+const SignumBalance = require('./balances/signum-balance');
 const NicehashBalance = require('./balances/nicehash-balance');
 const CoinbaseBalance = require('./balances/coinbase-balance');
 const GenericWallet = require('./wallets/generic-wallet');
@@ -25,6 +25,8 @@ const BoomWallet = require('./wallets/boom-wallet');
 const WalletAgent = require('./wallets/wallet-agent');
 const FoxyPoolV2 = require('./pool/foxy-pool-v2');
 const ChiaWallet = require('./wallets/chia-wallet');
+const AllTheBlocksBalance = require('./balances/all-the-blocks-balance');
+const BhdBalance = require('./balances/bhd-balance');
 
 function getClassForDashboardType(type) {
   switch(type) {
@@ -54,8 +56,8 @@ function getClassForDashboardType(type) {
       return EthereumBalance;
     case 'bitmart-balance':
       return BitmartBalance;
-    case 'burstBalance':
-      return BurstBalance;
+    case 'signum-balance':
+      return SignumBalance;
     case 'nicehashBalance':
       return NicehashBalance;
     case 'node-cryptonote-pool':
@@ -82,6 +84,10 @@ function getClassForDashboardType(type) {
       return WalletAgent;
     case 'chia-wallet':
       return ChiaWallet;
+    case 'all-the-blocks-balance':
+      return AllTheBlocksBalance;
+    case 'bhd-balance':
+      return BhdBalance;
     default:
       throw new Error(`No class matched '${type}'`);
   }

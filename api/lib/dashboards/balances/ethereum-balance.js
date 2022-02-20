@@ -2,6 +2,18 @@ const util = require('../../util');
 const Dashboard = require('../dashboard');
 const coinGecko = require('../../rates/coingecko');
 
+const blacklistedTokens = [
+  '0xc12d1c73ee7dc3615ba4e37e4abfdbddfa38907e',
+  '0x2e91e3e54c5788e9fdd6a181497fdcea1de1bcc1',
+  '0x5e888b83b7287eed4fb7da7b7d0a0d4c735d94b3',
+  '0x79186ba0fc6fa49fd9db2f0ba34f36f8c24489c7',
+  '0xa0ec5625a9316b9846a7f5239186f0fd1919e516',
+  '0xa38b7ee9df79955b90cc4e2de90421f6baa83a3d',
+  '0xab95e915c123fded5bdfb6325e35ef5515f1ea69',
+  '0xbddab785b306bcd9fb056da189615cc8ece1d823',
+  '0xbf52f2ab39e26e0951d2a02b49b7702abe30406a',
+];
+
 module.exports = class EthereumBalance extends Dashboard {
 
   static getDefaults() {
@@ -33,6 +45,7 @@ module.exports = class EthereumBalance extends Dashboard {
       if (rate) {
         result.eth.balanceFiat = parseFloat(rate.current_price) * result.eth.balance;
       }
+      result.tokens = result.tokens.filter(token => blacklistedTokens.indexOf(token.tokenInfo.address) === -1);
       result.tokens.forEach((token) => {
         token.balance = token.balance / (Math.pow(10, parseInt(token.tokenInfo.decimals)));
 

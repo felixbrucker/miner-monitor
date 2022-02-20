@@ -31,7 +31,7 @@ const config = module.exports = {
     dashboardTypes:[
       'bitcoinBalance',
       'bitmart-balance',
-      'burstBalance',
+      'signum-balance',
       'counterpartyBalance',
       'cryptoidBalance',
       'dashboard-api',
@@ -56,7 +56,9 @@ const config = module.exports = {
       'chia-wallet',
       'wallet-agent',
       'coinbase',
-      'yiimp'
+      'yiimp',
+      'all-the-blocks-balance',
+      'bhd-balance',
     ]
   },
   getConfig: function () {

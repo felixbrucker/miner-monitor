@@ -98,22 +98,22 @@
       const types = [];
       switch (column) {
         case 'address':
-          types.push('nicehash', 'bitcoinBalance', 'cryptoidBalance', 'counterpartyBalance', 'ethBalance', 'burstBalance', 'node-cryptonote-pool', 'snipa-nodejs-pool', 'yiimp', 'hdpool', 'hpool', 'burst-wallet', 'boom-wallet', 'foxy-pool', 'foxy-pool-v2');
+          types.push('nicehash', 'bitcoinBalance', 'cryptoidBalance', 'counterpartyBalance', 'ethBalance', 'signum-balance', 'node-cryptonote-pool', 'snipa-nodejs-pool', 'yiimp', 'hdpool', 'hpool', 'burst-wallet', 'boom-wallet', 'foxy-pool', 'foxy-pool-v2', 'all-the-blocks-balance', 'bhd-balance');
           break;
         case 'ticker':
-          types.push('cryptoidBalance', 'snipa-nodejs-pool', 'generic-wallet', 'foxy-pool', 'foxy-pool-v2');
+          types.push('cryptoidBalance', 'snipa-nodejs-pool', 'generic-wallet', 'foxy-pool', 'foxy-pool-v2', 'all-the-blocks-balance');
           break;
         case 'baseUrl':
           types.push('genericMPOS', 'dashboard-api', 'node-cryptonote-pool', 'snipa-nodejs-pool', 'generic-wallet', 'bitbean-wallet', 'bhd-wallet', 'disc-wallet', 'burst-wallet', 'boom-wallet', 'yiimp', 'wallet-agent', 'hdpool-control', 'chia-wallet');
           break;
         case 'apiKey':
-          types.push('genericMPOS', 'miningpoolhub', 'cryptoidBalance', 'nicehashBalance', 'coinbase', 'hdpool', 'bitmart-balance', 'hpool', 'nicehash', 'chia-wallet');
+          types.push('genericMPOS', 'miningpoolhub', 'cryptoidBalance', 'nicehashBalance', 'coinbase', 'hdpool', 'bitmart-balance', 'hpool', 'nicehash', 'chia-wallet', 'all-the-blocks-balance');
           break;
         case 'userId':
           types.push('genericMPOS', 'miningpoolhub', 'nicehashBalance', 'hdpool', 'hpool', 'nicehash');
           break;
         case 'hashrateModifier':
-          types.push('genericMPOS', 'snipa-nodejs-pool');
+          types.push('genericMPOS', 'snipa-nodejs-pool', 'all-the-blocks-balance');
           break;
       }
       return types;

@@ -1,0 +1,41 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="centerAlign">Balances:</div>
+    <table class="table table-bordered table-condensed leftAlign">
+      <thead>
+        <tr>
+          <th>Balance</th>
+          <th>Fiat balance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="(id, dashboard) in $ctrl.dashboards track by $index">
+          <td class="ellipsis" ng-click="$ctrl.toggleVisible(id)">
+            {{$ctrl.getTotalForBalances(dashboard.balances, 'balance') | customnumber:6}} {{dashboard.ticker}}
+            <span ng-if="$ctrl.isVisible(id)" style="font-size:small;">
+              <span ng-repeat="balance in dashboard.balances track by $index">
+                <br/>
+                <span><a ng-if="balance.addressUrl" href="{{balance.addressUrl}}" target="_blank">{{balance.name}}</a><span ng-if="!balance.addressUrl">{{balance.name}}</span></span>: {{balance.data.balance | customnumber:6}} {{dashboard.ticker}}
+              </span>
+            </span>
+          </td>
+
+          <td ng-click="$ctrl.toggleVisible(id)">
+            {{$ctrl.getTotalForBalances(dashboard.balances, 'balanceFiat') | customnumber:2}} €
+            <span ng-if="$ctrl.isVisible(id)" style="font-size:small;">
+              <span ng-repeat="balance in dashboard.balances track by $index">
+                <br/>
+                {{balance.data.balanceFiat | customnumber:2}} €
+              </span>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Total</strong></td>
+          <td><strong>{{$ctrl.getTotal('balanceFiat') | customnumber: 2}} €</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+

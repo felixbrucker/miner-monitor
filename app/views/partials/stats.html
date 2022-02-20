@@ -1,4 +1,4 @@
-<div masonry>
+<div masonry masonry-options="{ columnWidth: 1 }">
     <div class="col-sm-4 col-md-4 col-lg-3 col-xl-2 col-xxl-3 masonry-brick" ng-if="statsVm.isDashboardTypeEnabled('bitcoinBalance')">
         <bitcoin-balance dashboards="statsVm.balances.bitcoin"></bitcoin-balance>
     </div>
@@ -8,20 +8,18 @@
     <div class="col-sm-4 col-md-4 col-lg-3 col-xl-2 col-xxl-3 masonry-brick" ng-if="statsVm.isDashboardTypeEnabled('counterpartyBalance')">
         <counterparty-balance dashboards="statsVm.balances.counterparty"></counterparty-balance>
     </div>
-    <div class="col-sm-4 col-md-4 col-lg-3 col-xl-2 col-xxl-3 masonry-brick" ng-if="statsVm.isDashboardTypeEnabled('ethBalance')">
-        <ethereum-balance dashboards="statsVm.balances.ethereum"></ethereum-balance>
-    </div>
     <div class="col-sm-4 col-md-4 col-lg-3 col-xl-2 col-xxl-3 masonry-brick" ng-if="statsVm.isDashboardTypeEnabled('bitmart-balance')">
       <bitmart-balance dashboards="statsVm.balances.bitmart"></bitmart-balance>
-    </div>
-    <div class="col-sm-4 col-md-4 col-lg-3 col-xl-2 col-xxl-3 masonry-brick" ng-if="statsVm.isDashboardTypeEnabled('burstBalance')">
-        <burst-balance dashboards="statsVm.balances.burst"></burst-balance>
     </div>
     <div class="col-sm-4 col-md-4 col-lg-3 col-xl-2 col-xxl-3 masonry-brick" ng-if="statsVm.isDashboardTypeEnabled('nicehashBalance')">
         <nicehash-balance dashboards="statsVm.balances.nicehash"></nicehash-balance>
     </div>
     <div class="col-sm-4 col-md-4 col-lg-3 col-xl-2 col-xxl-3 masonry-brick" ng-if="statsVm.isDashboardTypeEnabled('coinbase')">
         <coinbase-balance dashboards="statsVm.balances.coinbase"></coinbase-balance>
+    </div>
+
+    <div class="masonry-brick col-sm-4 col-md-4 col-lg-3 col-xl-2 col-xxl-3" ng-if="statsVm.dashboards.balances.length > 0">
+      <balance-summary dashboards="statsVm.dashboards.balances"></balance-summary>
     </div>
 
     <div class="masonry-brick col-sm-8 col-md-8 col-lg-5 col-xl-4 col-xxl-5" ng-if="statsVm.isDashboardTypesEnabled(['generic-wallet', 'bitbean-wallet', 'bhd-wallet', 'disc-wallet', 'wallet-agent', 'burst-wallet', 'boom-wallet'])">
@@ -72,15 +70,15 @@
       <burst-proxy upstreams="statsVm.burstProxies"></burst-proxy>
     </div>
 
-    <div class="masonry-brick col-sm-12 col-md-12 col-lg-8 col-xl-6 col-xxl-8" ng-if="statsVm.isDeviceTypeEnabled('storj')">
+    <div class="masonry-brick col-sm-12 col-md-8 col-lg-8 col-xl-5 col-xxl-8" ng-if="statsVm.isDeviceTypeEnabled('storj')">
       <storj nodes="statsVm.storjNodes"></storj>
     </div>
 
-    <div class="masonry-brick col-sm-12 col-md-12 col-lg-8 col-xl-6 col-xxl-8" ng-if="statsVm.isDashboardTypeEnabled('foxy-pool') || statsVm.isDashboardTypeEnabled('foxy-pool-v2')">
+    <div class="masonry-brick col-sm-12 col-md-8 col-lg-8 col-xl-5 col-xxl-8" ng-if="statsVm.isDashboardTypeEnabled('foxy-pool') || statsVm.isDashboardTypeEnabled('foxy-pool-v2')">
       <foxy-pool pools="statsVm.dashboards.foxyPools"></foxy-pool>
     </div>
 
-    <div class="masonry-brick col-sm-12 col-md-12 col-lg-8 col-xl-6 col-xxl-8" ng-if="statsVm.isDeviceTypeEnabled('chia-plotter')">
+    <div class="masonry-brick col-sm-12 col-md-8 col-lg-8 col-xl-5 col-xxl-8" ng-if="statsVm.isDeviceTypeEnabled('chia-plotter')">
       <chia-plotter plot-jobs="statsVm.chiaPlotterPlotJobs"></chia-plotter>
     </div>
 
@@ -97,11 +95,10 @@
             <chia-farmer farmer="entry"></chia-farmer>
         </div>
 
-        <div class="masonry-brick col-sm-12 col-md-12 col-lg-8 col-xl-6 col-xxl-8" ng-if="entry.type === 'chia-archiver'">
+        <div class="masonry-brick col-sm-12 col-md-8 col-lg-8 col-xl-5 col-xxl-8" ng-if="entry.type === 'chia-archiver'">
             <chia-archiver archiver="entry"></chia-archiver>
         </div>
     </span>
-
 </div>
 
 

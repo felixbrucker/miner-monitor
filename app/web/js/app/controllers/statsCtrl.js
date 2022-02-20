@@ -43,6 +43,7 @@
       wallets: [],
       yiimp: [],
       hdpool: [],
+      balances: [],
     };
     vm.devices = [];
     vm.creepMiner = [];
@@ -89,8 +90,7 @@
               vm.current.dashboardData[i].type==='bitcoinBalance' ||
               vm.current.dashboardData[i].type==='cryptoidBalance' ||
               vm.current.dashboardData[i].type==='counterpartyBalance' ||
-              vm.current.dashboardData[i].type==='ethBalance' ||
-              vm.current.dashboardData[i].type==='burstBalance'))
+              vm.current.dashboardData[i].type==='ethBalance'))
             return true;
         }
       }
@@ -156,7 +156,6 @@
 
     function updateArrays() {
       vm.balances.bitcoin = getDashboardArrForTypes(['bitcoinBalance']);
-      vm.balances.burst = getDashboardArrForTypes(['burstBalance']);
       vm.balances.cryptoid = getDashboardArrForTypes(['cryptoidBalance']);
       vm.balances.counterparty = getDashboardArrForTypes(['counterpartyBalance']);
       vm.balances.ethereum = getDashboardArrForTypes(['ethBalance']);
@@ -178,6 +177,49 @@
       vm.dashboards.hdpoolControl = getDashboardArrForTypes('hdpool-control');
       vm.dashboards.hpool = getDashboardArrForTypes('hpool');
       vm.dashboards.foxyPools = getDashboardArrForTypes(['foxy-pool', 'foxy-pool-v2']);
+
+      const ethAndTokenBalances = vm.balances.ethereum
+        .reduce((acc, dashboard) => {
+          const addressUrl = `https://etherscan.io/address/${dashboard.addr}`;
+
+          return acc.concat([{
+            addressUrl,
+            name: dashboard.name,
+            ticker: 'ETH',
+            coin: 'Ethereum',
+            data: {
+              balance: dashboard.data.eth.balance,
+              balanceFiat: dashboard.data.eth.balanceFiat,
+            },
+          }].concat(dashboard.data.tokens.map(token => {
+            return {
+              addressUrl,
+              name: dashboard.name,
+              ticker: token.tokenInfo.symbol,
+              coin: token.tokenInfo.name,
+              data: {
+                balance: token.balance,
+                balanceFiat: token.balanceFiat,
+              },
+            };
+          })));
+        }, []);
+      const allBalances = ethAndTokenBalances.concat(getDashboardArrForTypes(['all-the-blocks-balance', 'signum-balance', 'bhd-balance']));
+      const groupedBalanceDashboards = {};
+      vm.dashboards.balances = allBalances.reduce((acc, curr) => {
+        if (!groupedBalanceDashboards[curr.coin]) {
+          groupedBalanceDashboards[curr.coin] = {
+            coin: curr.coin,
+            ticker: curr.ticker,
+            balances: [],
+          };
+          acc.push(groupedBalanceDashboards[curr.coin]);
+        }
+        groupedBalanceDashboards[curr.coin].balances.push(curr);
+
+        return acc;
+      }, []);
+
       vm.devices = vm.current.entries
         .sort(sortByName)
         .map(group => Object.keys(group.devices)
