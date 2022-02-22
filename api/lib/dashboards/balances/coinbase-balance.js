@@ -6,7 +6,7 @@ module.exports = class CoinbaseBalance extends Dashboard {
 
   static getDefaults() {
     return {
-      interval: 3 * 60 * 1000,
+      interval: 5 * 60 * 1000,
     };
   }
 
@@ -24,7 +24,7 @@ module.exports = class CoinbaseBalance extends Dashboard {
           ticker: account.currency,
           balance: parseFloat(account.balance),
         }))
-        .filter(account => account.balance > 0)
+        .filter(account => (account.ticker !== 'EUR' && account.balance > 0.000001) || (account.ticker === 'EUR' && account.balance >= 0.01))
         .map(account => {
           const rates = coinGecko.getRates(account.ticker);
           const rate = rates.length > 0 ? rates[0] : null;

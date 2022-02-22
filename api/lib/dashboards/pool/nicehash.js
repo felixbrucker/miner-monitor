@@ -5,7 +5,7 @@ const NicehashApi = require('../../nicehash-api');
 module.exports = class Nicehash extends Dashboard {
   static getDefaults() {
     return {
-      interval: 60 * 1000,
+      interval: 3 * 60 * 1000,
     };
   }
 

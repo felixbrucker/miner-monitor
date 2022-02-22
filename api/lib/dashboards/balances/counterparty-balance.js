@@ -6,7 +6,7 @@ module.exports = class CounterpartyBalance extends Dashboard {
 
   static getDefaults() {
     return {
-      interval: 3 * 60 * 1000,
+      interval: 5 * 60 * 1000,
     };
   }
 

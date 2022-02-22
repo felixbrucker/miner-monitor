@@ -14,9 +14,6 @@
     <div class="col-sm-4 col-md-4 col-lg-3 col-xl-2 col-xxl-3 masonry-brick" ng-if="statsVm.isDashboardTypeEnabled('nicehashBalance')">
         <nicehash-balance dashboards="statsVm.balances.nicehash"></nicehash-balance>
     </div>
-    <div class="col-sm-4 col-md-4 col-lg-3 col-xl-2 col-xxl-3 masonry-brick" ng-if="statsVm.isDashboardTypeEnabled('coinbase')">
-        <coinbase-balance dashboards="statsVm.balances.coinbase"></coinbase-balance>
-    </div>
 
     <div class="masonry-brick col-sm-4 col-md-4 col-lg-3 col-xl-2 col-xxl-3" ng-if="statsVm.dashboards.balances.length > 0">
       <balance-summary dashboards="statsVm.dashboards.balances"></balance-summary>

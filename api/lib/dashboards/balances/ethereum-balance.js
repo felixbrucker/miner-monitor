@@ -18,7 +18,7 @@ module.exports = class EthereumBalance extends Dashboard {
 
   static getDefaults() {
     return {
-      interval: 3 * 60 * 1000,
+      interval: 10 * 60 * 1000,
     };
   }
 

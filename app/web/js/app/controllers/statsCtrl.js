@@ -181,12 +181,14 @@
       const ethAndTokenBalances = vm.balances.ethereum
         .reduce((acc, dashboard) => {
           const addressUrl = `https://etherscan.io/address/${dashboard.addr}`;
+          if (dashboard.data.eth === undefined) {
+            return acc;
+          }
 
           return acc.concat([{
             addressUrl,
             name: dashboard.name,
             ticker: 'ETH',
-            coin: 'Ethereum',
             data: {
               balance: dashboard.data.eth.balance,
               balanceFiat: dashboard.data.eth.balanceFiat,
@@ -196,7 +198,6 @@
               addressUrl,
               name: dashboard.name,
               ticker: token.tokenInfo.symbol,
-              coin: token.tokenInfo.name,
               data: {
                 balance: token.balance,
                 balanceFiat: token.balanceFiat,
@@ -204,18 +205,30 @@
             };
           })));
         }, []);
-      const allBalances = ethAndTokenBalances.concat(getDashboardArrForTypes(['all-the-blocks-balance', 'signum-balance', 'bhd-balance']));
+      const coinbaseBalances = vm.balances.coinbase
+        .reduce((acc, dashboard) => {
+          return acc.concat(dashboard.data.map(({ balance, balanceFiat, ticker }) => {
+            return {
+              name: dashboard.name,
+              ticker,
+              data: {
+                balance,
+                balanceFiat,
+              },
+            };
+          }));
+        }, []);
+      const allBalances = ethAndTokenBalances.concat(coinbaseBalances).concat(getDashboardArrForTypes(['all-the-blocks-balance', 'signum-balance', 'bhd-balance']));
       const groupedBalanceDashboards = {};
       vm.dashboards.balances = allBalances.reduce((acc, curr) => {
-        if (!groupedBalanceDashboards[curr.coin]) {
-          groupedBalanceDashboards[curr.coin] = {
-            coin: curr.coin,
+        if (!groupedBalanceDashboards[curr.ticker]) {
+          groupedBalanceDashboards[curr.ticker] = {
             ticker: curr.ticker,
             balances: [],
           };
-          acc.push(groupedBalanceDashboards[curr.coin]);
+          acc.push(groupedBalanceDashboards[curr.ticker]);
         }
-        groupedBalanceDashboards[curr.coin].balances.push(curr);
+        groupedBalanceDashboards[curr.ticker].balances.push(curr);
 
         return acc;
       }, []);
