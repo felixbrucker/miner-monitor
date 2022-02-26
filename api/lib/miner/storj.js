@@ -18,7 +18,7 @@ module.exports = class Storj extends Miner {
     this.updateHistoricalbandwidthInterval = setInterval(this.updateHistoricalBandwidth.bind(this), 60 * 1000);
     this.updateHistoricalDiskUsageInterval = setInterval(this.updateHistoricalDiskUsage.bind(this), 60 * 1000);
     this.latestVersion = null;
-    this.updateLatestVersionInterval = setInterval(this.updateLatestVersion.bind(this), 10 * 60 * 1000);
+    this.updateLatestVersionInterval = setInterval(this.updateLatestVersion.bind(this), 30 * 60 * 1000);
     this.updateLatestVersion();
     super.onInit();
   }
