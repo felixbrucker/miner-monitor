@@ -12,8 +12,8 @@ const blacklistedTokens = [
   '0xab95e915c123fded5bdfb6325e35ef5515f1ea69',
   '0xbddab785b306bcd9fb056da189615cc8ece1d823',
   '0xbf52f2ab39e26e0951d2a02b49b7702abe30406a',
-  '0x5C406D99E04B8494dc253FCc52943Ef82bcA7D75',
-  '0x7379cBCe70bBA5a9871f97d33B391AFBA377e885',
+  '0x5c406d99e04b8494dc253fcc52943ef82bca7d75',
+  '0x7379cbce70bba5a9871f97d33b391afba377e885',
 ];
 
 module.exports = class EthereumBalance extends Dashboard {
