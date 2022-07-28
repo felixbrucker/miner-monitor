@@ -1,0 +1,107 @@
+<div style="float: left;">{{$ctrl.dashboard.name}}</div>
+<table class="table table-bordered table-condensed leftAlign">
+    <thead>
+    <tr>
+        <th>Manager</th>
+        <th>Doc</th>
+        <th>State</th>
+        <th>Elapsed</th>
+        <th>Plots</th>
+        <th>Runs</th>
+        <th>Last run duration</th>
+    </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="worker in $ctrl.dashboard.data track by worker.workerId">
+        <td>{{worker.managerId.slice(-8)}} / {{worker.workerId.slice(-8)}}</td>
+        <td>{{worker.stats.documentName || 'N/A'}}</td>
+        <td>
+          <span ng-if="worker.stats.state === 'uninitialized'">
+            <span data-toggle="tooltip" title="Uninitialized">
+              <i class="far fa-stop-circle negative-color"></i>
+            </span>
+          </span>
+          <span ng-if="worker.stats.state === 'waitingForTheViewToLoad'">
+            <span data-toggle="tooltip" title="Waiting for the view to load">
+                <i class="fas fa-circle-notch fa-spin intermediary-color"></i>
+            </span>
+          </span>
+          <span ng-if="worker.stats.state === 'waitingForAutoReconnect'">
+            <span data-toggle="tooltip" title="Waiting for auto reconnect">
+               <i class="fas fa-circle-notch fa-spin intermediary-color"></i>
+            </span>
+          </span>
+          <span ng-if="worker.stats.state === 'startingNewRun'">
+            <span data-toggle="tooltip" title="Starting new run">
+              <i class="fas fa-cog fa-spin processing-color"></i>
+            </span>
+          </span>
+          <span ng-if="worker.stats.state === 'waitingForRunCompletion'">
+            <span data-toggle="tooltip" title="Waiting for run completion">
+              <i class="far fa-clock positive-color"></i>
+            </span>
+          </span>
+          <span ng-if="worker.stats.state === 'cleaningUpDialogs'">
+            <span data-toggle="tooltip" title="Cleaning up dialogs">
+              <i class="fas fa-comment-slash"></i>
+            </span>
+          </span>
+          |
+          <span ng-if="worker.stats.connectionStatus === 'unknown'">
+            <span data-toggle="tooltip" title="Unknown">
+              <i class="far fa-question-circle negative-color"></i>
+            </span>
+          </span>
+          <span ng-if="worker.stats.connectionStatus === 'unavailable'">
+            <span data-toggle="tooltip" title="Unavailable">
+              <i class="fas fa-ban negative-color"></i>
+            </span>
+          </span>
+          <span ng-if="worker.stats.connectionStatus === 'readyToConnect'">
+            <span data-toggle="tooltip" title="Ready to connect">
+              <i class="fas fa-plug intermediary-color"></i>
+            </span>
+          </span>
+          <span ng-if="worker.stats.connectionStatus === 'connecting'">
+            <span data-toggle="tooltip" title="Connecting">
+               <i class="fas fa-cog fa-spin processing-color"></i>
+            </span>
+          </span>
+          <span ng-if="worker.stats.connectionStatus === 'connected'">
+            <span data-toggle="tooltip" title="Connected">
+              <i class="fas fa-plug positive-color"></i>
+            </span>
+          </span>
+          |
+          <span ng-if="worker.stats.isExecutingNotebook">
+            <span data-toggle="tooltip" title="Notebook is being executed">
+              <i class="fas fa-check positive-color"></i>
+            </span>
+          </span>
+          <span ng-if="!worker.stats.isExecutingNotebook">
+            <span data-toggle="tooltip" title="Notebook is not being executed">
+              <i class="fas fa-times negative-color"></i>
+            </span>
+          </span>
+          <span ng-if="worker.stats.hasDialog">
+            |
+            <span data-toggle="tooltip" title="A dialog is shown">
+              <i class="fas fa-comment"></i>
+            </span>
+          </span>
+        </td>
+        <td>{{$ctrl.elapsedSince(worker.stats.stateChangedAt)}}</td>
+        <td>
+          <span data-toggle="tooltip" title="Plots created">
+            {{worker.stats.plotStats.plotsPlotted}} <i class="fas fa-cloud-upload-alt"></i>
+          </span>
+          |
+          <span data-toggle="tooltip" title="Current plot progress">
+            <i class="fas fa-stream"></i> {{(worker.stats.plotStats.currentPlotProgress * 100).toFixed(0)}}%
+          </span>
+        </td>
+        <td>{{worker.stats.completedRuns}}</td>
+        <td>{{$ctrl.formatDuration(worker.stats.lastRunDurationInMs)}}</td>
+      </tr>
+    </tbody>
+</table>

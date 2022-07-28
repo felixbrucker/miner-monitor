@@ -83,6 +83,10 @@
       <chia-miner miners="statsVm.chiaMiners"></chia-miner>
     </div>
 
+    <div class="masonry-brick col-sm-12 col-md-8 col-lg-8 col-xl-5 col-xxl-8" ng-repeat="(id, dashboard) in statsVm.custom.colabManagerStatsCollections track by $index">
+      <colab-manager-stats-collection dashboard="dashboard"></colab-manager-stats-collection>
+    </div>
+
     <span ng-repeat="(id, entry) in statsVm.devices track by $index">
         <div class="masonry-brick col-sm-9 col-md-6 col-lg-6 col-xl-4 col-xxl-6" ng-if="entry.type === 'miner-agent'">
             <miner-manager entry="entry"></miner-manager>

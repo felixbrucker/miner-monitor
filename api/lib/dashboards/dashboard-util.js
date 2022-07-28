@@ -8,6 +8,7 @@ const HDPool = require('./pool/hdpool');
 const HDPoolControl = require('./custom/hdpool-control');
 const HPool = require('./pool/hpool');
 const DashboardApi = require('./custom/dashboard-api');
+const ColabManagerStatsCollection = require('./custom/colab-manager-stats-collection');
 const BitcoinBalance = require('./balances/bitcoin-balance');
 const CryptoidBalance = require('./balances/cryptoid-balance');
 const CounterpartyBalance = require('./balances/counterparty-balance');
@@ -46,6 +47,8 @@ function getClassForDashboardType(type) {
       return HPool;
     case 'dashboard-api':
       return DashboardApi;
+    case 'colab-manager-stats-collection':
+      return ColabManagerStatsCollection;
     case 'bitcoinBalance':
       return BitcoinBalance;
     case 'cryptoidBalance':

@@ -228,3 +228,15 @@ select {
 .logging-in {
   background-color: rgb(199, 99, 249);
 }
+.positive-color {
+  color: rgb(75, 210, 143);
+}
+.intermediary-color {
+  color: rgb(255, 170, 0);
+}
+.negative-color {
+  color: rgb(255, 77, 77);
+}
+.processing-color {
+  color: rgb(66, 134, 244);
+}

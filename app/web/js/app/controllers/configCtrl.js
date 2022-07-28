@@ -104,7 +104,7 @@
           types.push('cryptoidBalance', 'snipa-nodejs-pool', 'generic-wallet', 'foxy-pool', 'foxy-pool-v2', 'all-the-blocks-balance');
           break;
         case 'baseUrl':
-          types.push('genericMPOS', 'dashboard-api', 'node-cryptonote-pool', 'snipa-nodejs-pool', 'generic-wallet', 'bitbean-wallet', 'bhd-wallet', 'disc-wallet', 'burst-wallet', 'boom-wallet', 'yiimp', 'wallet-agent', 'hdpool-control', 'chia-wallet');
+          types.push('genericMPOS', 'dashboard-api', 'colab-manager-stats-collection', 'node-cryptonote-pool', 'snipa-nodejs-pool', 'generic-wallet', 'bitbean-wallet', 'bhd-wallet', 'disc-wallet', 'burst-wallet', 'boom-wallet', 'yiimp', 'wallet-agent', 'hdpool-control', 'chia-wallet');
           break;
         case 'apiKey':
           types.push('genericMPOS', 'miningpoolhub', 'cryptoidBalance', 'nicehashBalance', 'coinbase', 'hdpool', 'bitmart-balance', 'hpool', 'nicehash', 'chia-wallet', 'all-the-blocks-balance');

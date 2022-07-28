@@ -34,6 +34,7 @@
     };
     vm.custom = {
       dashboardApi: [],
+      colabManagerStatsCollections: [],
     };
     vm.dashboards = {
       nicehash: [],
@@ -71,7 +72,6 @@
       angular.element(document).ready(function () {
         // doesn't automatically render the updated content, use standard tooltips for now
         // $("body").tooltip({ selector: '[data-toggle=tooltip]' });
-
 
         var interval=localStorage.getItem('refreshInterval');
         if (interval!==null&&interval!==""&&interval!=="NaN")
@@ -163,6 +163,7 @@
       vm.balances.nicehash = getDashboardArrForTypes(['nicehashBalance']);
       vm.balances.coinbase = getDashboardArrForTypes(['coinbase']);
       vm.custom.dashboardApi = getDashboardArrForTypes(['dashboard-api']);
+      vm.custom.colabManagerStatsCollections = getDashboardArrForTypes(['colab-manager-stats-collection']);
       vm.dashboards.nicehash = getDashboardArrForTypes(['nicehash']);
       vm.dashboards.mpos = getDashboardArrForTypes(['genericMPOS']);
       vm.dashboards.mph = getDashboardArrForTypes(['miningpoolhub']);
@@ -286,6 +287,7 @@
           vm.current.entries = response.data.entries;
           vm.current.dashboardData=response.data.dashboardData;
           updateArrays();
+          $("body").tooltip({ selector: '[data-toggle=tooltip]' });
         }, function errorCallback(response) {
           console.log(response);
         });

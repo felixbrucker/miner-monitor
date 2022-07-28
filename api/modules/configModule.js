@@ -35,6 +35,7 @@ const config = module.exports = {
       'counterpartyBalance',
       'cryptoidBalance',
       'dashboard-api',
+      'colab-manager-stats-collection',
       'ethBalance',
       'genericMPOS',
       'hdpool',
