@@ -14,7 +14,7 @@ function ColabManagerStatsCollectionController() {
       return 'N/A';
     }
 
-    return moment.duration(durationInMs).humanize(true)
+    return moment.duration(durationInMs).humanize()
   };
 }
 
