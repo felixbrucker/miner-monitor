@@ -8,7 +8,7 @@
         <th>Elapsed</th>
         <th>Plots</th>
         <th>Runs</th>
-        <th>Last run duration</th>
+        <th>Last run</th>
     </tr>
     </thead>
     <tbody>
@@ -101,7 +101,20 @@
           </span>
         </td>
         <td>{{worker.stats.completedRuns}}</td>
-        <td>{{$ctrl.formatDuration(worker.stats.lastRunDurationInMs)}}</td>
+        <td>
+          <span ng-if="worker.stats.lastRunPlotsPlotted !== null">
+            <span data-toggle="tooltip" title="Plots created in the last run">
+              {{worker.stats.lastRunPlotsPlotted}} <i class="fas fa-cloud-upload-alt"></i>
+            </span>
+            |
+            <span data-toggle="tooltip" title="Last run duration">
+              {{$ctrl.formatDuration(worker.stats.lastRunDurationInMs)}}
+            </span>
+          </span>
+          <span ng-if="worker.stats.lastRunPlotsPlotted === null">
+            N/A
+          </span>
+        </td>
       </tr>
     </tbody>
 </table>
