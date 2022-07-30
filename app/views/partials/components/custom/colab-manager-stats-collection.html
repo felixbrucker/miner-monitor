@@ -31,6 +31,11 @@
                <i class="fas fa-circle-notch fa-spin intermediary-color"></i>
             </span>
           </span>
+          <span ng-if="worker.stats.state === 'waitingForStagger'">
+            <span data-toggle="tooltip" title="Waiting for stagger">
+              <i class="far fa-clock intermediary-color"></i>
+            </span>
+          </span>
           <span ng-if="worker.stats.state === 'startingNewRun'">
             <span data-toggle="tooltip" title="Starting new run">
               <i class="fas fa-cog fa-spin processing-color"></i>
@@ -48,27 +53,27 @@
           </span>
           |
           <span ng-if="worker.stats.connectionStatus === 'unknown'">
-            <span data-toggle="tooltip" title="Unknown">
+            <span data-toggle="tooltip" title="Unknown connection status">
               <i class="far fa-question-circle negative-color"></i>
             </span>
           </span>
           <span ng-if="worker.stats.connectionStatus === 'unavailable'">
-            <span data-toggle="tooltip" title="Unavailable">
+            <span data-toggle="tooltip" title="Runtime unavailable">
               <i class="fas fa-ban negative-color"></i>
             </span>
           </span>
           <span ng-if="worker.stats.connectionStatus === 'readyToConnect'">
-            <span data-toggle="tooltip" title="Ready to connect">
+            <span data-toggle="tooltip" title="Ready to connect to the runtime">
               <i class="fas fa-plug intermediary-color"></i>
             </span>
           </span>
           <span ng-if="worker.stats.connectionStatus === 'connecting'">
-            <span data-toggle="tooltip" title="Connecting">
+            <span data-toggle="tooltip" title="Connecting to the runtime">
                <i class="fas fa-cog fa-spin processing-color"></i>
             </span>
           </span>
           <span ng-if="worker.stats.connectionStatus === 'connected'">
-            <span data-toggle="tooltip" title="Connected">
+            <span data-toggle="tooltip" title="Connected to the runtime">
               <i class="fas fa-plug positive-color"></i>
             </span>
           </span>
