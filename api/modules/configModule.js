@@ -27,6 +27,7 @@ const config = module.exports = {
       'chia-miner',
       'chia-farmer',
       'chia-archiver',
+      'rclone',
     ],
     dashboardTypes:[
       'bitcoinBalance',

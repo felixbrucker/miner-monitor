@@ -52,6 +52,7 @@
     vm.hidden={};
     vm.storjNodes = [];
     vm.chiaPlotterPlotJobs = [];
+    vm.rclones = [];
 
 
     // controller API
@@ -271,6 +272,7 @@
         return etaInSecondsA - etaInSecondsB;
       });
       vm.chiaMiners = getDeviceArrForTypes(['chia-miner']);
+      vm.rclones = getDeviceArrForTypes(['rclone']);
     }
 
     /**

@@ -1,0 +1,62 @@
+<div class="row">
+  <div class="col-md-12">
+    <div style="float: left;font-size:120%;">
+      Rclone
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <table class="table table-bordered table-condensed">
+      <thead>
+      <tr>
+        <th>Machine</th>
+        <th>Transfers</th>
+        <th>Progress</th>
+      </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="rclone in $ctrl.rclones track by rclone.id">
+          <td>
+            {{rclone.name}}
+          </td>
+          <td ng-if="!rclone.stats">
+            N/A
+          </td>
+          <td ng-if="!rclone.stats">
+            N/A
+          </td>
+          <td ng-if="rclone.stats">
+            <span ng-repeat="(index, transfer) in rclone.stats.transfers track by transfer.fileName">
+              <span>
+                {{transfer.shortName}}: <strong>{{transfer.speedInMibPerSec | capacity:'MiB'}}/s</strong><br>
+                <span style="font-size: 12px">
+                  {{(transfer.percentage).toFixed(2)}}%, {{transfer.transferredGib | capacity:'GiB'}} / {{transfer.totalGib | capacity:'GiB'}}
+                  | ETA: <strong>{{$ctrl.getFormattedEta(transfer)}}</strong>
+                </span>
+              </span>
+              <br ng-if="index !== rclone.stats.transfers.length - 1" />
+              </span>
+          </td>
+          <td ng-if="rclone.stats">
+            <strong>{{rclone.stats.speedInMibPerSec | capacity:'MiB'}}/s</strong>
+            | ETA: <strong>{{$ctrl.getFormattedEta(rclone.stats)}}</strong><br>
+            {{(rclone.stats.percentage).toFixed(2)}}%, {{rclone.stats.transferredGib | capacity:'GiB'}} / {{rclone.stats.totalGib | capacity:'GiB'}}
+          </td>
+        </tr>
+      <tr>
+        <td>
+          <strong>Total</strong>
+        </td>
+        <td colspan="2">
+          <strong>
+            {{$ctrl.totalSpeedInMibPerSec() | capacity:'MiB'}}/s
+            | ETA: {{$ctrl.getTotalFormattedEta()}}
+            | {{$ctrl.totalProgress().toFixed(2)}}%, {{$ctrl.totalTransferredGib() | capacity:'GiB'}} / {{$ctrl.totalGib() | capacity:'GiB'}}
+          </strong>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

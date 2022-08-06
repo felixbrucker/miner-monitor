@@ -6,6 +6,7 @@ const ChiaPlotter = require('./chia-plotter');
 const ChiaMiner = require('./chia-miner');
 const ChiaFarmer = require('./chia-farmer');
 const ChiaArchiver = require('./chia-archiver');
+const Rclone = require('./rclone')
 
 function getClassForMinerType(type) {
   switch(type) {
@@ -25,6 +26,8 @@ function getClassForMinerType(type) {
       return CreepMiner;
     case 'burst-proxy':
       return BurstProxy;
+    case 'rclone':
+      return Rclone;
     default:
       throw new Error(`No class matched '${type}'`);
   }
