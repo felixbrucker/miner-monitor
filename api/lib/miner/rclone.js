@@ -49,6 +49,7 @@ module.exports = class Rclone extends Miner {
         }),
       }
     } catch(err) {
+      this.stats = null;
       console.error(`[${this.device.name} :: Rclone] => ${err.message}`)
     }
   }
