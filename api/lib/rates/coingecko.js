@@ -4,7 +4,7 @@ const util = require('../util');
 
 class CoinGecko {
   constructor() {
-    this.interval = 20 * 60 * 1000;
+    this.interval = 30 * 60 * 1000;
     this.currency = 'EUR';
     this.baseUrl = 'https://api.coingecko.com/api/v3';
     this.rates = [];
@@ -38,9 +38,10 @@ class CoinGecko {
         rates = await this.doApiCall('coins/markets', {vs_currency: this.currency.toLowerCase(), per_page: limit, page, order: 'id_asc'});
         allRates = allRates.concat(rates);
         page += 1;
+        await util.sleep(5);
       } catch (err) {
         console.error(`[CoinGecko] => ${err.message}`);
-        await util.sleep(15);
+        await util.sleep(30);
       }
     } while (rates.length === limit);
     this.rates = allRates;
