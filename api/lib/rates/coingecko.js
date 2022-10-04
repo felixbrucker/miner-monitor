@@ -55,8 +55,8 @@ class CoinGecko {
 
   async doApiCall(endpoint, params = {}) {
     const res = await superagent.get(`${this.baseUrl}/${endpoint}`).query(params).timeout({
-      response: 10 * 1000,  // Wait 10 seconds for the server to start sending,
-      deadline: 30 * 1000, // but allow 1 minute for the file to finish loading.
+      response: 10 * 1000, // Wait 10 seconds for the server to start sending,
+      deadline: 90 * 1000, // but allow 1:30 min for the request to finish loading.
     });
 
     return res.body;
