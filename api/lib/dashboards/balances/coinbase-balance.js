@@ -1,6 +1,6 @@
-const { CoinbasePro } = require('coinbase-pro-node');
 const Dashboard = require('../dashboard');
 const coinGecko = require('../../rates/coingecko');
+const CoinbaseApi = require('../../coinbase-api')
 
 module.exports = class CoinbaseBalance extends Dashboard {
 
@@ -17,12 +17,12 @@ module.exports = class CoinbaseBalance extends Dashboard {
 
   async updateStats() {
     try {
-      const accounts = await this.client.rest.account.listAccounts();
+      const accounts = await this.client.listAllAccounts({ excludeZeroBalances: true });
       this.stats = accounts
         .map(account => ({
           name: account.name,
           ticker: account.currency,
-          balance: parseFloat(account.balance),
+          balance: parseFloat(account.available_balance.value),
         }))
         .filter(account => (account.ticker !== 'EUR' && account.balance > 0.000001) || (account.ticker === 'EUR' && account.balance >= 0.01))
         .map(account => {
@@ -41,14 +41,12 @@ module.exports = class CoinbaseBalance extends Dashboard {
 
   async onInit() {
     const apiKeySecretAndPassphrase = this.dashboard.api_key.split(':');
-    if (apiKeySecretAndPassphrase.length !== 3) {
-      return console.error(`[${this.dashboard.name} :: Coinbase-Balance-API] => Invalid api key, secret key and passphrase string, format is: 'api_key:api_secret:passphrase'`);
+    if (apiKeySecretAndPassphrase.length !== 2) {
+      return console.error(`[${this.dashboard.name} :: Coinbase-Balance-API] => Invalid api key and secret key string, format is: 'api_key:api_secret'`);
     }
-    this.client = new CoinbasePro({
+    this.client = new CoinbaseApi({
       apiKey: apiKeySecretAndPassphrase[0],
       apiSecret: apiKeySecretAndPassphrase[1],
-      passphrase: apiKeySecretAndPassphrase[2],
-      useSandbox: false,
     });
     super.onInit();
   }
