@@ -59,7 +59,7 @@
             N/A
           </td>
           <td ng-if="node.stats">
-            {{node.stats.diskSpace.used | bytes:2}} ({{((node.stats.diskSpace.used / node.stats.diskSpace.available) * 100).toFixed(0)}}%, {{node.diskUsageSpeed | bytes:1}}/s)
+            {{node.stats.diskSpace.used | bytes:2}} ({{(((node.stats.diskSpace.used + node.stats.diskSpace.trash) / node.stats.diskSpace.available) * 100).toFixed(0)}}%, {{node.diskUsageSpeed | bytes:1}}/s)
           </td>
           <td ng-if="node.stats">
             {{node.stats.bandwidth.used | bytes:2}}
